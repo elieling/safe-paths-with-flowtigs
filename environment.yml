@@ -1,0 +1,8 @@
+name: snakemake-flowtigs 
+channels:
+        - conda-forge
+        - bioconda
+dependencies: 
+        - snakemake==6.3.0
+        - time == 1.8
+        - mamba

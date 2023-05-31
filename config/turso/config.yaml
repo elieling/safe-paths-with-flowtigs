@@ -1,0 +1,43 @@
+use-conda: true
+# You need to change all <...> entries
+# You can change all occurences of snakemake-turso to a name more fitting to your project, if you want to.
+cluster: >-
+  sbatch
+  --job-name=matchtigs:{rule}:$(sed "s\/\_\g" <<< '{wildcards}' | sed "s/ /_/g" | head -c 100)
+  --chdir=/home/ebingerv/VSC/snakemake-flowtigs
+  -o "$(cat .logdir)/snakemake-flowtigs:{rule}:$(sed "s\/\_\g" <<< '{wildcards}' | sed "s/ /_/g" | head -c 100):%j.log"
+  -p {resources.queue}
+  -c {resources.cpus}
+  -t {resources.time_min}
+  -M {resources.cluster}
+  {resources.options}
+  --mem={resources.mem_mb}
+  --mail-type={resources.mail_type}
+  --mail-user=ebingerv@helsinki.fi
+  --signal=SIGINT@300
+#  $(./scripts/parse_sbatch_job_id.sh {dependencies})
+cluster-status: "scripts/get_slurm_job_status.py"
+max-status-checks-per-second: 10
+cluster-cancel: "scripts/cancel_slurm_jobs.py"
+cluster-cancel-nargs: 1000
+default-resources:
+  - cpus=1
+  - time_min=60
+  - mem_mb=100
+  - queue="short,medium,aurinko"
+  - mail_type=FAIL
+  - benchmark=0
+  - tmpdir="/tmp/sebschmi/matchtigs"
+  - cluster=ukko
+  - options=""
+rerun-incomplete: true
+printshellcmds: true
+jobs: 100
+cores: 100000
+local-cores: 8
+latency-wait: 60
+config: "datadir=/home/ebingerv/VSC/snakemake-flowtigs/data"
+keep-going: true
+scheduler: "greedy" # ILP creates files in bad locations, possibly leading to a lockup of the Lustre file system
+shadow-prefix: "/home/ebingerv/VSC/snakemake-flowtigs/shadow"
+

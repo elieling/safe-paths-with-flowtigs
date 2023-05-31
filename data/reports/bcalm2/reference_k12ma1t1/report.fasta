@@ -1,0 +1,12 @@
+>0 LN:i:12 KC:i:23 km:f:23.0   L:-:3:+ L:-:4:+ L:-:5:+  L:+:3:+ L:+:4:+ L:+:5:+ 
+GATCGATCGATC
+>1 LN:i:12 KC:i:22 km:f:22.0   L:-:4:- L:-:5:-  L:+:4:- L:+:5:- 
+TCGATCGATCGA
+>2 LN:i:23 KC:i:12 km:f:1.0   L:-:3:-  L:+:3:- 
+TCGATCGATCAGTGATCGATCGA
+>3 LN:i:12 KC:i:2 km:f:2.0   L:-:0:+ L:-:0:-  L:+:2:+ L:+:2:- 
+ATCGATCGATCA
+>4 LN:i:22 KC:i:11 km:f:1.0   L:-:0:+ L:-:0:-  L:+:1:+ L:+:1:- 
+ATCGATCGATCTCGATCGATCG
+>5 LN:i:12 KC:i:43 km:f:43.0   L:-:0:+ L:-:0:-  L:+:1:+ L:+:1:- 
+ATCGATCGATCG

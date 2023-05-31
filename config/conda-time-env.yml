@@ -1,0 +1,4 @@
+channels:
+        - conda-forge
+dependencies:
+        - time == 1.8

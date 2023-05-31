@@ -1,1 +1,1 @@
-# safe-paths-with-flowtigs
+Snakemake pipeline for computing flowtigs.

@@ -1,0 +1,36 @@
+>0 LN:i:12 KC:i:58 km:f:58.0   L:-:10:+ L:-:11:+ L:-:16:+  L:+:10:+ L:+:11:+ L:+:16:+ 
+GATCGATCGATC
+>1 LN:i:12 KC:i:4 km:f:4.0   L:-:15:+  L:+:10:+ L:+:11:+ L:+:16:+ 
+TATCGATCGATC
+>2 LN:i:12 KC:i:58 km:f:58.0   L:-:10:- L:-:11:- L:-:13:+ L:-:16:-  L:+:10:- L:+:11:- L:+:13:+ L:+:16:- 
+TCGATCGATCGA
+>3 LN:i:17 KC:i:12 km:f:2.0   L:-:15:-  L:+:7:+ 
+ATCGATATCGACGATCG
+>4 LN:i:12 KC:i:4 km:f:4.0   L:+:8:+ L:+:8:-  L:-:5:+ L:-:17:- 
+TCGATCGCGATC
+>5 LN:i:15 KC:i:8 km:f:2.0   L:-:4:+  L:+:9:- 
+ATCGCGATCGACGAT
+>6 LN:i:12 KC:i:2 km:f:2.0   L:-:15:-  L:+:15:- 
+ATCGATATCGAT
+>7 LN:i:12 KC:i:5 km:f:5.0   L:+:12:- L:+:14:-  L:-:3:- L:-:9:+ 
+ATCGACGATCGA
+>8 LN:i:12 KC:i:2 km:f:2.0   L:-:4:-  L:+:4:- 
+CGATCGCGATCG
+>9 LN:i:13 KC:i:6 km:f:3.0   L:-:7:+  L:+:5:- L:+:13:- 
+CGATCGTCGATCG
+>10 LN:i:25 KC:i:14 km:f:1.0   L:-:0:+ L:-:0:- L:-:1:-  L:+:2:+ L:+:2:- L:+:12:+ L:+:17:+ 
+ATCGATCGATCAGTTCGATCGATCG
+>11 LN:i:22 KC:i:11 km:f:1.0   L:-:0:+ L:-:0:- L:-:1:-  L:+:2:+ L:+:2:- L:+:12:+ L:+:17:+ 
+ATCGATCGATCTCGATCGATCG
+>12 LN:i:15 KC:i:12 km:f:3.0   L:-:10:- L:-:11:- L:-:13:+ L:-:16:-  L:+:7:- 
+TCGATCGATCGTCGA
+>13 LN:i:15 KC:i:4 km:f:1.0   L:-:2:+ L:-:2:- L:-:12:+ L:-:17:+  L:+:9:- 
+CGATCGATCGACGAT
+>14 LN:i:22 KC:i:22 km:f:2.0   L:-:15:+  L:+:7:- 
+TATCGATCGATTCGATCGTCGA
+>15 LN:i:15 KC:i:24 km:f:6.0   L:-:1:+ L:-:14:+  L:+:3:+ L:+:6:+ L:+:6:- 
+ATCGATCGATATCGA
+>16 LN:i:12 KC:i:118 km:f:118.0   L:-:0:+ L:-:0:- L:-:1:-  L:+:2:+ L:+:2:- L:+:12:+ L:+:17:+ 
+ATCGATCGATCG
+>17 LN:i:15 KC:i:8 km:f:2.0   L:-:10:- L:-:11:- L:-:13:+ L:-:16:-  L:+:4:+ 
+TCGATCGATCGCGAT
