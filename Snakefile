@@ -69,6 +69,12 @@ BUILD_FA = os.path.join(REPORTDIR, "bcalm2", "{file_name}_k{k}ma{min_abundance}t
 BUILD_LOG = os.path.join("logs", "build_{file_name}_k{k}ma{min_abundance}t{threads}", "log.log")
 NODE_TO_ARC_CENTRIC_DBG_BINARY = os.path.abspath("external_software/node-to-arc-centric-dbg/target/release/node-to-arc-centric-dbg")
 NODE_TO_ARC_CENTRIC_DBG = os.path.join(REPORTDIR, "node_to_arc", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.edgelist") #threads 28
+SAFE_PATHS_BINARY = os.path.abspath("external_software/safe-paths/target/release/flow_decomposition")
+SAFE_PATHS = os.path.join(REPORTDIR, "safe_paths", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta") #threads 28
+EXTERNAL_SOFTWARE_ROOTDIR = os.path.join(DATADIR, "external_software")
+QUAST_BINARY = os.path.join(EXTERNAL_SOFTWARE_ROOTDIR, "quast", "quast.py")
+QUAST_OUTPUT_DIR = os.path.join(REPORTDIR, "quast", "{file_name}_k{k}ma{min_abundance}t{threads}")
+#     DATADIR = ... # wherever you have your data, e.g. /wrk-vakka/users/<your username>/flowtigs
 
 #################################
 ###### Global report rules ######
@@ -182,11 +188,100 @@ rule node_to_arc_centric_dbg:
 
 
 
+# Rule to set up the external software for the safe-paths rule.
+rule build_safe_paths:
+    input:  "external_software/safe-paths/Cargo.toml",
+    output: SAFE_PATHS_BINARY,
+    conda:  "config/conda-rust-env.yml",
+    threads: MAX_THREADS,
+    resources:
+            mem_mb = 10000,
+            time_min = 60,
+            cpus = MAX_THREADS,
+            queue = "aurinko,bigmem,short,medium",
+    shell:  """
+        cd external_software/safe-paths
+        cargo build --release -j {threads} --offline
+    """
+
+
+# Rule to get the safe paths from the edge-centric weighted De Bruijn graph given by
+#   the node_to_arc_centric_dbg rule.
+# input: output of node_to_arc_centric_dbg and output of build_safe_paths.
+# wildcards: k=size of kmers, file_name=name of the file with the data in the data folder,
+#   min_abundance=minimum abundance, thredas=number of cpu cores used.
+# output: List of the safe paths with, for each path, a line with "Path: <path-index>"
+#   and a second line with the sequence.
+rule safe_paths:
+    input:  arc_centric_dbg = NODE_TO_ARC_CENTRIC_DBG,
+            binary = SAFE_PATHS_BINARY,
+    log:    log = "logs/safe_paths/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
+    output: safe_paths = SAFE_PATHS,
+    conda:  "config/conda-time-env.yml",
+    resources:
+            time_min = 1440, # likely too much
+            mem_mb = 250_000, # likely too much
+            queue = "short,medium,bigmem,aurinko",
+    shell:  """
+        rm -f '{log.log}'
+        ${{CONDA_PREFIX}}/bin/time -v '{input.binary}' -k {wildcards.k} --input '{input.arc_centric_dbg}' --output '{output.safe_paths}'
+    """
+
+
+
+
+
+rule run_quast:
+    input:  contigs = SAFE_PATHS,
+            references = [GENOME_ALL_REFERENCES], # list of references
+            script = QUAST_BINARY,
+            error_report = "config/quast_error_report.tex",
+            error_misassemblies_report = "config/quast_error_misassemblies_report.tex"
+    output: directory = directory(QUAST_OUTPUT_DIR),
+            eaxmax_csv = os.path.join(QUAST_OUTPUT_DIR, "aligned_stats/EAxmax_plot.csv"),
+    log:    minimap = os.path.join(QUAST_OUTPUT_DIR, "contigs_reports", "contigs_report_contigs.stderr")
+    params: references = lambda wildcards, input: "-r '" + "' -r '".join(input.references) + "'",
+    conda: "config/conda-quast-env.yml"
+    threads: 14,
+    resources: mem_mb = 250_000, # likely to much for our genomes
+               cpus = 14,
+               time_min = 1440,
+               queue = "short,medium,bigmem,aurinko", # I had some more complex expression here, the queues fitting to the time are on https://wiki.helsinki.fi/display/it4sci/HPC+Environment+User+Guide#HPCEnvironmentUserGuide-4.8.4Partitions-Ukko
+    shell:  """
+        set +e 
+        ${{CONDA_PREFIX}}/bin/time -v {input.script} -t {threads} --no-html -o '{output.directory}' {params.references} '{input.contigs}'
+        set -e
+        
+        if [ $? -ne 0 ]; then
+            rm -rf '{output.directory}'
+        fi
+
+
+        mkdir -p '{output.directory}'
+        if [ ! -f '{output.directory}/report.tex' ]; then
+            echo "report.tex is missing, using error template" 
+            cp '{input.error_report}' '{output.directory}/report.tex'
+        fi
+
+        mkdir -p '{output.directory}/contigs_reports'
+        if [ ! -f '{output.directory}/contigs_reports/misassemblies_report.tex' ]; then
+            echo "misassemblies_report.tex is missing, using error template"
+            cp '{input.error_misassemblies_report}' '{output.directory}/contigs_reports/misassemblies_report.tex'
+        fi
+
+        mkdir -p '{output.directory}/aligned_stats'
+        if [ ! -f '{output.directory}/aligned_stats/EAxmax_plot.csv' ]; then
+            echo "EAxmax_plot.csv is missing, using empty file"
+            touch '{output.directory}/aligned_stats/EAxmax_plot.csv'
+        fi
+    """ #  --large
+
+
 
 #######################
 ###### Downloads ######
 #######################
- 
+
 # Here can be rules to download your input files.
 # These must be localrules, as the compute nodes of the federated cluster do not have a connection to the internet.
 
@@ -221,10 +316,47 @@ rule download_node_to_arc_centric_dbg:
         rm -rf node-to-arc-centric-dbg
         git clone https://github.com/sebschmi/node-to-arc-centric-dbg.git
         cd node-to-arc-centric-dbg
-        git checkout 96e3bd1a4ee57dc317a86178e751128f286d34cc
+        git checkout d0afdf0532fcaa658f57182fe4e5d26224136285
 
         cargo fetch
     """
+
+
+# Rule to download the external software used for calculatings safe paths from an arc-centric De Bruijn graph.
+localrules: download_safe_paths
+rule download_safe_paths:
+    output: "external_software/safe-paths/Cargo.toml"
+    conda:  "config/conda-rust-env.yml"
+    threads: 1
+    shell:  """
+        mkdir -p external_software
+        cd external_software
+
+        rm -rf safe-paths
+        git clone https://github.com/elieling/safe-paths.git
+        cd safe-paths
+        git checkout db71ee631c4a2f5679ea1ecb06052e233a987e26 
+
+        cargo fetch
+    """ #  45588f4986a75254f45cc57e609e518459be937d b0a41fb3b77cf4fab3fcbc07105343543beff917 a2efc2045282c735c182cf15b0f6cbf867c9b757
+
+
+localrules: install_quast
+rule install_quast:
+    output: script = QUAST_BINARY,
+    params: external_software_dir = EXTERNAL_SOFTWARE_ROOTDIR,
+    threads: 1
+    shell: """
+        mkdir -p '{params.external_software_dir}'
+        cd '{params.external_software_dir}'
+
+        rm -rf quast
+        git clone https://github.com/elieling/quast.git 
+        cd quast
+        git checkout 9e374a20bbb058f11bf59fc748abd0e94084d175
+    """ # https://github.com/sebschmi/quast  39cf5f04bd0d127480344d5d1c41226245f08b9b
+
+
 
 
 localrules: download_sra_file
