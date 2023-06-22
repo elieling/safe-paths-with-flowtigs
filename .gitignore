@@ -1,2 +1,5 @@
 .snakemake
 logs
+external_software
+output.txt
+data/reports
