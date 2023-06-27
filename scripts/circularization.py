@@ -10,7 +10,7 @@ k = int(k_string)
 record_list = []
 with open(snakemake.input.assembly, 'r') as infile:
 
-    # Creating a list of all the sequences from the input file
+    # Going through all the sequences from the input file
     sequences=[i for i in SeqIO.parse(infile, 'fasta')]
     for sequence in sequences:
 
@@ -27,7 +27,6 @@ with open(snakemake.input.assembly, 'r') as infile:
             first_elements = s_data[:(k-1)]
             s_data = s_data + first_elements
 
-            # sequence.seq = s_data
             record_list.append(Seq(s_data))
 
 
