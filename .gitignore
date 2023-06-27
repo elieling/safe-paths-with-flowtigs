@@ -2,7 +2,7 @@
 logs
 external_software
 output.txt
-data/reports
+/data/reports
 validationtests
 combiner.py
 data/pdf
