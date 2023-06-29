@@ -28,7 +28,7 @@ if [ $# -eq 0 ]; then
 fi
 
 source $HOME/.bashrc
-cd /home/ebingerv/VSC/snakemake-flowtigs
+cd /abga/work/elieling/safe-paths-with-flowtigs
 
 source activate snakemake-flowtigs
 
