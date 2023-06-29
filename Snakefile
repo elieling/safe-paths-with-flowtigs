@@ -78,6 +78,11 @@ QUAST_OUTPUT_DIR = os.path.join(REPORTDIR, "quast_{tigs}", "{file_name}_k{k}ma{m
 PRACTICAL_OMNITIGS_BINARY = os.path.abspath("external_software/practical-omnitigs/implementation/target/release/cli")
 PRACTICAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_omni", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
 ECOLI = os.path.join(DATADIR, "ecoli.fasta")
+PRACTICAL_TEST_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_omniTest", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
+PRACTICAL_TRIVIAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_omniTrivial", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
+
+
+
 #     DATADIR = ... # wherever you have your data, e.g. /wrk-vakka/users/<your username>/flowtigs
 
 #################################
@@ -143,7 +148,7 @@ rule bcalm2_build:
             mem_mb = 250_000, # probably much more than needed
             time_min = 1440,
             cpus = build_cpus,
-            queue = 'short', # I had some more complex expression here, the queues fitting to the time are on https://wiki.helsinki.fi/display/it4sci/HPC+Environment+User+Guide#HPCEnvironmentUserGuide-4.8.4Partitions-Ukko
+            queue = 'aurinko,bigmem,short,medium', # I had some more complex expression here, the queues fitting to the time are on https://wiki.helsinki.fi/display/it4sci/HPC+Environment+User+Guide#HPCEnvironmentUserGuide-4.8.4Partitions-Ukko
     shell:  """
         rm -f '{log.log}'
         ${{CONDA_PREFIX}}/bin/time -v bcalm -nb-cores {threads} -kmer-size {wildcards.k} -in '{input.references}' -out '{output.tigs}' -abundance-min {wildcards.min_abundance} 2>&1 | tee -a '{log.log}'
@@ -349,6 +354,40 @@ rule practical_omitigs:
     shell:  """
         rm -f '{log.log}'
         '{input.binary}' compute-multi-safe-walks --file-format bcalm2 --input '{input.practical_omnitigs}' --output '{output.practical_omnitigs}' -k {wildcards.k}
+    """
+
+
+# Rule for testing the practical omnitigs rule
+rule practical_test_omitigs:
+    input:  practical_omnitigs = BUILD_FA,
+            binary = PRACTICAL_OMNITIGS_BINARY,
+    log:    log = "logs/practical_omnitigs/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
+    output: practical_omnitigs = PRACTICAL_TEST_OMNITIGS,  
+    conda:  "config/conda-rust-env.yml",
+    resources:
+            time_min = 1440, # likely too much
+            mem_mb = 250_000, # likely too much
+            queue = "short,medium,bigmem,aurinko",
+    shell:  """
+        rm -f '{log.log}'
+        '{input.binary}' compute-omnitigs --file-format bcalm2 --input '{input.practical_omnitigs}' --output '{output.practical_omnitigs}' -k {wildcards.k}
+    """
+
+
+# Rule for testing the practical omnitigs rule
+rule practical_trivial_omitigs:
+    input:  practical_omnitigs = BUILD_FA,
+            binary = PRACTICAL_OMNITIGS_BINARY,
+    log:    log = "logs/practical_omnitigs/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
+    output: practical_omnitigs = PRACTICAL_TRIVIAL_OMNITIGS,  
+    conda:  "config/conda-rust-env.yml",
+    resources:
+            time_min = 1440, # likely too much
+            mem_mb = 250_000, # likely too much
+            queue = "short,medium,bigmem,aurinko",
+    shell:  """
+        rm -f '{log.log}'
+        '{input.binary}' compute-trivial-omnitigs --file-format bcalm2 --input '{input.practical_omnitigs}' --output '{output.practical_omnitigs}' -k {wildcards.k}
     """
 
 
