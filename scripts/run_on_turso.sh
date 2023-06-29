@@ -52,7 +52,7 @@ echo "$LOGDIR" > .logdir
 # echo "Cleaning shadow directory"
 # snakemake --profile config/turso --cleanup-shadow >> "$LOGDIR/run_on_turso.log" 2>&1
 
-export TMPDIR="/wrk-vakka/users/ebingerv/snakemake-flowtigs/tmp"
+export TMPDIR="/abga/work/elieling/safe-paths-with-flowtigs/tmp"
 export TEMP=$TMPDIR
 export TMP=$TMPDIR
 mkdir -p "$TMPDIR"
