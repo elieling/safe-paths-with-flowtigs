@@ -4,7 +4,7 @@ use-conda: true
 cluster: >-
   sbatch
   --job-name=matchtigs:{rule}:$(sed "s\/\_\g" <<< '{wildcards}' | sed "s/ /_/g" | head -c 100)
-  --chdir=/home/ebingerv/VSC/snakemake-flowtigs
+  --chdir=/wrk-vakka/users/ebingerv/snakemake-flowtigs
   -o "$(cat .logdir)/snakemake-flowtigs:{rule}:$(sed "s\/\_\g" <<< '{wildcards}' | sed "s/ /_/g" | head -c 100):%j.log"
   -p {resources.queue}
   -c {resources.cpus}
@@ -27,7 +27,7 @@ default-resources:
   - queue="short,medium,aurinko"
   - mail_type=FAIL
   - benchmark=0
-  - tmpdir="/tmp/sebschmi/matchtigs"
+  - tmpdir="/tmp/ebingerv/matchtigs"
   - cluster=ukko
   - options=""
 rerun-incomplete: true
@@ -36,8 +36,8 @@ jobs: 100
 cores: 100000
 local-cores: 8
 latency-wait: 60
-config: "datadir=/home/ebingerv/VSC/snakemake-flowtigs/data"
+config: "datadir=/wrk-vakka/users/ebingerv/snakemake-flowtigs/data"
 keep-going: true
 scheduler: "greedy" # ILP creates files in bad locations, possibly leading to a lockup of the Lustre file system
-shadow-prefix: "/home/ebingerv/VSC/snakemake-flowtigs/shadow"
+shadow-prefix: "/wrk-vakka/users/ebingerv/snakemake-flowtigs/shadow"
 

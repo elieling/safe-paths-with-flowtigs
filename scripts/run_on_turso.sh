@@ -28,7 +28,7 @@ if [ $# -eq 0 ]; then
 fi
 
 source $HOME/.bashrc
-cd /abga/work/elieling/safe-paths-with-flowtigs
+cd /wrk-vakka/users/ebingerv/snakemake-flowtigs
 
 source activate snakemake-flowtigs
 
@@ -52,7 +52,7 @@ echo "$LOGDIR" > .logdir
 # echo "Cleaning shadow directory"
 # snakemake --profile config/turso --cleanup-shadow >> "$LOGDIR/run_on_turso.log" 2>&1
 
-export TMPDIR="/abga/work/elieling/safe-paths-with-flowtigs/tmp"
+export TMPDIR="/wrk-vakka/users/ebingerv/snakemake-flowtigs"
 export TEMP=$TMPDIR
 export TMP=$TMPDIR
 mkdir -p "$TMPDIR"
