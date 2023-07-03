@@ -65,21 +65,30 @@ ASSEMBLY = os.path.join(DATADIR, "assembly", "s{species}-k{k}", "assembly.fa")
 REPORT = os.path.join(REPORTDIR, "s{species}-k{k}", "report.txt")
 GENOME_ALL_REFERENCES = os.path.join(DATADIR, "{file_name}.fasta")
 GENOME_CIRCULAR_REFERENCES = os.path.join(REPORTDIR, "circularization", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
-BUILD_FA = os.path.join(REPORTDIR, "safe_paths_uni", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
+BUILD_FA = os.path.join(REPORTDIR, "safe_paths_unitigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
 # BUILD_FA = os.path.join(REPORTDIR, "bcalm2", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
 BUILD_LOG = os.path.join("logs", "build_{file_name}_k{k}ma{min_abundance}t{threads}", "log.log")
 NODE_TO_ARC_CENTRIC_DBG_BINARY = os.path.abspath("external_software/node-to-arc-centric-dbg/target/release/node-to-arc-centric-dbg")
 NODE_TO_ARC_CENTRIC_DBG = os.path.join(REPORTDIR, "node_to_arc", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.edgelist") #threads 28
 SAFE_PATHS_BINARY = os.path.abspath("external_software/safe-paths/target/release/flow_decomposition")
-SAFE_PATHS = os.path.join(REPORTDIR, "safe_paths_flow", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta") 
+SAFE_PATHS = os.path.join(REPORTDIR, "safe_paths_flowtigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta") 
 EXTERNAL_SOFTWARE_ROOTDIR = os.path.join(DATADIR, "external_software")
 QUAST_BINARY = os.path.join(EXTERNAL_SOFTWARE_ROOTDIR, "quast", "quast.py")
-QUAST_OUTPUT_DIR = os.path.join(REPORTDIR, "quast_{tigs}", "{file_name}_k{k}ma{min_abundance}t{threads}")
+QUAST_OUTPUT_DIR = os.path.join(REPORTDIR, "quast_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}")
 PRACTICAL_OMNITIGS_BINARY = os.path.abspath("external_software/practical-omnitigs/implementation/target/release/cli")
-PRACTICAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_omni", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
+PRACTICAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_multi-safe", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
 ECOLI = os.path.join(DATADIR, "ecoli.fasta")
-PRACTICAL_TEST_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_omniTest", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
-PRACTICAL_TRIVIAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_omniTrivial", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
+PRACTICAL_TEST_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
+PRACTICAL_TRIVIAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_trivial-omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
+ALGORITHMS = ["unitigs", "trivial-omnitigs", "multi-safe", "flowtigs", "omnitigs"] # values for the wildcard that chooses which tigs to generate
+ALGORITHM_COLUMN_NAMES = ["unitigs", "t. omnitigs", "multi-safe", "flowtigs", "omnitigs"] # column names for the different tigs
+CONVERT_VALIDATION_OUTPUTS_TO_LATEX_SCRIPT = "scripts/convert_validation_outputs_to_latex.py"
+CREATE_COMBINED_EAXMAX_PLOT_SCRIPT = "scripts/create_combined_eaxmax_plot.py"
+REPORT_SUBDIR = os.path.join(REPORTDIR, "final_reports_{file_name}k{k}ma{min_abundance}t{threads}")
+REPORT_COMBINED_EAXMAX_PLOT = os.path.join(REPORT_SUBDIR, "combined_eaxmax_plot.pdf")
+REPORT_NAME_FILE = os.path.join(REPORT_SUBDIR, "name.txt")
+REPORT_HASHDIR = os.path.join(REPORTDIR, "hashdir")
+REPORT_TEX = os.path.join(REPORTDIR, "output", "{file_name}_k{k}ma{min_abundance}t{threads}", "{report_name}", "{report_file_name}.abc")
 
 
 
@@ -111,6 +120,86 @@ rule create_single_report:
     output: report = REPORT,
     conda:  "config/conda-biopython-env.yml"
     script: "scripts/create_single_report.py"
+
+
+class SafeDict(dict):
+    def __missing__(self, key):
+        return '{' + key + '}'
+
+def safe_format(str, **kwargs):
+    return str.format_map(SafeDict(kwargs))
+
+def safe_expand(str, **kwargs):
+    items = []
+    for key, values in kwargs.items():
+        if type(values) is str or type(values) is not list:
+            values = [values]
+        items.append([(key, value) for value in values])
+
+    for combination in itertools.product(*items):
+        yield safe_format(str, **dict(combination))
+
+def wildcard_format(str, wildcards):
+    return str.format(**dict(wildcards.items()))
+
+
+def get_single_report_script_column_arguments_from_wildcards(wildcards):
+    try:
+        result = ""
+        once = True
+        for algorithm in ALGORITHMS:
+            if once:
+                once = False
+            else:
+                result += " "
+
+            quast_output_dir = safe_format(QUAST_OUTPUT_DIR, algorithm = algorithm).format(**wildcards)
+            result += f"'{algorithm}' '' '{quast_output_dir}' '' ''"
+        return result
+    except Exception:
+        traceback.print_exc()
+        sys.exit("Catched exception")
+
+
+
+rule create_single_report_tex:
+    input:  quasts = [safe_format(QUAST_OUTPUT_DIR, algorithm = algorithm) for algorithm in ALGORITHMS],
+            combined_eaxmax_plot = REPORT_COMBINED_EAXMAX_PLOT,
+            script = CONVERT_VALIDATION_OUTPUTS_TO_LATEX_SCRIPT,
+    output: report = REPORT_TEX,
+    log:    log = "logs/create_single_report/{file_name}_k{k}ma{min_abundance}t{threads}r{report_name}rf{report_file_name}/log.log",
+    params: genome_name = lambda wildcards: ", ".join(wildcards.file_name), 
+            script_column_arguments = get_single_report_script_column_arguments_from_wildcards,
+            name_file = REPORT_NAME_FILE,
+            hashdir = REPORT_HASHDIR,
+    wildcard_constraints:
+            report_name = "[^/]+",
+    conda: "config/conda-latex-gen-env.yml" 
+    threads: 1
+    resources:
+            queue = "short,medium,bigmem,aurinko",
+    shell: """
+        mkdir -p '{params.hashdir}'
+        echo '{wildcards.report_name} {params.genome_name} {wildcards.report_file_name}' > '{params.name_file}'
+        python3 '{input.script}' '{params.hashdir}' '{params.name_file}' 'none' 'none' '{input.combined_eaxmax_plot}' '{output}' {params.script_column_arguments}
+        """
+
+
+rule create_combined_eaxmax_graph:
+    input:  quast_csvs = [os.path.join(safe_format(QUAST_OUTPUT_DIR, algorithm = algorithm), "aligned_stats", "EAxmax_plot.csv") for algorithm in ALGORITHMS],
+            script = CREATE_COMBINED_EAXMAX_PLOT_SCRIPT,
+    output: REPORT_COMBINED_EAXMAX_PLOT,
+    params: input_quast_csvs = lambda wildcards, input: "' '".join([shortname + "' '" + quast for shortname, quast in zip(ALGORITHM_COLUMN_NAMES, input.quast_csvs)])
+    conda:  "config/conda-seaborn-env.yml"
+    threads: 1
+    resources:
+            queue = "short,medium,bigmem,aurinko",
+    shell: """
+        mkdir -p "$(dirname '{output}')"
+        python3 '{input.script}' '{params.input_quast_csvs}' '{output}'
+        """
+
+    
 
 ########################
 ###### Assembly ########
@@ -145,8 +234,8 @@ rule bcalm2_build:
     threads: MAX_THREADS,
     shadow: "minimal"
     resources:
-            mem_mb = 250_000, # probably much more than needed
-            time_min = 1440,
+            mem_mb = 10_000, # probably much more than needed
+            time_min = 60,
             cpus = build_cpus,
             queue = 'aurinko,bigmem,short,medium', # I had some more complex expression here, the queues fitting to the time are on https://wiki.helsinki.fi/display/it4sci/HPC+Environment+User+Guide#HPCEnvironmentUserGuide-4.8.4Partitions-Ukko
     shell:  """
@@ -186,8 +275,8 @@ rule node_to_arc_centric_dbg:
     output: arc_centric_dbg = NODE_TO_ARC_CENTRIC_DBG,   # .edgelist
     conda:  "config/conda-time-env.yml",
     resources:
-            time_min = 1440, # likely too much
-            mem_mb = 250_000, # likely too much
+            time_min = 60, # likely too much
+            mem_mb = 10_000, # likely too much
             queue = "short,medium,bigmem,aurinko",
     shell:  """
         rm -f '{log.log}'
@@ -228,8 +317,8 @@ rule safe_paths:
     output: safe_paths = SAFE_PATHS,
     conda:  "config/conda-time-env.yml",
     resources:
-            time_min = 1440, # likely too much
-            mem_mb = 250_000, # likely too much
+            time_min = 60, # likely too much
+            mem_mb = 10_000, # likely too much
             queue = "short,medium,bigmem,aurinko",
     shell:  """
         rm -f '{log.log}'
@@ -246,14 +335,14 @@ rule safe_paths:
 #   error_report: Template file for when there is an error creating the report.tex file.
 #   error_missassemblies_report: Template file for when there is an error creating the missassemblies_report.tex file.
 # wildcards: 
-#   tigs: method for finding safe paths. Either "uni" for unitigs, "omni" for omnitigs or "flow" for flowtigs.
+#   algorithm: method for finding safe paths. Either "uni" for unitigs, "omni" for omnitigs or "flow" for flowtigs.
 #   k: size of kmers
 #   file_name: name of the file with the data in the data folder
 #   min_abundance: minimum abundance
 #   threads: number of cpu cores used.
 # output: report in .tex, .tsv, .txt, and .pdf formats
 rule run_quast:
-    input:  contigs = os.path.join(REPORTDIR, "safe_paths_{tigs}", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta"),
+    input:  contigs = os.path.join(REPORTDIR, "safe_paths_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta"),
             references = [GENOME_ALL_REFERENCES], # list of references
             script = QUAST_BINARY,
             error_report = "config/quast_error_report.tex",
@@ -264,9 +353,9 @@ rule run_quast:
     params: references = lambda wildcards, input: "-r '" + "' -r '".join(input.references) + "'",
     conda: "config/conda-quast-env.yml"
     threads: 14,
-    resources: mem_mb = 250_000, # likely to much for our genomes
+    resources: mem_mb = 10_000, # likely to much for our genomes
                cpus = 14,
-               time_min = 1440,
+               time_min = 60,
                queue = "short,medium,bigmem,aurinko", # I had some more complex expression here, the queues fitting to the time are on https://wiki.helsinki.fi/display/it4sci/HPC+Environment+User+Guide#HPCEnvironmentUserGuide-4.8.4Partitions-Ukko
     shell:  """
         set +e 
@@ -348,8 +437,8 @@ rule practical_omitigs:
     output: practical_omnitigs = PRACTICAL_OMNITIGS,  
     conda:  "config/conda-rust-env.yml",
     resources:
-            time_min = 1440, # likely too much
-            mem_mb = 250_000, # likely too much
+            time_min = 60, # likely too much
+            mem_mb = 10_000, # likely too much
             queue = "short,medium,bigmem,aurinko",
     shell:  """
         rm -f '{log.log}'
@@ -365,8 +454,8 @@ rule practical_test_omitigs:
     output: practical_omnitigs = PRACTICAL_TEST_OMNITIGS,  
     conda:  "config/conda-rust-env.yml",
     resources:
-            time_min = 1440, # likely too much
-            mem_mb = 250_000, # likely too much
+            time_min = 60, # likely too much
+            mem_mb = 10_000, # likely too much
             queue = "short,medium,bigmem,aurinko",
     shell:  """
         rm -f '{log.log}'
@@ -382,8 +471,8 @@ rule practical_trivial_omitigs:
     output: practical_omnitigs = PRACTICAL_TRIVIAL_OMNITIGS,  
     conda:  "config/conda-rust-env.yml",
     resources:
-            time_min = 1440, # likely too much
-            mem_mb = 250_000, # likely too much
+            time_min = 60, # likely too much
+            mem_mb = 10_000, # likely too much
             queue = "short,medium,bigmem,aurinko",
     shell:  """
         rm -f '{log.log}'
