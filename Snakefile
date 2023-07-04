@@ -78,6 +78,7 @@ QUAST_OUTPUT_DIR = os.path.join(REPORTDIR, "quast_{algorithm}", "{file_name}_k{k
 PRACTICAL_OMNITIGS_BINARY = os.path.abspath("external_software/practical-omnitigs/implementation/target/release/cli")
 PRACTICAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_multi-safe", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
 ECOLI = os.path.join(DATADIR, "ecoli.fasta")
+META_BASE7 = os.path.join(DATADIR, "meta_base7.fasta")
 PRACTICAL_TEST_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
 PRACTICAL_TRIVIAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_trivial-omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
 ALGORITHMS = ["unitigs", "trivial-omnitigs", "multi-safe", "flowtigs", "omnitigs"] # values for the wildcard that chooses which tigs to generate
@@ -88,6 +89,9 @@ REPORT_SUBDIR = os.path.join(REPORTDIR, "final_reports_{file_name}k{k}ma{min_abu
 REPORT_COMBINED_EAXMAX_PLOT = os.path.join(REPORT_SUBDIR, "combined_eaxmax_plot.pdf")
 REPORT_NAME_FILE = os.path.join(REPORT_SUBDIR, "name.txt")
 REPORT_HASHDIR = os.path.join(REPORTDIR, "hashdir")
+META_BASE7_DIR = os.path.join(DATADIR, "meta", "base7")
+META_BASE7_FASTA = [os.path.join(META_BASE7_DIR, "GCF_000005845.2_ASM584v2_genomic.fna"), os.path.join(META_BASE7_DIR, "GCF_000159115.1_ASM15911v1_genomic.fna"), os.path.join(META_BASE7_DIR, "GCF_000175375.1_ASM17537v1_genomic.fna"), os.path.join(META_BASE7_DIR, "GCF_000376705.1_ASM37670v1_genomic.fna"), os.path.join(META_BASE7_DIR, "GCF_003999335.1_ASM399933v1_genomic.fna"), os.path.join(META_BASE7_DIR, "GCF_017638885.1_ASM1763888v1_genomic.fna"), os.path.join(META_BASE7_DIR, "GCF_019890915.1_ASM1989091v1_genomic.fna")]
+META_BASE7_ABUNDANCES = os.path.join(META_BASE7_DIR, "nanosim.abundances.tsv")
 REPORT_TEX = os.path.join(REPORTDIR, "output", "{file_name}_k{k}ma{min_abundance}t{threads}", "{report_name}", "{report_file_name}.tex")
 
 
@@ -204,6 +208,17 @@ rule create_combined_eaxmax_graph:
 ########################
 ###### Assembly ########
 ########################
+
+
+# Rule to get sequences for metagenome data.
+localrules: metagenome_to_single_file
+rule metagenome_to_single_file:
+    input:  abundances = META_BASE7_ABUNDANCES,
+            references = META_BASE7_FASTA,
+    output: report = META_BASE7,
+    log:    log = "logs/metagenome_to_single_file/log.log",
+    conda:  "config/conda-seaborn-env.yml"
+    script: "scripts/metagenome_to_single_file.py"
 
 
 # Rule to circularize non-circular sequences of the genome or metagenome.
@@ -590,10 +605,10 @@ rule download_practical_omnitigs:
         rm -rf practical-omnitigs
         git clone https://github.com/algbio/practical-omnitigs.git
         cd practical-omnitigs
-        git checkout e1640a6220dedb85ad90f83d9b141f4fd257a6e5
+        git checkout 690a836ebc158b17d68593fdcc59c1a05cc07b20 
         cd implementation
         cargo fetch
-    """ # bb1de69873c6b48f183e51bca2f48d2a057b8b64
+    """ # e1640a6220dedb85ad90f83d9b141f4fd257a6e5 bb1de69873c6b48f183e51bca2f48d2a057b8b64
         # git checkout sebschmi/unspecified 
 
 
