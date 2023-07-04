@@ -200,6 +200,7 @@ contig_validator_table = [headline + "\\\\ \\hline"] + contig_validator_table
 ### Process CLI graph statistics files ###
 ##########################################
 
+graph_statistics_table = []
 if graph_statistics_file_name != "none":
     try:
         graph_statistics_file = open(graph_statistics_file_name, 'r')
@@ -330,7 +331,7 @@ def write_image(output_file, caption, file, natwidth, natheight):
     output_file.write("\\caption{" + str(caption) + "}")
     output_file.write("\\end{figure*}\n")
 
-revision = subprocess.check_output(["git", "describe"]).strip()
+revision = subprocess.check_output(["git", "rev-parse", "HEAD"]).strip()
 output_file = open(output_file_name, 'w')
 output_file.write(
     """
