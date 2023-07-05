@@ -79,6 +79,7 @@ PRACTICAL_OMNITIGS_BINARY = os.path.abspath("external_software/practical-omnitig
 PRACTICAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_multi-safe", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
 ECOLI = os.path.join(DATADIR, "ecoli.fasta")
 META_BASE7 = os.path.join(DATADIR, "meta_base7.fasta")
+META_BASE7_CONCAT = os.path.join(DATADIR, "meta_base7_concat.fasta")
 PRACTICAL_TEST_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
 PRACTICAL_TRIVIAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_trivial-omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
 ALGORITHMS = ["unitigs", "trivial-omnitigs", "multi-safe", "flowtigs", "omnitigs"] # values for the wildcard that chooses which tigs to generate
@@ -219,6 +220,17 @@ rule metagenome_to_single_file:
     log:    log = "logs/metagenome_to_single_file/log.log",
     conda:  "config/conda-seaborn-env.yml"
     script: "scripts/metagenome_to_single_file.py"
+
+
+
+# Rule to concatenate metagenome data.
+localrules: metagenome_concatenate
+rule metagenome_concatenate:
+    input:  references = META_BASE7_FASTA,
+    output: report = META_BASE7_CONCAT,
+    log:    log = "logs/metagenome_concatenate/log.log",
+    conda:  "config/conda-seaborn-env.yml"
+    script: "scripts/metagenome_concatenate.py"
 
 
 # Rule to circularize non-circular sequences of the genome or metagenome.
