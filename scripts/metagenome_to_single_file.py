@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 abundance_df = pd.read_csv(snakemake.input.abundances, sep='\t')
 logger.info(abundance_df)
-logger.info("len", len(abundance_df))
+logger.info("len %s", len(abundance_df))
 n_rows = abundance_df.shape[0]
 
 for i in range(n_rows):
