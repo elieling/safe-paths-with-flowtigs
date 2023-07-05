@@ -9,3 +9,4 @@ for i in range(n_rows):
         with open(snakemake.output.report, 'a') as destination:
             content = source.read()
             destination.write(content)
+            destination.write("\n")
