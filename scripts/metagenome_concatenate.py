@@ -2,7 +2,7 @@
 
 import pandas as pd
 
-n_rows = snakemake.input.references.len()
+n_rows = len(snakemake.input.references)
 
 for i in range(n_rows):
     with open(snakemake.input.references[i], 'r') as source:
