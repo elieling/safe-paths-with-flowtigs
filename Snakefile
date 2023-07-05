@@ -479,7 +479,7 @@ rule practical_omitigs:
 rule practical_test_omitigs:
     input:  practical_omnitigs = BUILD_FA,
             binary = PRACTICAL_OMNITIGS_BINARY,
-    log:    log = "logs/practical_omnitigs/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
+    log:    log = "logs/practical_test_omnitigs/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
     output: practical_omnitigs = PRACTICAL_TEST_OMNITIGS,  
     conda:  "config/conda-rust-env.yml",
     resources:
@@ -496,7 +496,7 @@ rule practical_test_omitigs:
 rule practical_trivial_omitigs:
     input:  practical_omnitigs = BUILD_FA,
             binary = PRACTICAL_OMNITIGS_BINARY,
-    log:    log = "logs/practical_omnitigs/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
+    log:    log = "logs/practical_trivial_omnitigs/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
     output: practical_omnitigs = PRACTICAL_TRIVIAL_OMNITIGS,  
     conda:  "config/conda-rust-env.yml",
     resources:
