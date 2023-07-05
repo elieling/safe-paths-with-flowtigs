@@ -63,7 +63,7 @@ READS_FASTA = os.path.join(DATADIR, "reads", "s{species}", "fasta", "reads.fa")
 ASSEMBLY_SOURCE_READS = os.path.join(DATADIR, "assembly", "s{species}-k{k}", "reads.fa")
 ASSEMBLY = os.path.join(DATADIR, "assembly", "s{species}-k{k}", "assembly.fa")
 REPORT = os.path.join(REPORTDIR, "s{species}-k{k}", "report.txt")
-GENOME_ALL_REFERENCES = os.path.join(DATADIR, "{file_name}.fasta")
+GENOME_ALL_REFERENCES = os.path.join(DATADIR, "{file_name}_concat.fasta")
 GENOME_CIRCULAR_REFERENCES = os.path.join(REPORTDIR, "circularization", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
 BUILD_FA = os.path.join(REPORTDIR, "safe_paths_unitigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
 # BUILD_FA = os.path.join(REPORTDIR, "bcalm2", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
@@ -78,6 +78,7 @@ QUAST_OUTPUT_DIR = os.path.join(REPORTDIR, "quast_{algorithm}", "{file_name}_k{k
 PRACTICAL_OMNITIGS_BINARY = os.path.abspath("external_software/practical-omnitigs/implementation/target/release/cli")
 PRACTICAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_multi-safe", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
 ECOLI = os.path.join(DATADIR, "ecoli.fasta")
+ECOLI_CONCAT = os.path.join(DATADIR, "ecoli_concat.fasta")
 META_BASE7 = os.path.join(DATADIR, "meta_base7.fasta")
 META_BASE7_CONCAT = os.path.join(DATADIR, "meta_base7_concat.fasta")
 PRACTICAL_TEST_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
@@ -545,6 +546,13 @@ rule download_ecoli:
         rm -rf ecoli.fasta
         wget -O ecoli.fasta.gz https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/005/845/GCF_000005845.2_ASM584v2/GCF_000005845.2_ASM584v2_genomic.fna.gz
         gunzip ecoli.fasta.gz
+    """
+
+rule ecoli_concat:
+    input: file = ECOLI
+    output: file = ECOLI_CONCAT
+    shell: """
+        cp {input.file} {output.file}
     """
 
 
