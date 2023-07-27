@@ -80,6 +80,8 @@ PRACTICAL_OMNITIGS_BINARY = os.path.abspath("external_software/practical-omnitig
 PRACTICAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_multi-safe", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
 ECOLI = os.path.join(DATADIR, "ecoli.fasta")
 ECOLI_CONCAT = os.path.join(DATADIR, "ecoli_concat.fasta")
+SINGLE = os.path.join(DATADIR, "{file_name}.fasta")
+SINGLE_CONCAT = os.path.join(DATADIR, "{file_name}_concat.fasta")
 META_BASE7 = os.path.join(DATADIR, "meta_base7.fasta")
 META_BASE7_CONCAT = os.path.join(DATADIR, "meta_base7_concat.fasta")
 PRACTICAL_TEST_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
@@ -549,6 +551,7 @@ rule download_ecoli:
         gunzip ecoli.fasta.gz
     """
 
+# Rule needed for run_quast. Just copies the file with a new name.
 rule ecoli_concat:
     input: file = ECOLI
     output: file = ECOLI_CONCAT
@@ -556,6 +559,13 @@ rule ecoli_concat:
         cp {input.file} {output.file}
     """
 
+# Rule to create the the concatenated version of a single file. Just copies the file with a new name.
+rule single_concat:
+    input: file = SINGLE
+    output: file = SINGLE_CONCAT
+    shell: """
+        cp {input.file} {output.file}
+    """
 
 
 # Rule to download the external software used for turning the node-centric De Bruijn graph
