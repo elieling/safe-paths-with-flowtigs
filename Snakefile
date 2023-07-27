@@ -94,8 +94,11 @@ REPORT_SUBDIR = os.path.join(REPORTDIR, "final_reports_{file_name}k{k}ma{min_abu
 REPORT_COMBINED_EAXMAX_PLOT = os.path.join(REPORT_SUBDIR, "combined_eaxmax_plot.pdf")
 REPORT_NAME_FILE = os.path.join(REPORT_SUBDIR, "name.txt")
 REPORT_HASHDIR = os.path.join(REPORTDIR, "hashdir")
+UNPREPROCESSED_META_BASE7 = os.path.join(META_BASE7_DIR, "{genome}.fna")
+PREPROCESSED_GENOME = os.path.join(DATADIR, "{genome}.fasta")
 META_BASE7_DIR = os.path.join(DATADIR, "meta", "base7")
-META_BASE7_FASTA = [os.path.join(META_BASE7_DIR, "GCF_000005845.2_ASM584v2_genomic.fna"), os.path.join(META_BASE7_DIR, "GCF_000159115.1_ASM15911v1_genomic.fna"), os.path.join(META_BASE7_DIR, "GCF_000175375.1_ASM17537v1_genomic.fna"), os.path.join(META_BASE7_DIR, "GCF_000376705.1_ASM37670v1_genomic.fna"), os.path.join(META_BASE7_DIR, "GCF_003999335.1_ASM399933v1_genomic.fna"), os.path.join(META_BASE7_DIR, "GCF_017638885.1_ASM1763888v1_genomic.fna"), os.path.join(META_BASE7_DIR, "GCF_019890915.1_ASM1989091v1_genomic.fna")]
+META_BASE7_UNPREPROCESSED = [os.path.join(META_BASE7_DIR, "GCF_000005845.2_ASM584v2_genomic.fna"), os.path.join(META_BASE7_DIR, "GCF_000159115.1_ASM15911v1_genomic.fna"), os.path.join(META_BASE7_DIR, "GCF_000175375.1_ASM17537v1_genomic.fna"), os.path.join(META_BASE7_DIR, "GCF_000376705.1_ASM37670v1_genomic.fna"), os.path.join(META_BASE7_DIR, "GCF_003999335.1_ASM399933v1_genomic.fna"), os.path.join(META_BASE7_DIR, "GCF_017638885.1_ASM1763888v1_genomic.fna"), os.path.join(META_BASE7_DIR, "GCF_019890915.1_ASM1989091v1_genomic.fna")]
+META_BASE7_FASTA = [os.path.join(DATADIR, "GCF_000005845.2_ASM584v2_genomic.fasta"), os.path.join(META_BASE7_DIR, "GCF_000159115.1_ASM15911v1_genomic.fasta"), os.path.join(META_BASE7_DIR, "GCF_000175375.1_ASM17537v1_genomic.fasta"), os.path.join(META_BASE7_DIR, "GCF_000376705.1_ASM37670v1_genomic.fasta"), os.path.join(META_BASE7_DIR, "GCF_003999335.1_ASM399933v1_genomic.fasta"), os.path.join(META_BASE7_DIR, "GCF_017638885.1_ASM1763888v1_genomic.fasta"), os.path.join(META_BASE7_DIR, "GCF_019890915.1_ASM1989091v1_genomic.fasta")]
 META_BASE7_ABUNDANCES = os.path.join(META_BASE7_DIR, "nanosim.abundances.tsv")
 REPORT_TEX = os.path.join(REPORTDIR, "output", "{file_name}_k{k}ma{min_abundance}t{threads}", "{report_name}", "{report_file_name}.tex")
 
@@ -235,6 +238,16 @@ rule metagenome_concatenate:
     log:    log = "logs/metagenome_concatenate/log.log",
     conda:  "config/conda-seaborn-env.yml"
     script: "scripts/metagenome_concatenate.py"
+
+
+
+# Rule to remove all the non-[A, C, G, T] characters from a fasta file. Should be ran first.
+rule preprocessing_single_genome:
+    input:  assembly = UNPREPROCESSED_META_BASE7,
+    output: report = PREPROCESSED_GENOME,
+    log:    log = "logs/preprocessing_single_genome/{genome}/log.log",
+    conda:  "config/conda-biopython-env.yml"
+    script: "scripts/preprocessing.py"
 
 
 # Rule to circularize non-circular sequences of the genome or metagenome.
