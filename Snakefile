@@ -66,7 +66,7 @@ REPORT = os.path.join(REPORTDIR, "s{species}-k{k}", "report.txt")
 GENOME_ALL_REFERENCES = os.path.join(DATADIR, "{file_name}.fasta")
 GENOME_CONCAT_REFERENCES = os.path.join(DATADIR, "{file_name}_concat.fasta")
 GENOME_CIRCULAR_REFERENCES = os.path.join(REPORTDIR, "circularization", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
-GENOME_CIRCULAR_CONCAT_REFERENCES = os.path.join(REPORTDIR, "circularization", "{file_name}_concat_k{k}ma{min_abundance}t{threads}", "report.fasta")
+# GENOME_CIRCULAR_CONCAT_REFERENCES = os.path.join(REPORTDIR, "circularization", "{file_name}_concat_k{k}ma{min_abundance}t{threads}", "report.fasta")
 BUILD_FA = os.path.join(REPORTDIR, "safe_paths_unitigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
 # BUILD_FA = os.path.join(REPORTDIR, "bcalm2", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
 BUILD_LOG = os.path.join("logs", "build_{file_name}_k{k}ma{min_abundance}t{threads}", "log.log")
@@ -388,7 +388,7 @@ rule safe_paths:
 # output: report in .tex, .tsv, .txt, and .pdf formats
 rule run_quast:
     input:  contigs = os.path.join(REPORTDIR, "safe_paths_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta"),
-            references = [GENOME_CIRCULAR_CONCAT_REFERENCES], # list of references
+            references = [GENOME_CONCAT_REFERENCES], # list of references
             script = QUAST_BINARY,
             error_report = "config/quast_error_report.tex",
             error_misassemblies_report = "config/quast_error_misassemblies_report.tex"

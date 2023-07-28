@@ -15,4 +15,3 @@ for i in range(n_rows):
             content = source.read()
             for j in range(n_occurences):
                 destination.write(content)
-
