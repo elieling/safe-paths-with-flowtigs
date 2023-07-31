@@ -634,10 +634,10 @@ rule download_node_to_arc_centric_dbg:
         rm -rf node-to-arc-centric-dbg
         git clone https://github.com/sebschmi/node-to-arc-centric-dbg.git
         cd node-to-arc-centric-dbg
-        git checkout d0afdf0532fcaa658f57182fe4e5d26224136285
-
+        git checkout 9ae1e61bd089be227342d03762031381cb989888 
         cargo fetch
-    """
+    """ # d0afdf0532fcaa658f57182fe4e5d26224136285
+
 
 
 # Rule to download the external software used for calculatings safe paths from an arc-centric De Bruijn graph.
