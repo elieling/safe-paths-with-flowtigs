@@ -662,7 +662,7 @@ rule download_safe_paths:
 localrules: install_quast
 rule install_quast:
     output: script = QUAST_BINARY,
-    params: external_software_dir = "external software", # EXTERNAL_SOFTWARE_ROOTDIR,
+    params: external_software_dir = "external_software", # EXTERNAL_SOFTWARE_ROOTDIR,
     threads: 1
     shell: """
         mkdir -p {params.external_software_dir}
