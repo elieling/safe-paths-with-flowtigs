@@ -665,8 +665,8 @@ rule install_quast:
     params: external_software_dir = "external software", # EXTERNAL_SOFTWARE_ROOTDIR,
     threads: 1
     shell: """
-        mkdir -p '{params.external_software_dir}'
-        cd '{params.external_software_dir}'
+        mkdir -p {params.external_software_dir}
+        cd {params.external_software_dir}
 
         rm -rf quast
         git clone https://github.com/elieling/quast.git 
