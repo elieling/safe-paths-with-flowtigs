@@ -255,7 +255,7 @@ rule medium20_to_single_file:
     output: report = MEDIUM20,
     log:    log = "logs/medium20_to_single_file/log.log",
     conda:  "config/conda-seaborn-env.yml"
-    script: "scripts/medium20_to_single_file.py"
+    script: "scripts/metagenome_to_single_file.py"
 
 
 
@@ -266,7 +266,7 @@ rule medium20_concatenate:
     output: report = MEDIUM20_CONCAT,
     log:    log = "logs/medium20_concatenate/log.log",
     conda:  "config/conda-seaborn-env.yml"
-    script: "scripts/medium20_concatenate.py"
+    script: "scripts/metagenome_concatenate.py"
 
 
 
