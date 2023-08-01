@@ -6,11 +6,11 @@ Doing these using E.coli bacteria and k = 31.
 ### Calculating the number of contigs with length greater than x and trying to match that number to the number of # contigs.
 
 Values of #contigs:
-    unitigs: 2,168 
-    trivial omitigs: 1,235 
-    multi safe: 1,240 
-    flowtigs: 1,461 
-    omnitigs: 1,219
+    - unitigs: 2,168 
+    - trivial omitigs: 1,235 
+    - multi safe: 1,240 
+    - flowtigs: 1,461 
+    - omnitigs: 1,219
 
 For each algorithm, the program gets the value 30. So, quast reports the number of contigs with lenght greater than 30, which matches with k = 31.
 
@@ -18,11 +18,11 @@ For each algorithm, the program gets the value 30. So, quast reports the number 
 ### Calculating the number of contigs with length greater than x and trying to match that number to the number of # unaligned contigs.
 
 Values of #unaligned contigs:
-    unitigs: 1,314 
-    trivial omitigs: 135
-    multi safe: 137
-    flowtigs: 241 
-    omnitigs: 133
+    - unitigs: 1,314 
+    - trivial omitigs: 135
+    - multi safe: 137
+    - flowtigs: 241 
+    - omnitigs: 133
 
 #### Results:
     - Unitigs, unaligned contigs: 1314
