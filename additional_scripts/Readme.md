@@ -7,7 +7,7 @@ Doing these using E.coli bacteria and k = 31.
 
 Values of #contigs:
 `
-    - unitigs: 2,168 ņ
+    - unitigs: 2,168 \n
     - trivial omitigs: 1,235 
     - multi safe: 1,240 
     - flowtigs: 1,461 
