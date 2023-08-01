@@ -78,6 +78,7 @@ SAFE_PATHS = os.path.join(REPORTDIR, "safe_paths_flowtigs", "{file_name}_k{k}ma{
 # QUAST_BINARY = os.path.join(EXTERNAL_SOFTWARE_ROOTDIR, "quast", "quast.py")
 QUAST_BINARY = os.path.abspath("external_software/quast/quast.py")
 QUAST_OUTPUT_DIR = os.path.join(REPORTDIR, "quast_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}")
+QUAST_EXTENDED_OUTPUT_DIR = os.path.join(REPORTDIR, "extended_quast_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}")
 PRACTICAL_OMNITIGS_BINARY = os.path.abspath("external_software/practical-omnitigs/implementation/target/release/cli")
 PRACTICAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_multi-safe", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
 ECOLI = os.path.join(DATADIR, "ecoli.fasta")
@@ -109,6 +110,9 @@ MEDIUM20_FASTA = [os.path.join(DATADIR, "medium20", "GCF_000005845.2_ASM584v2_ge
 META_BASE7_ABUNDANCES = os.path.join(META_BASE7_DIR, "nanosim.abundances.tsv")
 MEDIUM20_ABUNDANCES = os.path.join(DATADIR, "meta", "medium20", "nanosim.abundances.tsv")
 REPORT_TEX = os.path.join(REPORTDIR, "output", "{file_name}_k{k}ma{min_abundance}t{threads}", "{report_name}", "{report_file_name}.tex")
+#QUAST_REPORT_TEX = os.path.join(REPORTDIR, "quast_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.tex")
+#QUAST_UNALIGNED = os.path.join(REPORTDIR, "quast_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}", "contigs_reports", "contigs_report_report.unaligned.info")
+#QUAST_EXTENDED_REPORT = os.path.join(REPORTDIR, "extended_quast_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.tex")
 
 
 
@@ -468,6 +472,22 @@ rule run_quast:
             touch '{output.directory}/aligned_stats/EAxmax_plot.csv'
         fi
     """ #  --large
+
+
+# Rule to add the length of the longest unaligned contig to the quast report
+rule add_longest_unaligned_contig_length_to_report:
+    input: directory = QUAST_OUTPUT_DIR,
+           script = "scripts/longest_unaligned_contig.py",
+    output: directory(QUAST_EXTENDED_OUTPUT_DIR)
+    conda:  "config/conda-seaborn-env.yml"
+    shell:"""
+        mkdir -p {output}
+        cp -r {input.directory}/* {output}
+        mv '{output}/report.tex' '{output}/old_report.tex'
+        touch '{output}/report.tex'
+        ${{CONDA_PREFIX}}/bin/time -v '{input.script}' '{output}/old_report.tex' '{output}/contigs_reports/contigs_report_report.unaligned.info' '{output}/report.tex'
+    """
+
 
 
 
