@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
 from Bio import SeqIO
-from Bio.Seq import Seq
-import pandas as pd
 import numpy as np
+
+
 
 
 unitigs = [i for i in SeqIO.parse("/home/ebingerv/VSC/snakemake-flowtigs/additional_scripts/data/unitigs.fasta", 'fasta')]
@@ -19,11 +19,11 @@ for i in range(30, 5000000):
     g = unitigs_n > i
     gsum_early = gsum
     gsum = g.sum()
-    if gsum == 1314:
+    if gsum == 2168:
         print(i)
-    elif gsum < 1314:
+    elif gsum < 2168:
         break
-print("unitigs 1314")
+print("unitigs 2168")
 print(i-1, gsum_early)
 print(i, gsum)
 print("#"*70)
@@ -42,11 +42,11 @@ for i in range(30, 5000000):
     g = unitigs_n > i
     gsum_early = gsum
     gsum = g.sum()
-    if gsum == 241:
+    if gsum == 1461:
         print("exact", i, gsum)
-    elif gsum < 241:
+    elif gsum < 1461:
         break
-print("flowtigs 241")
+print("flowtigs 1461")
 print(i-1, gsum_early)
 print(i, gsum)
 print("#"*70)
@@ -65,11 +65,11 @@ for i in range(30, 5000000):
     g = unitigs_n > i
     gsum_early = gsum
     gsum = g.sum()
-    if gsum == 135:
+    if gsum == 1235:
         print("exact", i, gsum)
-    elif gsum < 135:
+    elif gsum < 1235:
         break
-print("trivial omnitigs 135")
+print("trivial omnitigs 1235")
 print(i-1, gsum_early)
 print(i, gsum)
 print("#"*70)
@@ -88,11 +88,11 @@ for i in range(30, 5000000):
     g = unitigs_n > i
     gsum_early = gsum
     gsum = g.sum()
-    if gsum == 137:
+    if gsum == 1240:
         print("exact", i, gsum)
-    elif gsum < 137:
+    elif gsum < 1240:
         break
-print("muti-safe 137")
+print("muti-safe 1240")
 print(i-1, gsum_early)
 print(i, gsum)
 print("#"*70)
@@ -111,11 +111,11 @@ for i in range(30, 5000000):
     g = unitigs_n > i
     gsum_early = gsum
     gsum = g.sum()
-    if gsum == 133:
+    if gsum == 1219:
         print("exact", i, gsum)
-    elif gsum < 133:
+    elif gsum < 1219:
         break
-print("omnitigs 133")
+print("omnitigs 1219")
 print(i-1, gsum_early)
 print(i, gsum)
 print("#"*70)

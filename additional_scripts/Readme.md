@@ -1,8 +1,30 @@
-Additional software to discover the contig length of unaligned contig.
+## Additional software to verify that the "# contig" given by the quast report matches the the number of contigs in the fasta files and to discover the contig length of "# unaligned contig".
 
-Calculates the number of contigs with length greater than x and tries to match that number to the number of unaligned contigs.
+Doing these using E.coli bacteria and k = 31.
 
-Results:
+
+### Calculating the number of contigs with length greater than x and trying to match that number to the number of # contigs.
+
+Values of #contigs:
+    unitigs: 2,168 
+    trivial omitigs: 1,235 
+    multi safe: 1,240 
+    flowtigs: 1,461 
+    omnitigs: 1,219
+
+For each algorithm, the program gets the value 30. So, quast reports the number of contigs with lenght greater than 30, which matches with k = 31.
+
+
+### Calculating the number of contigs with length greater than x and trying to match that number to the number of # unaligned contigs.
+
+Values of #unaligned contigs:
+    unitigs: 1,314 
+    trivial omitigs: 135
+    multi safe: 137
+    flowtigs: 241 
+    omnitigs: 133
+
+#### Results:
     - Unitigs, unaligned contigs: 1314
         > 44 : 1324
         > 45 : 1311
