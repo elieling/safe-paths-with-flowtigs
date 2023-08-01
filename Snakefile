@@ -688,10 +688,10 @@ rule download_practical_omnitigs:
         rm -rf practical-omnitigs
         git clone https://github.com/algbio/practical-omnitigs.git
         cd practical-omnitigs
-        git checkout 690a836ebc158b17d68593fdcc59c1a05cc07b20 
+        git checkout c74a979af4b59c1f99777b2be2cacf6796d081ac
         cd implementation
         cargo fetch
-    """ # e1640a6220dedb85ad90f83d9b141f4fd257a6e5 bb1de69873c6b48f183e51bca2f48d2a057b8b64
+    """ # 690a836ebc158b17d68593fdcc59c1a05cc07b20  e1640a6220dedb85ad90f83d9b141f4fd257a6e5 bb1de69873c6b48f183e51bca2f48d2a057b8b64
         # git checkout sebschmi/unspecified 
 
 
