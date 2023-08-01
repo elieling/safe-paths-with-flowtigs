@@ -14,7 +14,7 @@ Values of #contigs:
     - omnitigs: 1,219
 
 
-For each algorithm, the program gets the value 30. So, quast reports the number of contigs with lenght greater than 30, which matches with k = 31.
+For each algorithm, the program gets the value 30 as well as all the lesser values. So, quast reports the number of contigs with lenght greater than 30, which matches with k = 31.
 
 
 ### Calculating the number of contigs with length greater than x and trying to match that number to the number of # unaligned contigs.
@@ -53,3 +53,31 @@ Values of #unaligned contigs:
         > 11240 : 133
            ...
         > 11268 : 133
+
+
+
+
+
+
+
+
+unitigs 1314
+66 1310
+67 1327
+######################################################################
+trivial omnitigs 135
+65 130
+66 136
+######################################################################
+muti-safe 137
+65 132
+66 138
+######################################################################
+flowtigs 241
+65 235
+66 243
+######################################################################
+exact 66 133
+omnitigs 133
+66 133
+67 136
