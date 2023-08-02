@@ -476,7 +476,7 @@ rule run_quast:
 
 # Rule to add the length of the longest unaligned contig to the quast report
 rule add_longest_unaligned_contig_length_to_report:
-    input: directory = QUAST_OUTPUT_DIR,
+    input: directory = directory(QUAST_OUTPUT_DIR),
            script = "scripts/longest_unaligned_contig.py",
     output: directory(QUAST_EXTENDED_OUTPUT_DIR)
     conda:  "config/conda-seaborn-env.yml"
