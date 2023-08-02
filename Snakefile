@@ -177,7 +177,7 @@ def get_single_report_script_column_arguments_from_wildcards(wildcards):
             else:
                 result += " "
 
-            quast_output_dir = safe_format(QUAST_OUTPUT_DIR, algorithm = algorithm).format(**wildcards)
+            quast_output_dir = safe_format(QUAST_EXTENDED_OUTPUT_DIR, algorithm = algorithm).format(**wildcards)
             result += f"'{algorithm}' '' '{quast_output_dir}' '' ''"
         return result
     except Exception:
@@ -187,7 +187,7 @@ def get_single_report_script_column_arguments_from_wildcards(wildcards):
 
 
 rule create_single_report_tex:
-    input:  quasts = [safe_format(QUAST_OUTPUT_DIR, algorithm = algorithm) for algorithm in ALGORITHMS],
+    input:  quasts = [safe_format(QUAST_EXTENDED_OUTPUT_DIR, algorithm = algorithm) for algorithm in ALGORITHMS],
             combined_eaxmax_plot = REPORT_COMBINED_EAXMAX_PLOT,
             script = CONVERT_VALIDATION_OUTPUTS_TO_LATEX_SCRIPT,
     output: report = REPORT_TEX,
