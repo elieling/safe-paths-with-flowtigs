@@ -471,7 +471,7 @@ rule run_quast:
             echo "EAxmax_plot.csv is missing, using empty file"
             touch '{output.directory}/aligned_stats/EAxmax_plot.csv'
         fi
-    """ #  --large
+    """ 
 
 
 # Rule to add the length of the longest unaligned contig to the quast report
@@ -491,8 +491,8 @@ rule add_longest_unaligned_contig_length_to_report:
 
 
 
-
-rule latex:
+# Rule to convert a tex file to a pdf
+rule latex_to_pdf:
     input: "{subpath}{file_suffix}.tex"
     output: "{subpath}{file_suffix}.pdf"
     wildcard_constraints:
@@ -533,7 +533,7 @@ rule build_practical_omnitigs:
 #   min_abundance=minimum abundance, thredas=number of cpu cores used.
 # output: List of the safe paths with, for each path, a line with "><path-index>"
 #   and a second line with the sequence.
-rule practical_omitigs:
+rule practical_multisafe:
     input:  practical_omnitigs = BUILD_FA,
             binary = PRACTICAL_OMNITIGS_BINARY,
     log:    log = "logs/practical_omnitigs/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
@@ -550,7 +550,7 @@ rule practical_omitigs:
 
 
 # Rule for testing the practical omnitigs rule
-rule practical_test_omitigs:
+rule practical_omitigs:
     input:  practical_omnitigs = BUILD_FA,
             binary = PRACTICAL_OMNITIGS_BINARY,
     log:    log = "logs/practical_test_omnitigs/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
@@ -656,8 +656,7 @@ rule download_node_to_arc_centric_dbg:
         cd node-to-arc-centric-dbg
         git checkout 9ae1e61bd089be227342d03762031381cb989888 
         cargo fetch
-    """ # d0afdf0532fcaa658f57182fe4e5d26224136285
-
+    """ 
 
 
 # Rule to download the external software used for calculatings safe paths from an arc-centric De Bruijn graph.
@@ -676,13 +675,13 @@ rule download_safe_paths:
         git checkout 19304e99283e336ebf15d5b206203da00b053f82
 
         cargo fetch
-    """ # db71ee631c4a2f5679ea1ecb06052e233a987e26 
+    """ 
 
 
 localrules: install_quast
 rule install_quast:
     output: script = QUAST_BINARY,
-    params: external_software_dir = "external_software", # EXTERNAL_SOFTWARE_ROOTDIR,
+    params: external_software_dir = "external_software", 
     threads: 1
     shell: """
         mkdir -p {params.external_software_dir}
@@ -692,7 +691,7 @@ rule install_quast:
         git clone https://github.com/elieling/quast.git 
         cd quast
         git checkout af809a144d007f8a31cfffee994b33362a3e379e
-    """ # 194f0026b54849b78fc145e7b9152cecb2ebd00d f0c416b5892fc7b7caf4ba1b82bdca85761fc952 0da05f6ef5c6503dc95ab2f8b7a4a3da21cc5172
+    """ 
 
 
 
@@ -711,8 +710,7 @@ rule download_practical_omnitigs:
         git checkout d038ac3fe282a534fab24e4e3e5342286c6cf276
         cd implementation
         cargo fetch
-    """ # c74a979af4b59c1f99777b2be2cacf6796d081ac 690a836ebc158b17d68593fdcc59c1a05cc07b20  e1640a6220dedb85ad90f83d9b141f4fd257a6e5 bb1de69873c6b48f183e51bca2f48d2a057b8b64
-        # git checkout sebschmi/unspecified 
+    """ 
 
 
 
