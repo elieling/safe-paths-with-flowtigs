@@ -579,7 +579,7 @@ rule practical_trivial_omitigs:
             queue = "short,medium,bigmem,aurinko",
     shell:  """
         rm -f '{log.log}'
-        '{input.binary}' compute-trivial-omnitigs --non-scc --file-format bcalm2 --input '{input.practical_omnitigs}' --output '{output.practical_omnitigs}' -k {wildcards.k}
+        '{input.binary}' compute-trivial-omnitigs --non-scc --multi-safe --file-format bcalm2 --input '{input.practical_omnitigs}' --output '{output.practical_omnitigs}' -k {wildcards.k}
     """
 
 
@@ -707,7 +707,7 @@ rule download_practical_omnitigs:
         rm -rf practical-omnitigs
         git clone https://github.com/algbio/practical-omnitigs.git
         cd practical-omnitigs
-        git checkout d038ac3fe282a534fab24e4e3e5342286c6cf276
+        git checkout f1c451ee2ce59f6e63ca32c77ac0cd590a8d5ecb 
         cd implementation
         cargo fetch
     """ 
