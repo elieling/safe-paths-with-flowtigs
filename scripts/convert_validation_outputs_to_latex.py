@@ -363,11 +363,19 @@ write_table(output_file, "Algorithm Statistics", len(experiments), algorithm_tab
 
 write_table(output_file, "ContigValidator", len(experiments), contig_validator_table)
 
+
+# Calculating improvements
+average_length = quast_table[16]
+ea50max = quast_table[52]
+ea75max = quast_table[54]
+write_table(output_file, "QUAST: improvements", len(experiments), quast_table[0] + average_length + ea50max + ea75max)
+
+
 write_table(output_file, "QUAST: \\# of contigs", len(experiments), quast_table[0:7])
 write_table(output_file, "QUAST: total length of contigs", len(experiments), [quast_table[0]] + quast_table[7:13])
-write_table(output_file, "QUAST: statistics for contigs $\\geq$ 500bp (or 3000bp for QUAST-LG)", len(experiments), [quast_table[0]] + quast_table[13:31])
-write_table(output_file, "QUAST: alignment statistics for contigs $\\geq$ 500bp (or 3000bp for QUAST-LG)", len(experiments), [quast_table[0]] + quast_table[31:], midrules = [12, 21])
-write_table(output_file, "QUAST: misassembly statistics for contigs $\\geq$ 500bp (or 3000bp for QUAST-LG)", len(experiments), quast_misassemblies_table)
+write_table(output_file, "QUAST: statistics", len(experiments), [quast_table[0]] + quast_table[13:31])
+write_table(output_file, "QUAST: alignment statistics", len(experiments), [quast_table[0]] + quast_table[31:], midrules = [12, 21])
+write_table(output_file, "QUAST: misassembly statistics", len(experiments), quast_misassemblies_table)
 
 write_table(output_file, "Resource usage", len(experiments), resources_table)
 
