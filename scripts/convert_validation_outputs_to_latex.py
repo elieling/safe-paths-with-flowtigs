@@ -368,7 +368,7 @@ write_table(output_file, "ContigValidator", len(experiments), contig_validator_t
 average_length = quast_table[16]
 ea50max = quast_table[52]
 ea75max = quast_table[54]
-write_table(output_file, "QUAST: improvements", len(experiments), quast_table[0] + average_length + ea50max + ea75max)
+write_table(output_file, "QUAST: improvements", len(experiments), [quast_table[0]] + average_length + ea50max + ea75max)
 
 
 write_table(output_file, "QUAST: \\# of contigs", len(experiments), quast_table[0:7])
