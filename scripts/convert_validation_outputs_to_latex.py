@@ -332,7 +332,7 @@ def write_image(output_file, caption, file, natwidth, natheight):
     output_file.write("\\end{figure*}\n")
 
 def get_integers(string):
-        numbers = [int(x) for x in string.split() if x.isnumeric()]
+        numbers = [float(x) for x in string.split() if x.isnumeric()]
         return numbers
 
 def calculate_improvement(value, comparison):
