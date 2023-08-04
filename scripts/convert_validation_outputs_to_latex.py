@@ -333,9 +333,9 @@ def write_image(output_file, caption, file, natwidth, natheight):
     output_file.write("\\end{figure*}\n")
 
 def get_values(string):
-        pattern = r'(?<=\s)[-+]?\d+(\.\d+)?(?=\s)'
+        pattern = r' [-+]?\d+(\.\d+)? '
         floats = re.findall(pattern, string)
-        float_list = [float(x) for x in floats]
+        float_list = [float(x.strip()) for x in floats]
         return float_list
 
 
