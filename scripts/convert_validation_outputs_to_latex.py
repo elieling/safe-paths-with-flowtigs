@@ -403,6 +403,10 @@ ea50max = "Improvement in average length of contigs (\%) & " + str(round(calcula
 
 integer_ea75max = get_values(ea75max)
 ea75max = "Improvement in average length of contigs (\%) & " + str(round(calculate_improvement(integer_ea75max[0], integer_ea75max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea75max[1], integer_ea75max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea75max[2], integer_ea75max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea75max[3], integer_ea75max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea75max[4], integer_ea75max[3]), 1)) + " \\\\"
+print("*"*70)
+print(calculate_improvement(integer_ea50max[0], integer_ea50max[3]))
+print(round(calculate_improvement(integer_ea50max[0], integer_ea50max[3]), 1))
+
 
 write_table(output_file, "QUAST: improvements of flowtigs compared to other algorithms", len(experiments), [quast_table[0]] + [average_length + ea50max + ea75max])
 
