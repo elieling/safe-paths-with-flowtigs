@@ -340,7 +340,7 @@ def convert_to_int_or_float(number):
         return float(number)
 
 def get_values(string):
-        pattern = r' [-+]?\d+(\.\d+)? '
+        pattern = r' ([-+]?\d+\.?\d*)? '
         numbers = re.findall(pattern, string)
         number_list = [convert_to_int_or_float(x.strip()) for x in numbers]
         return number_list
