@@ -332,11 +332,17 @@ def write_image(output_file, caption, file, natwidth, natheight):
     output_file.write("\\caption{" + str(caption) + "}")
     output_file.write("\\end{figure*}\n")
 
+def convert_to_int_or_float(number):
+    try:
+        return int(number)
+    except ValueError:
+        return float(number)
+
 def get_values(string):
         pattern = r' [-+]?\d+(\.\d+)? '
-        floats = re.findall(pattern, string)
-        float_list = [float(x.strip()) for x in floats]
-        return float_list
+        numbers = re.findall(pattern, string)
+        number_list = [convert_to_int_or_float(x.strip()) for x in numbers]
+        return number_list
 
 
 def calculate_improvement(value, comparison):
