@@ -293,11 +293,32 @@ def format_row_numbers(row):
 
     return " & ".join(result) + "\\\\"
 
-def write_table(output_file, caption, column_count, rows, midrules = []):
+def format_metatable_row_numbers(row):
+    row = row.strip()
+    row = row.rstrip('\\')
+    result = []
+
+    for column in row.split('&'):
+        column = column.strip()
+        if column.isdigit():
+            column = int(column)
+            column = f"{column:,}"
+        else:
+            try:
+                column = float(column)
+                column = f"{column:,.1f}"
+            except ValueError:
+                pass
+        result.append(column)
+
+    return " & ".join(result) + "\\\\"
+
+def write_table(output_file, caption, column_count, rows, midrules = [], meta = False):
     midrules = set(midrules)
     output_file.write(table_header(caption, column_count))
     for index, row in enumerate(rows):
-        row = format_row_numbers(row)
+        if meta: row = format_metatable_row_numbers(row)
+        else: row = format_row_numbers(row)
         output_file.write(row)
         if index in midrules:
             output_file.write("\\hline")
@@ -408,7 +429,7 @@ print(calculate_improvement(integer_ea50max[0], integer_ea50max[3]))
 print(round(calculate_improvement(integer_ea50max[0], integer_ea50max[3]), 1))
 
 
-write_table(output_file, "QUAST: improvements of flowtigs compared to other algorithms", len(experiments), [quast_table[0]] + [average_length + ea50max + ea75max])
+write_table(output_file, "QUAST: improvements of flowtigs compared to other algorithms", len(experiments), [quast_table[0]] + [average_length + ea50max + ea75max], meta = True)
 
 
 
