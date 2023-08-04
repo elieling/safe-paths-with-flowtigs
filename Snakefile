@@ -479,7 +479,7 @@ rule add_longest_unaligned_contig_length_to_report:
     input: directory = QUAST_OUTPUT_DIR,
            script = "scripts/longest_unaligned_contig.py",
     output: directory(QUAST_EXTENDED_OUTPUT_DIR)
-    log:    log = "logs/longest_unaligned_{algorithm}/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
+    log:    log = "logs/the_longest_unaligned_{algorithm}/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
     conda:  "config/conda-seaborn-env.yml"
     shell:"""
         mkdir -p {output}
