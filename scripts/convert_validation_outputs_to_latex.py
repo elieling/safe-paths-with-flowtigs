@@ -333,6 +333,7 @@ def write_image(output_file, caption, file, natwidth, natheight):
     output_file.write("\\end{figure*}\n")
 
 def convert_to_int_or_float(number):
+    print("NUMBER:", number)
     try:
         return int(number)
     except ValueError:
