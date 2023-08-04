@@ -347,7 +347,7 @@ def get_values(string):
 
 
 def calculate_improvement(value, comparison):
-    return comparison / value - 1
+    return comparison * 100 / value - 100
 
 revision = subprocess.check_output(["git", "rev-parse", "HEAD"]).strip()
 output_file = open(output_file_name, 'w')
