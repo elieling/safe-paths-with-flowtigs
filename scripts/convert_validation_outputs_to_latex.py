@@ -445,7 +445,7 @@ ea40max = "Improvement in EA40max (\%) & " + str(round(calculate_improvement(int
 integer_ea45max = get_values(ea45max)
 ea45max = "Improvement in EA45max (\%) & " + str(round(calculate_improvement(integer_ea45max[0], integer_ea45max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea45max[1], integer_ea45max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea45max[2], integer_ea45max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea45max[3], integer_ea45max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea45max[4], integer_ea45max[3]), 1)) + " \\\\"
 
-write_table(output_file, "QUAST: improvements of flowtigs compared to other algorithms", len(experiments), [quast_table[0]] + [average_length + "ḩline" + ea50max + ea75max + "ḩline" + ea5max + ea10max + ea15max + ea20max + ea25max + ea30max + ea35max + ea40max + ea45max], meta = True)
+write_table(output_file, "QUAST: improvements of flowtigs compared to other algorithms", len(experiments), [quast_table[0]] + [average_length + "\\hline " + ea50max + ea75max + "\\hline " + ea5max + ea10max + ea15max + ea20max + ea25max + ea30max + ea35max + ea40max + ea45max], meta = True)
 
 
 write_table(output_file, "QUAST: \\# of contigs", len(experiments), quast_table[0:7])
