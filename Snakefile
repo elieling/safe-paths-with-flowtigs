@@ -691,8 +691,8 @@ rule install_quast:
         rm -rf quast
         git clone https://github.com/elieling/quast.git 
         cd quast
-        git checkout af809a144d007f8a31cfffee994b33362a3e379e
-    """ 
+        git checkout d370ad11d60122d11220fc212c44be1be88daf9c
+    """ # af809a144d007f8a31cfffee994b33362a3e379e
 
 
 
