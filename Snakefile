@@ -328,7 +328,7 @@ rule medium20_concatenate:
 rule preprocessing_single_metagenome:
     input:  assembly = UNPREPROCESSED_METAGENOME,
     output: report = PREPROCESSED_METAGENOME,
-    log:    log = "logs/preprocessing_single_genome/{genome}/log.log",
+    log:    log = "logs/preprocessing_single_genome/{metagenome}/{genome}/log.log",
     conda:  "config/conda-biopython-env.yml"
     script: "scripts/preprocessing.py"
 
