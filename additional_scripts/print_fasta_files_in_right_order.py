@@ -4,7 +4,7 @@ import pandas as pd
 folder_name = sys.argv[1]
 abundances_file = sys.argv[2]
 
-abundances_df = pd.reaad_csv(abundances_file, sep='\t')
+abundances_df = pd.read_csv(abundances_file, sep='\t')
 names = abundances_df["Size"]
 
 result = "["
