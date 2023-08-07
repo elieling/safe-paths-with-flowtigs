@@ -89,6 +89,10 @@ META_BASE7 = os.path.join(DATADIR, "meta_base7.fasta")
 META_BASE7_CONCAT = os.path.join(DATADIR, "meta_base7_concat.fasta")
 MEDIUM20 = os.path.join(DATADIR, "meta_medium20.fasta")
 MEDIUM20_CONCAT = os.path.join(DATADIR, "meta_medium20_concat.fasta")
+COMPLEX32 = os.path.join(DATADIR, "meta_complex32.fasta")
+COMPLEX32_CONCAT = os.path.join(DATADIR, "meta_complex32_concat.fasta")
+# METAGENOME = os.path.join(DATADIR, "meta_{metagenome}.fasta")
+# METAGENOME_CONCAT = os.path.join(DATADIR, "meta_{metagenome}_concat.fasta")
 PRACTICAL_TEST_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
 PRACTICAL_TRIVIAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_trivial-omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
 ALGORITHMS = ["unitigs", "trivial-omnitigs", "multi-safe", "flowtigs", "omnitigs"] # values for the wildcard that chooses which tigs to generate
@@ -100,15 +104,20 @@ REPORT_COMBINED_EAXMAX_PLOT = os.path.join(REPORT_SUBDIR, "combined_eaxmax_plot.
 REPORT_NAME_FILE = os.path.join(REPORT_SUBDIR, "name.txt")
 REPORT_HASHDIR = os.path.join(REPORTDIR, "hashdir")
 META_BASE7_DIR = os.path.join(DATADIR, "meta", "base7")
-UNPREPROCESSED_META_BASE7 = os.path.join(META_BASE7_DIR, "GCF_0{genome}_genomic.fna")
-UNPREPROCESSED_MEDIUM20 = os.path.join(DATADIR, "meta", "medium20", "GCF_{genome}_genomic.fna")
-PREPROCESSED_GENOME = os.path.join(DATADIR, "metabase7", "GCF_0{genome}_genomic.fasta")
-PREPROCESSED_MEDIUM = os.path.join(DATADIR, "medium20", "GCF_{genome}_genomic.fasta")
+# UNPREPROCESSED_META_BASE7 = os.path.join(META_BASE7_DIR, "GCF_0{genome}_genomic.fna")
+# UNPREPROCESSED_MEDIUM20 = os.path.join(DATADIR, "meta", "medium20", "GCF_{genome}_genomic.fna")
+# PREPROCESSED_GENOME = os.path.join(DATADIR, "metabase7", "GCF_0{genome}_genomic.fasta")
+# PREPROCESSED_MEDIUM = os.path.join(DATADIR, "medium20", "GCF_{genome}_genomic.fasta")
+UNPREPROCESSED_METAGENOME = os.path.join(DATADIR, "meta", "{metagenome}", "GCF_{genome}_genomic.fna")
+PREPROCESSED_GENOME = os.path.join(DATADIR, "meta{metagenome}", "GCF_{genome}_genomic.fasta")
 META_BASE7_UNPREPROCESSED = [os.path.join(META_BASE7_DIR, "GCF_000005845.2_ASM584v2_genomic.fna"), os.path.join(META_BASE7_DIR, "GCF_000159115.1_ASM15911v1_genomic.fna"), os.path.join(META_BASE7_DIR, "GCF_000175375.1_ASM17537v1_genomic.fna"), os.path.join(META_BASE7_DIR, "GCF_000376705.1_ASM37670v1_genomic.fna"), os.path.join(META_BASE7_DIR, "GCF_003999335.1_ASM399933v1_genomic.fna"), os.path.join(META_BASE7_DIR, "GCF_017638885.1_ASM1763888v1_genomic.fna"), os.path.join(META_BASE7_DIR, "GCF_019890915.1_ASM1989091v1_genomic.fna")]
 META_BASE7_FASTA = [os.path.join(DATADIR, "metabase7", "GCF_000005845.2_ASM584v2_genomic.fasta"), os.path.join(DATADIR, "metabase7", "GCF_000159115.1_ASM15911v1_genomic.fasta"), os.path.join(DATADIR, "metabase7", "GCF_000175375.1_ASM17537v1_genomic.fasta"), os.path.join(DATADIR, "metabase7", "GCF_000376705.1_ASM37670v1_genomic.fasta"), os.path.join(DATADIR, "metabase7", "GCF_003999335.1_ASM399933v1_genomic.fasta"), os.path.join(DATADIR, "metabase7", "GCF_017638885.1_ASM1763888v1_genomic.fasta"), os.path.join(DATADIR, "metabase7", "GCF_019890915.1_ASM1989091v1_genomic.fasta")]
 MEDIUM20_FASTA = [os.path.join(DATADIR, "medium20", "GCF_000005845.2_ASM584v2_genomic.fasta"), os.path.join(DATADIR, "medium20", "GCF_000009045.1_ASM904v1_genomic.fasta"), os.path.join(DATADIR, "medium20", "GCF_000013285.1_ASM1328v1_genomic.fasta"), os.path.join(DATADIR, "medium20", "GCF_000025905.1_ASM2590v1_genomic.fasta"), os.path.join(DATADIR, "medium20", "GCF_000092125.1_ASM9212v1_genomic.fasta"), os.path.join(DATADIR, "medium20", "GCF_000143845.1_ASM14384v1_genomic.fasta"), os.path.join(DATADIR, "medium20", "GCF_000159115.1_ASM15911v1_genomic.fasta"), os.path.join(DATADIR, "medium20", "GCF_000175375.1_ASM17537v1_genomic.fasta"), os.path.join(DATADIR, "medium20", "GCF_000184345.1_ASM18434v2_genomic.fasta"), os.path.join(DATADIR, "medium20", "GCF_000185725.2_Segn_rugo_CDC_945_V2_genomic.fasta"), os.path.join(DATADIR, "medium20", "GCF_000196035.1_ASM19603v1_genomic.fasta"), os.path.join(DATADIR, "medium20", "GCF_000265425.1_ASM26542v1_genomic.fasta"), os.path.join(DATADIR, "medium20", "GCF_000325705.1_ASM32570v1_genomic.fasta"), os.path.join(DATADIR, "medium20", "GCF_000376705.1_ASM37670v1_genomic.fasta"), os.path.join(DATADIR, "medium20", "GCF_003999335.1_ASM399933v1_genomic.fasta"), os.path.join(DATADIR, "medium20", "GCF_008632635.1_ASM863263v1_genomic.fasta"), os.path.join(DATADIR, "medium20", "GCF_017638885.1_ASM1763888v1_genomic.fasta"), os.path.join(DATADIR, "medium20", "GCF_019704535.1_ASM1970453v1_genomic.fasta"), os.path.join(DATADIR, "medium20", "GCF_019890915.1_ASM1989091v1_genomic.fasta"), os.path.join(DATADIR, "medium20", "GCF_900638215.1_56553_A01_genomic.fasta")]
+COMPLEX32_FASTA = [os.path.join(DATADIR, 'complex32', 'GCF_000005845.2_ASM584v2_genomic.fna'), os.path.join(DATADIR, 'complex32', 'GCF_000006925.2_ASM692v2_genomic.fna'), os.path.join(DATADIR, 'complex32', 'GCF_000006945.2_ASM694v2_genomic.fna'), os.path.join(DATADIR, 'complex32', 'GCF_000009045.1_ASM904v1_genomic.fna'), os.path.join(DATADIR, 'complex32', 'GCF_000013285.1_ASM1328v1_genomic.fna'), os.path.join(DATADIR, 'complex32', 'GCF_000025905.1_ASM2590v1_genomic.fna'), os.path.join(DATADIR, 'complex32', 'GCF_000092125.1_ASM9212v1_genomic.fna'), os.path.join(DATADIR, 'complex32', 'GCF_000143845.1_ASM14384v1_genomic.fna'), os.path.join(DATADIR, 'complex32', 'GCF_000159115.1_ASM15911v1_genomic.fna'), os.path.join(DATADIR, 'complex32', 'GCF_000160855.1_ASM16085v1_genomic.fna'), os.path.join(DATADIR, 'complex32', 'GCF_000175375.1_ASM17537v1_genomic.fna'), os.path.join(DATADIR, 'complex32', 'GCF_000179955.1_ASM17995v1_genomic.fna'), os.path.join(DATADIR, 'complex32', 'GCF_000184345.1_ASM18434v2_genomic.fna'), os.path.join(DATADIR, 'complex32', 'GCF_000185725.2_Segn_rugo_CDC_945_V2_genomic.fna'), os.path.join(DATADIR, 'complex32', 'GCF_000196035.1_ASM19603v1_genomic.fna'), os.path.join(DATADIR, 'complex32', 'GCF_000231385.2_ASM23138v3_genomic.fna'), os.path.join(DATADIR, 'complex32', 'GCF_000233715.2_ASM23371v3_genomic.fna'), os.path.join(DATADIR, 'complex32', 'GCF_000255115.2_ASM25511v3_genomic.fna'), os.path.join(DATADIR, 'complex32', 'GCF_000265425.1_ASM26542v1_genomic.fna'), os.path.join(DATADIR, 'complex32', 'GCF_000325705.1_ASM32570v1_genomic.fna'), os.path.join(DATADIR, 'complex32', 'GCF_000376705.1_ASM37670v1_genomic.fna'), os.path.join(DATADIR, 'complex32', 'GCF_000439255.1_ASM43925v1_genomic.fna'), os.path.join(DATADIR, 'complex32', 'GCF_001905915.1_ASM190591v1_genomic.fna'), os.path.join(DATADIR, 'complex32', 'GCF_001932995.2_ASM193299v2_genomic.fna'), os.path.join(DATADIR, 'complex32', 'GCF_003028755.1_ASM302875v1_genomic.fna'), os.path.join(DATADIR, 'complex32', 'GCF_003999335.1_ASM399933v1_genomic.fna'), os.path.join(DATADIR, 'complex32', 'GCF_008632635.1_ASM863263v1_genomic.fna'), os.path.join(DATADIR, 'complex32', 'GCF_017638885.1_ASM1763888v1_genomic.fna'), os.path.join(DATADIR, 'complex32', 'GCF_018094625.1_ASM1809462v1_genomic.fna'), os.path.join(DATADIR, 'complex32', 'GCF_019704535.1_ASM1970453v1_genomic.fna'), os.path.join(DATADIR, 'complex32', 'GCF_019890915.1_ASM1989091v1_genomic.fna'), os.path.join(DATADIR, 'complex32', 'GCF_900638215.1_56553_A01_genomic.fna')]
 META_BASE7_ABUNDANCES = os.path.join(META_BASE7_DIR, "nanosim.abundances.tsv")
 MEDIUM20_ABUNDANCES = os.path.join(DATADIR, "meta", "medium20", "nanosim.abundances.tsv")
+COMPLEX32_ABUNDANCES = os.path.join(DATADIR, "meta", "complex32", "nanosim.abundances.tsv")
+# METAGENOME_ABUNDANCES = os.path.join(DATADIR, "meta", "{metagenome}", "nanosim.abundances.tsv")
 REPORT_TEX = os.path.join(REPORTDIR, "output", "{file_name}_k{k}ma{min_abundance}t{threads}", "{report_name}", "{report_file_name}.tex")
 #QUAST_REPORT_TEX = os.path.join(REPORTDIR, "quast_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.tex")
 #QUAST_UNALIGNED = os.path.join(REPORTDIR, "quast_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}", "contigs_reports", "contigs_report_report.unaligned.info")
@@ -265,6 +274,29 @@ rule medium20_to_single_file:
 
 
 # Rule to concatenate metagenome data.
+localrules: medium32_concatenate
+rule medium32_concatenate:
+    input:  references = COMPLEX32_FASTA,
+    output: report = COMPLEX32_CONCAT,
+    log:    log = "logs/medium20_concatenate/log.log",
+    conda:  "config/conda-seaborn-env.yml"
+    script: "scripts/metagenome_concatenate.py"
+
+
+
+# Rule to get sequences for metagenome data.
+localrules: medium32_to_single_file
+rule medium32_to_single_file:
+    input:  abundances = COMPLEX32_ABUNDANCES,
+            references = COMPLEX32_FASTA,
+    output: report = COMPLEX32,
+    log:    log = "logs/medium20_to_single_file/log.log",
+    conda:  "config/conda-seaborn-env.yml"
+    script: "scripts/metagenome_to_single_file.py"
+
+
+
+# Rule to concatenate metagenome data.
 localrules: medium20_concatenate
 rule medium20_concatenate:
     input:  references = MEDIUM20_FASTA,
@@ -275,19 +307,27 @@ rule medium20_concatenate:
 
 
 
-# Rule to remove all the non-[A, C, G, T] characters from a fasta file. Should be ran first.
-rule preprocessing_single_genome:
-    input:  assembly = UNPREPROCESSED_META_BASE7,
-    output: report = PREPROCESSED_GENOME,
-    log:    log = "logs/preprocessing_single_genome/{genome}/log.log",
-    conda:  "config/conda-biopython-env.yml"
-    script: "scripts/preprocessing.py"
+# # Rule to remove all the non-[A, C, G, T] characters from a fasta file. Should be ran first.
+# rule preprocessing_single_genome:
+#     input:  assembly = UNPREPROCESSED_META_BASE7,
+#     output: report = PREPROCESSED_GENOME,
+#     log:    log = "logs/preprocessing_single_genome/{genome}/log.log",
+#     conda:  "config/conda-biopython-env.yml"
+#     script: "scripts/preprocessing.py"
 
 
+# # Rule to remove all the non-[A, C, G, T] characters from a fasta file. Should be ran first.
+# rule preprocessing_single_medium20_genome:
+#     input:  assembly = UNPREPROCESSED_MEDIUM20,
+#     output: report = PREPROCESSED_MEDIUM,
+#     log:    log = "logs/preprocessing_single_genome/{genome}/log.log",
+#     conda:  "config/conda-biopython-env.yml"
+#     script: "scripts/preprocessing.py"
+
 # Rule to remove all the non-[A, C, G, T] characters from a fasta file. Should be ran first.
-rule preprocessing_single_medium20_genome:
-    input:  assembly = UNPREPROCESSED_MEDIUM20,
-    output: report = PREPROCESSED_MEDIUM,
+rule preprocessing_single_metagenome:
+    input:  assembly = UNPREPROCESSED_METAGENOME,
+    output: report = PREPROCESSED_METAGENOME,
     log:    log = "logs/preprocessing_single_genome/{genome}/log.log",
     conda:  "config/conda-biopython-env.yml"
     script: "scripts/preprocessing.py"
