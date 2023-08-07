@@ -12,7 +12,7 @@ first = True
 for name in names:
     if name.endswith(".fna") or name.endswith(".fasta"):
         if not first: result = result + ", "
-        result = result + "os.path.join(DATADIR, '" + folder_name + "')"
+        result = result + "os.path.join(DATADIR, '" + folder_name + "', '" + name + "')"
         first = False
 
 result = result + "]"
