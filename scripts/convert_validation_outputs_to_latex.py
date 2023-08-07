@@ -405,8 +405,17 @@ write_table(output_file, "ContigValidator", len(experiments), contig_validator_t
 
 # Calculating improvements
 average_length = quast_table[16]
-ea50max = quast_table[52]
-ea75max = quast_table[54]
+ea5max = quast_table[52]
+ea10max = quast_table[53]
+ea15max = quast_table[54]
+ea20max = quast_table[55]
+ea25max = quast_table[56]
+ea30max = quast_table[57]
+ea35max = quast_table[58]
+ea40max = quast_table[59]
+ea45max = quast_table[60]
+ea50max = quast_table[61]
+ea75max = quast_table[72]
 
 integer_average_lengths = get_values(average_length)
 average_length = "Improvement in average length of contigs (\%) & " + str(round(calculate_improvement(integer_average_lengths[0], integer_average_lengths[3]), 1)) + " & " + str(round(calculate_improvement(integer_average_lengths[1], integer_average_lengths[3]), 1)) + " & " + str(round(calculate_improvement(integer_average_lengths[2], integer_average_lengths[3]), 1)) + " & " + str(round(calculate_improvement(integer_average_lengths[3], integer_average_lengths[3]), 1)) + " & " + str(round(calculate_improvement(integer_average_lengths[4], integer_average_lengths[3]), 1)) + " \\\\"
@@ -417,7 +426,26 @@ ea50max = "Improvement in EA50max (\%) & " + str(round(calculate_improvement(int
 integer_ea75max = get_values(ea75max)
 ea75max = "Improvement in EA75max (\%) & " + str(round(calculate_improvement(integer_ea75max[0], integer_ea75max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea75max[1], integer_ea75max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea75max[2], integer_ea75max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea75max[3], integer_ea75max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea75max[4], integer_ea75max[3]), 1)) + " \\\\"
 
-write_table(output_file, "QUAST: improvements of flowtigs compared to other algorithms", len(experiments), [quast_table[0]] + [average_length + ea50max + ea75max], meta = True)
+integer_ea5max = get_values(ea5max)
+ea5max = "Improvement in EA5max (\%) & " + str(round(calculate_improvement(integer_ea5max[0], integer_ea5max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea5max[1], integer_ea5max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea5max[2], integer_ea5max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea5max[3], integer_ea5max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea5max[4], integer_ea5max[3]), 1)) + " \\\\"
+integer_ea10max = get_values(ea10max)
+ea10max = "Improvement in EA10max (\%) & " + str(round(calculate_improvement(integer_ea10max[0], integer_ea10max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea10max[1], integer_ea10max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea10max[2], integer_ea10max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea10max[3], integer_ea10max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea10max[4], integer_ea10max[3]), 1)) + " \\\\"
+integer_ea15max = get_values(ea15max)
+ea15max = "Improvement in EA15max (\%) & " + str(round(calculate_improvement(integer_ea15max[0], integer_ea15max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea15max[1], integer_ea15max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea15max[2], integer_ea15max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea15max[3], integer_ea15max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea15max[4], integer_ea15max[3]), 1)) + " \\\\"
+integer_ea20max = get_values(ea20max)
+ea20max = "Improvement in EA20max (\%) & " + str(round(calculate_improvement(integer_ea20max[0], integer_ea20max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea20max[1], integer_ea20max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea20max[2], integer_ea20max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea20max[3], integer_ea20max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea20max[4], integer_ea20max[3]), 1)) + " \\\\"
+integer_ea25max = get_values(ea25max)
+ea25max = "Improvement in EA25max (\%) & " + str(round(calculate_improvement(integer_ea25max[0], integer_ea25max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea25max[1], integer_ea25max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea25max[2], integer_ea25max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea25max[3], integer_ea25max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea25max[4], integer_ea25max[3]), 1)) + " \\\\"
+integer_ea30max = get_values(ea30max)
+ea30max = "Improvement in EA30max (\%) & " + str(round(calculate_improvement(integer_ea30max[0], integer_ea30max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea30max[1], integer_ea30max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea30max[2], integer_ea30max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea30max[3], integer_ea30max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea30max[4], integer_ea30max[3]), 1)) + " \\\\"
+integer_ea35max = get_values(ea35max)
+ea35max = "Improvement in EA35max (\%) & " + str(round(calculate_improvement(integer_ea35max[0], integer_ea35max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea35max[1], integer_ea35max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea35max[2], integer_ea35max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea35max[3], integer_ea35max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea35max[4], integer_ea35max[3]), 1)) + " \\\\"
+integer_ea40max = get_values(ea40max)
+ea40max = "Improvement in EA40max (\%) & " + str(round(calculate_improvement(integer_ea40max[0], integer_ea40max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea40max[1], integer_ea40max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea40max[2], integer_ea40max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea40max[3], integer_ea40max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea40max[4], integer_ea40max[3]), 1)) + " \\\\"
+integer_ea45max = get_values(ea45max)
+ea45max = "Improvement in EA45max (\%) & " + str(round(calculate_improvement(integer_ea45max[0], integer_ea45max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea45max[1], integer_ea45max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea45max[2], integer_ea45max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea45max[3], integer_ea45max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea45max[4], integer_ea45max[3]), 1)) + " \\\\"
+
+write_table(output_file, "QUAST: improvements of flowtigs compared to other algorithms", len(experiments), [quast_table[0]] + [average_length + "ḩline" + ea50max + ea75max + "ḩline" + ea5max + ea10max + ea15max + ea20max + ea25max + ea30max + ea35max + ea40max + ea45max], meta = True)
 
 
 write_table(output_file, "QUAST: \\# of contigs", len(experiments), quast_table[0:7])
