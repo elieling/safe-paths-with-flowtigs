@@ -444,7 +444,7 @@ rule safe_paths:
     output: safe_paths = SAFE_PATHS,
     conda:  "config/conda-time-env.yml",
     resources:
-            time_min = 600, # likely too much
+            time_min = 60, # likely too much
             mem_mb = 100_000, # likely too much
             queue = "medium,bigmem,aurinko",
     shell:  """
@@ -480,10 +480,10 @@ rule run_quast:
     params: references = lambda wildcards, input: "-r '" + "' -r '".join(input.references) + "'",
     conda: "config/conda-quast-env.yml"
     threads: 14,
-    resources: mem_mb = 10_000, # likely to much for our genomes
+    resources: mem_mb = 100_000, # likely to much for our genomes
                cpus = 14,
                time_min = 60,
-               queue = "short,medium,bigmem,aurinko", # I had some more complex expression here, the queues fitting to the time are on https://wiki.helsinki.fi/display/it4sci/HPC+Environment+User+Guide#HPCEnvironmentUserGuide-4.8.4Partitions-Ukko
+               queue = "medium,bigmem,aurinko", # I had some more complex expression here, the queues fitting to the time are on https://wiki.helsinki.fi/display/it4sci/HPC+Environment+User+Guide#HPCEnvironmentUserGuide-4.8.4Partitions-Ukko
     shell:  """
         set +e 
         ${{CONDA_PREFIX}}/bin/time -v {input.script} -t {threads} --no-html -o '{output.directory}' {params.references} '{input.contigs}'
