@@ -581,9 +581,9 @@ rule practical_multisafe:
     output: practical_omnitigs = PRACTICAL_OMNITIGS,  
     conda:  "config/conda-rust-env.yml",
     resources:
-            time_min = 60, # likely too much
+            time_min = 600, # likely too much
             mem_mb = 100_000, # likely too much
-            queue = "medium,bigmem,aurinko",
+            queue = "bigmem,aurinko",
     shell:  """
         rm -f '{log.log}'
         '{input.binary}' compute-multi-safe-walks --file-format bcalm2 --input '{input.practical_omnitigs}' --output '{output.practical_omnitigs}' -k {wildcards.k}
@@ -598,9 +598,9 @@ rule practical_omitigs:
     output: practical_omnitigs = PRACTICAL_TEST_OMNITIGS,  
     conda:  "config/conda-rust-env.yml",
     resources:
-            time_min = 60, # likely too much
+            time_min = 600, # likely too much
             mem_mb = 100_000, # likely too much
-            queue = "medium,bigmem,aurinko",
+            queue = "bigmem,aurinko",
     shell:  """
         rm -f '{log.log}'
         '{input.binary}' compute-omnitigs --file-format bcalm2 --input '{input.practical_omnitigs}' --output '{output.practical_omnitigs}' -k {wildcards.k}
