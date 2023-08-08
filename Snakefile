@@ -420,10 +420,10 @@ rule build_safe_paths:
     conda:  "config/conda-rust-env.yml",
     threads: MAX_THREADS,
     resources:
-            mem_mb = 10000,
-            time_min = 60,
+            mem_mb = 100000,
+            time_min = 600,
             cpus = MAX_THREADS,
-            queue = "aurinko,bigmem,short,medium",
+            queue = "aurinko,bigmem,medium",
     shell:  """
         cd external_software/safe-paths
         cargo build --release -j {threads} --offline
