@@ -420,10 +420,10 @@ rule build_safe_paths:
     conda:  "config/conda-rust-env.yml",
     threads: MAX_THREADS,
     resources:
-            mem_mb = 100000,
-            time_min = 600,
+            mem_mb = 10000,
+            time_min = 60,
             cpus = MAX_THREADS,
-            queue = "aurinko,bigmem,medium",
+            queue = "aurinko,bigmem,short,medium",
     shell:  """
         cd external_software/safe-paths
         cargo build --release -j {threads} --offline
@@ -444,9 +444,9 @@ rule safe_paths:
     output: safe_paths = SAFE_PATHS,
     conda:  "config/conda-time-env.yml",
     resources:
-            time_min = 60, # likely too much
-            mem_mb = 10_000, # likely too much
-            queue = "short,medium,bigmem,aurinko",
+            time_min = 600, # likely too much
+            mem_mb = 100_000, # likely too much
+            queue = "medium,bigmem,aurinko",
     shell:  """
         rm -f '{log.log}'
         ${{CONDA_PREFIX}}/bin/time -v '{input.binary}' -k {wildcards.k} --input '{input.arc_centric_dbg}' --output '{output.safe_paths}'
