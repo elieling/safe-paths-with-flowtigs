@@ -418,7 +418,7 @@ ea50max = quast_table[61]
 ea75max = quast_table[72]
 
 integer_average_lengths = get_values(average_length)
-average_length = "Improvement in average length of contigs (\%) & " + str(round(calculate_improvement(integer_average_lengths[0], integer_average_lengthx[2]), 1)) + " & " + str(round(calculate_improvement(integer_average_lengths[1], integer_average_lengthx[2]), 1)) + " & " + str(round(calculate_improvement(integer_average_lengths[2], integer_average_lengthx[2]), 1)) + " \\\\"
+average_length = "Improvement in average length of contigs (\%) & " + str(round(calculate_improvement(integer_average_lengths[0], integer_average_lengths[2]), 1)) + " & " + str(round(calculate_improvement(integer_average_lengths[1], integer_average_lengths[2]), 1)) + " & " + str(round(calculate_improvement(integer_average_lengths[2], integer_average_lengths[2]), 1)) + " \\\\"
 
 integer_ea50max = get_values(ea50max)
 ea50max = "Improvement in EA50max (\%) & " + str(round(calculate_improvement(integer_ea50max[0], integer_ea50max[2]), 1)) + " & " + str(round(calculate_improvement(integer_ea50max[1], integer_ea50max[2]), 1)) + " & " + str(round(calculate_improvement(integer_ea50max[2], integer_ea50max[2]), 1)) + " \\\\"
