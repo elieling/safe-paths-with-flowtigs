@@ -554,7 +554,7 @@ rule run_quast:
     threads: 14,
     resources: mem_mb = 1_000_000, # likely to much for our genomes
                cpus = 14,
-               time_min = 600,
+               time_min = 1440,
                queue = "bigmem,aurinko", # I had some more complex expression here, the queues fitting to the time are on https://wiki.helsinki.fi/display/it4sci/HPC+Environment+User+Guide#HPCEnvironmentUserGuide-4.8.4Partitions-Ukko
     shell:  """
         set +e 
