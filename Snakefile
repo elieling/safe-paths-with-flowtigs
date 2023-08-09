@@ -653,7 +653,7 @@ rule practical_multisafe:
     output: practical_omnitigs = PRACTICAL_OMNITIGS,  
     conda:  "config/conda-rust-env.yml",
     resources:
-            time_min = 10080, 
+            time_min = 4320, 
             mem_mb = 100_000, # likely too much
             queue = "bigmem,aurinko",
     shell:  """
@@ -670,7 +670,7 @@ rule practical_omitigs:
     output: practical_omnitigs = PRACTICAL_TEST_OMNITIGS,  
     conda:  "config/conda-rust-env.yml",
     resources:
-            time_min = 10080, 
+            time_min = 4320, 
             mem_mb = 100_000, # likely too much
             queue = "bigmem,aurinko",
     shell:  """
