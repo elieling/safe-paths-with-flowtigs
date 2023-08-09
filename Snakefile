@@ -100,6 +100,7 @@ ALGORITHM_COLUMN_NAMES = ["unitigs", "t. omnitigs", "multi-safe", "flowtigs", "o
 FAST_ALGORITHMS = ["unitigs", "trivial-omnitigs", "flowtigs"] # algorithms that have a fast runtime
 FAST_ALGORITHM_COLUMN_NAMES = ["unitigs", "t. omnitigs", "flowtigs"] # column names for algorithms that have a fast runtime
 CONVERT_VALIDATION_OUTPUTS_TO_LATEX_SCRIPT = "scripts/convert_validation_outputs_to_latex.py"
+CONVERT_FAST_VALIDATION_OUTPUTS_TO_LATEX_SCRIPT = "scripts/convert_fast_validation_outputs_to_latex.py"
 CREATE_COMBINED_EAXMAX_PLOT_SCRIPT = "scripts/create_combined_eaxmax_plot.py"
 REPORT_SUBDIR = os.path.join(REPORTDIR, "final_reports", "final_reports_{file_name}k{k}ma{min_abundance}t{threads}")
 REPORT_COMBINED_EAXMAX_PLOT = os.path.join(REPORT_SUBDIR, "combined_eaxmax_plot.pdf")
@@ -243,7 +244,7 @@ rule create_single_report_tex:
 rule create_single_report_for_fast_algorithms_only:
     input:  quasts = [safe_format(QUAST_EXTENDED_OUTPUT_DIR, algorithm = algorithm) for algorithm in FAST_ALGORITHMS],
             combined_eaxmax_plot = REPORT_COMBINED_EAXMAX_PLOT_FAST,
-            script = CONVERT_VALIDATION_OUTPUTS_TO_LATEX_SCRIPT,
+            script = CONVERT_FAST_VALIDATION_OUTPUTS_TO_LATEX_SCRIPT,
     output: report = REPORT_TEX_FAST,
     log:    log = "logs/create_single_report/{file_name}_k{k}ma{min_abundance}t{threads}r{report_name}rf{report_file_name}/log.log",
     params: genome_name = lambda wildcards: ", ".join(wildcards.file_name), 
