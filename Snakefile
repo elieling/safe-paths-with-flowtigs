@@ -97,10 +97,13 @@ PRACTICAL_TEST_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_omnitigs", "{file_
 PRACTICAL_TRIVIAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_trivial-omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
 ALGORITHMS = ["unitigs", "trivial-omnitigs", "multi-safe", "flowtigs", "omnitigs"] # values for the wildcard that chooses which tigs to generate
 ALGORITHM_COLUMN_NAMES = ["unitigs", "t. omnitigs", "multi-safe", "flowtigs", "omnitigs"] # column names for the different tigs
+FAST_ALGORITHMS = ["unitigs", "trivial-omnitigs", "flowtigs"] # algorithms that have a fast runtime
+FAST_ALGORITHM_COLUMN_NAMES = ["unitigs", "t. omnitigs", "flowtigs"] # column names for algorithms that have a fast runtime
 CONVERT_VALIDATION_OUTPUTS_TO_LATEX_SCRIPT = "scripts/convert_validation_outputs_to_latex.py"
 CREATE_COMBINED_EAXMAX_PLOT_SCRIPT = "scripts/create_combined_eaxmax_plot.py"
 REPORT_SUBDIR = os.path.join(REPORTDIR, "final_reports", "final_reports_{file_name}k{k}ma{min_abundance}t{threads}")
 REPORT_COMBINED_EAXMAX_PLOT = os.path.join(REPORT_SUBDIR, "combined_eaxmax_plot.pdf")
+REPORT_COMBINED_EAXMAX_PLOT_FAST = os.path.join(REPORT_SUBDIR, "combined_eaxmax_plot_fast.pdf")
 REPORT_NAME_FILE = os.path.join(REPORT_SUBDIR, "name.txt")
 REPORT_HASHDIR = os.path.join(REPORTDIR, "hashdir")
 META_BASE7_DIR = os.path.join(DATADIR, "meta", "base7")
@@ -118,7 +121,7 @@ META_BASE7_ABUNDANCES = os.path.join(META_BASE7_DIR, "nanosim.abundances.tsv")
 MEDIUM20_ABUNDANCES = os.path.join(DATADIR, "meta", "medium20", "nanosim.abundances.tsv")
 COMPLEX32_ABUNDANCES = os.path.join(DATADIR, "meta", "complex32", "nanosim.abundances.tsv")
 # METAGENOME_ABUNDANCES = os.path.join(DATADIR, "meta", "{metagenome}", "nanosim.abundances.tsv")
-REPORT_TEX = os.path.join(REPORTDIR, "output", "{file_name}_k{k}ma{min_abundance}t{threads}", "{report_name}", "{report_file_name}.tex")
+REPORT_TEX = os.path.join(REPORTDIR, "output", "{file_name}_k{k}ma{min_abundance}t{threads}", "{report_name}_fast", "{report_file_name}.tex")
 #QUAST_REPORT_TEX = os.path.join(REPORTDIR, "quast_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.tex")
 #QUAST_UNALIGNED = os.path.join(REPORTDIR, "quast_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}", "contigs_reports", "contigs_report_report.unaligned.info")
 #QUAST_EXTENDED_REPORT = os.path.join(REPORTDIR, "extended_quast_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.tex")
@@ -194,6 +197,24 @@ def get_single_report_script_column_arguments_from_wildcards(wildcards):
         sys.exit("Catched exception")
 
 
+def get_single_report_script_column_arguments_from_wildcards_fast(wildcards):
+    try:
+        result = ""
+        once = True
+        for algorithm in FAST_ALGORITHMS:
+            if once:
+                once = False
+            else:
+                result += " "
+
+            quast_output_dir = safe_format(QUAST_EXTENDED_OUTPUT_DIR, algorithm = algorithm).format(**wildcards)
+            result += f"'{algorithm}' '' '{quast_output_dir}' '' ''"
+        return result
+    except Exception:
+        traceback.print_exc()
+        sys.exit("Catched exception")
+
+
 
 rule create_single_report_tex:
     input:  quasts = [safe_format(QUAST_EXTENDED_OUTPUT_DIR, algorithm = algorithm) for algorithm in ALGORITHMS],
@@ -218,11 +239,48 @@ rule create_single_report_tex:
         """
 
 
+rule create_single_report_for_fast_algorithms_only:
+    input:  quasts = [safe_format(QUAST_EXTENDED_OUTPUT_DIR, algorithm = algorithm) for algorithm in FAST_ALGORITHMS],
+            combined_eaxmax_plot = REPORT_COMBINED_EAXMAX_PLOT_FAST,
+            script = CONVERT_VALIDATION_OUTPUTS_TO_LATEX_SCRIPT,
+    output: report = REPORT_TEX_FAST,
+    log:    log = "logs/create_single_report/{file_name}_k{k}ma{min_abundance}t{threads}r{report_name}rf{report_file_name}/log.log",
+    params: genome_name = lambda wildcards: ", ".join(wildcards.file_name), 
+            script_column_arguments = get_single_report_script_column_arguments_from_wildcards_fast,
+            name_file = REPORT_NAME_FILE,
+            hashdir = REPORT_HASHDIR,
+    wildcard_constraints:
+            report_name = "[^/]+",
+    conda: "config/conda-latex-gen-env.yml" 
+    threads: 1
+    resources:
+            queue = "short,medium,bigmem,aurinko",
+    shell: """
+        mkdir -p '{params.hashdir}'
+        echo '{wildcards.report_name} {params.genome_name} {wildcards.report_file_name}' > '{params.name_file}'
+        python3 '{input.script}' '{params.hashdir}' '{params.name_file}' 'none' 'none' '{input.combined_eaxmax_plot}' '{output}' {params.script_column_arguments}
+        """
+
+
 rule create_combined_eaxmax_graph:
     input:  quast_csvs = [os.path.join(safe_format(QUAST_OUTPUT_DIR, algorithm = algorithm), "aligned_stats", "EAxmax_plot.csv") for algorithm in ALGORITHMS],
             script = CREATE_COMBINED_EAXMAX_PLOT_SCRIPT,
     output: REPORT_COMBINED_EAXMAX_PLOT,
     params: input_quast_csvs = lambda wildcards, input: "' '".join([shortname + "' '" + quast for shortname, quast in zip(ALGORITHM_COLUMN_NAMES, input.quast_csvs)])
+    conda:  "config/conda-seaborn-env.yml"
+    threads: 1
+    resources:
+            queue = "short,medium,bigmem,aurinko",
+    shell: """
+        mkdir -p "$(dirname '{output}')"
+        python3 '{input.script}' '{params.input_quast_csvs}' '{output}'
+        """
+
+rule create_combined_eaxmax_graph_for_fast_algorithms_only:
+    input:  quast_csvs = [os.path.join(safe_format(QUAST_OUTPUT_DIR, algorithm = algorithm), "aligned_stats", "EAxmax_plot.csv") for algorithm in FAST_ALGORITHMS],
+            script = CREATE_COMBINED_EAXMAX_PLOT_SCRIPT,
+    output: REPORT_COMBINED_EAXMAX_PLOT_FAST,
+    params: input_quast_csvs = lambda wildcards, input: "' '".join([shortname + "' '" + quast for shortname, quast in zip(FAST_ALGORITHM_COLUMN_NAMES, input.quast_csvs)])
     conda:  "config/conda-seaborn-env.yml"
     threads: 1
     resources:
@@ -594,7 +652,7 @@ rule practical_multisafe:
     output: practical_omnitigs = PRACTICAL_OMNITIGS,  
     conda:  "config/conda-rust-env.yml",
     resources:
-            time_min = 10080, # likely too much
+            time_min = 10080, 
             mem_mb = 100_000, # likely too much
             queue = "bigmem,aurinko",
     shell:  """
