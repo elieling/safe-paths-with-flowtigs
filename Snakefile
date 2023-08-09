@@ -234,9 +234,11 @@ rule create_combined_eaxmax_graph:
 
     
 
-########################
-###### Assembly ########
-########################
+###########################
+###### Metagenomes ########
+###########################
+
+# Rules to gather the data from metagenomes to a single file
 
 
 # Rule to get sequences for metagenome data.
@@ -323,6 +325,17 @@ rule medium20_concatenate:
 #     log:    log = "logs/preprocessing_single_genome/{genome}/log.log",
 #     conda:  "config/conda-biopython-env.yml"
 #     script: "scripts/preprocessing.py"
+
+    
+
+
+
+########################
+###### Assembly ########
+########################
+
+
+
 
 # Rule to remove all the non-[A, C, G, T] characters from a fasta file. Should be ran first.
 rule preprocessing_single_metagenome:
@@ -581,7 +594,7 @@ rule practical_multisafe:
     output: practical_omnitigs = PRACTICAL_OMNITIGS,  
     conda:  "config/conda-rust-env.yml",
     resources:
-            time_min = 600, # likely too much
+            time_min = 10080, # likely too much
             mem_mb = 100_000, # likely too much
             queue = "bigmem,aurinko",
     shell:  """
@@ -598,7 +611,7 @@ rule practical_omitigs:
     output: practical_omnitigs = PRACTICAL_TEST_OMNITIGS,  
     conda:  "config/conda-rust-env.yml",
     resources:
-            time_min = 600, # likely too much
+            time_min = 10080, 
             mem_mb = 100_000, # likely too much
             queue = "bigmem,aurinko",
     shell:  """
