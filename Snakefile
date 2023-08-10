@@ -85,14 +85,14 @@ ECOLI = os.path.join(DATADIR, "ecoli.fasta")
 ECOLI_CONCAT = os.path.join(DATADIR, "ecoli_concat.fasta")
 SINGLE = os.path.join(DATADIR, "{file_name}.fasta")
 SINGLE_CONCAT = os.path.join(DATADIR, "{file_name}_concat.fasta")
-META_BASE7 = os.path.join(DATADIR, "meta_base7.fasta")
-META_BASE7_CONCAT = os.path.join(DATADIR, "meta_base7_concat.fasta")
-MEDIUM20 = os.path.join(DATADIR, "meta_medium20.fasta")
-MEDIUM20_CONCAT = os.path.join(DATADIR, "meta_medium20_concat.fasta")
-COMPLEX32 = os.path.join(DATADIR, "meta_complex32.fasta")
-COMPLEX32_CONCAT = os.path.join(DATADIR, "meta_complex32_concat.fasta")
-# METAGENOME = os.path.join(DATADIR, "meta_{metagenome}.fasta")
-# METAGENOME_CONCAT = os.path.join(DATADIR, "meta_{metagenome}_concat.fasta")
+# META_BASE7 = os.path.join(DATADIR, "meta_base7.fasta")
+# META_BASE7_CONCAT = os.path.join(DATADIR, "meta_base7_concat.fasta")
+# MEDIUM20 = os.path.join(DATADIR, "meta_medium20.fasta")
+# MEDIUM20_CONCAT = os.path.join(DATADIR, "meta_medium20_concat.fasta")
+# COMPLEX32 = os.path.join(DATADIR, "meta_complex32.fasta")
+# COMPLEX32_CONCAT = os.path.join(DATADIR, "meta_complex32_concat.fasta")
+METAGENOME = os.path.join(DATADIR, "meta_{metagenome}.fasta")
+METAGENOME_CONCAT = os.path.join(DATADIR, "meta_{metagenome}_concat.fasta")
 PRACTICAL_TEST_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
 PRACTICAL_TRIVIAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_trivial-omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
 ALGORITHMS = ["unitigs", "trivial-omnitigs", "multi-safe", "flowtigs", "omnitigs"] # values for the wildcard that chooses which tigs to generate
@@ -115,13 +115,15 @@ META_BASE7_DIR = os.path.join(DATADIR, "meta", "base7")
 UNPREPROCESSED_METAGENOME = os.path.join(DATADIR, "meta", "{metagenome}", "GCF_{genome}_genomic.fna")
 PREPROCESSED_METAGENOME = os.path.join(DATADIR, "meta{metagenome}", "GCF_{genome}_genomic.fasta")
 META_BASE7_UNPREPROCESSED = [os.path.join(META_BASE7_DIR, "GCF_000005845.2_ASM584v2_genomic.fna"), os.path.join(META_BASE7_DIR, "GCF_000159115.1_ASM15911v1_genomic.fna"), os.path.join(META_BASE7_DIR, "GCF_000175375.1_ASM17537v1_genomic.fna"), os.path.join(META_BASE7_DIR, "GCF_000376705.1_ASM37670v1_genomic.fna"), os.path.join(META_BASE7_DIR, "GCF_003999335.1_ASM399933v1_genomic.fna"), os.path.join(META_BASE7_DIR, "GCF_017638885.1_ASM1763888v1_genomic.fna"), os.path.join(META_BASE7_DIR, "GCF_019890915.1_ASM1989091v1_genomic.fna")]
-META_BASE7_FASTA = [os.path.join(DATADIR, "metabase7", "GCF_000005845.2_ASM584v2_genomic.fasta"), os.path.join(DATADIR, "metabase7", "GCF_000159115.1_ASM15911v1_genomic.fasta"), os.path.join(DATADIR, "metabase7", "GCF_000175375.1_ASM17537v1_genomic.fasta"), os.path.join(DATADIR, "metabase7", "GCF_000376705.1_ASM37670v1_genomic.fasta"), os.path.join(DATADIR, "metabase7", "GCF_003999335.1_ASM399933v1_genomic.fasta"), os.path.join(DATADIR, "metabase7", "GCF_017638885.1_ASM1763888v1_genomic.fasta"), os.path.join(DATADIR, "metabase7", "GCF_019890915.1_ASM1989091v1_genomic.fasta")]
-MEDIUM20_FASTA = [os.path.join(DATADIR, "metamedium20", "GCF_000005845.2_ASM584v2_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000009045.1_ASM904v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000013285.1_ASM1328v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000025905.1_ASM2590v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000092125.1_ASM9212v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000143845.1_ASM14384v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000159115.1_ASM15911v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000175375.1_ASM17537v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000184345.1_ASM18434v2_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000185725.2_Segn_rugo_CDC_945_V2_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000196035.1_ASM19603v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000265425.1_ASM26542v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000325705.1_ASM32570v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000376705.1_ASM37670v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_003999335.1_ASM399933v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_008632635.1_ASM863263v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_017638885.1_ASM1763888v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_019704535.1_ASM1970453v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_019890915.1_ASM1989091v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_900638215.1_56553_A01_genomic.fasta")]
-COMPLEX32_FASTA = [os.path.join(DATADIR, 'metacomplex32', 'GCF_000005845.2_ASM584v2_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000006925.2_ASM692v2_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000006945.2_ASM694v2_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000009045.1_ASM904v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000013285.1_ASM1328v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000025905.1_ASM2590v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000092125.1_ASM9212v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000143845.1_ASM14384v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000159115.1_ASM15911v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000160855.1_ASM16085v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000175375.1_ASM17537v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000179955.1_ASM17995v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000184345.1_ASM18434v2_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000185725.2_Segn_rugo_CDC_945_V2_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000196035.1_ASM19603v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000231385.2_ASM23138v3_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000233715.2_ASM23371v3_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000255115.2_ASM25511v3_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000265425.1_ASM26542v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000325705.1_ASM32570v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000376705.1_ASM37670v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000439255.1_ASM43925v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_001905915.1_ASM190591v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_001932995.2_ASM193299v2_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_003028755.1_ASM302875v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_003999335.1_ASM399933v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_008632635.1_ASM863263v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_017638885.1_ASM1763888v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_018094625.1_ASM1809462v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_019704535.1_ASM1970453v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_019890915.1_ASM1989091v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_900638215.1_56553_A01_genomic.fasta')]
-META_BASE7_ABUNDANCES = os.path.join(META_BASE7_DIR, "nanosim.abundances.tsv")
-MEDIUM20_ABUNDANCES = os.path.join(DATADIR, "meta", "medium20", "nanosim.abundances.tsv")
-COMPLEX32_ABUNDANCES = os.path.join(DATADIR, "meta", "complex32", "nanosim.abundances.tsv")
-# METAGENOME_ABUNDANCES = os.path.join(DATADIR, "meta", "{metagenome}", "nanosim.abundances.tsv")
+# META_BASE7_FASTA = [os.path.join(DATADIR, "metabase7", "GCF_000005845.2_ASM584v2_genomic.fasta"), os.path.join(DATADIR, "metabase7", "GCF_000159115.1_ASM15911v1_genomic.fasta"), os.path.join(DATADIR, "metabase7", "GCF_000175375.1_ASM17537v1_genomic.fasta"), os.path.join(DATADIR, "metabase7", "GCF_000376705.1_ASM37670v1_genomic.fasta"), os.path.join(DATADIR, "metabase7", "GCF_003999335.1_ASM399933v1_genomic.fasta"), os.path.join(DATADIR, "metabase7", "GCF_017638885.1_ASM1763888v1_genomic.fasta"), os.path.join(DATADIR, "metabase7", "GCF_019890915.1_ASM1989091v1_genomic.fasta")]
+# MEDIUM20_FASTA = [os.path.join(DATADIR, "metamedium20", "GCF_000005845.2_ASM584v2_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000009045.1_ASM904v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000013285.1_ASM1328v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000025905.1_ASM2590v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000092125.1_ASM9212v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000143845.1_ASM14384v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000159115.1_ASM15911v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000175375.1_ASM17537v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000184345.1_ASM18434v2_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000185725.2_Segn_rugo_CDC_945_V2_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000196035.1_ASM19603v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000265425.1_ASM26542v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000325705.1_ASM32570v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000376705.1_ASM37670v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_003999335.1_ASM399933v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_008632635.1_ASM863263v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_017638885.1_ASM1763888v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_019704535.1_ASM1970453v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_019890915.1_ASM1989091v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_900638215.1_56553_A01_genomic.fasta")]
+# COMPLEX32_FASTA = [os.path.join(DATADIR, 'metacomplex32', 'GCF_000005845.2_ASM584v2_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000006925.2_ASM692v2_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000006945.2_ASM694v2_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000009045.1_ASM904v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000013285.1_ASM1328v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000025905.1_ASM2590v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000092125.1_ASM9212v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000143845.1_ASM14384v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000159115.1_ASM15911v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000160855.1_ASM16085v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000175375.1_ASM17537v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000179955.1_ASM17995v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000184345.1_ASM18434v2_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000185725.2_Segn_rugo_CDC_945_V2_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000196035.1_ASM19603v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000231385.2_ASM23138v3_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000233715.2_ASM23371v3_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000255115.2_ASM25511v3_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000265425.1_ASM26542v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000325705.1_ASM32570v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000376705.1_ASM37670v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000439255.1_ASM43925v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_001905915.1_ASM190591v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_001932995.2_ASM193299v2_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_003028755.1_ASM302875v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_003999335.1_ASM399933v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_008632635.1_ASM863263v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_017638885.1_ASM1763888v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_018094625.1_ASM1809462v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_019704535.1_ASM1970453v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_019890915.1_ASM1989091v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_900638215.1_56553_A01_genomic.fasta')]
+# META_BASE7_ABUNDANCES = os.path.join(META_BASE7_DIR, "nanosim.abundances.tsv")
+# MEDIUM20_ABUNDANCES = os.path.join(DATADIR, "meta", "medium20", "nanosim.abundances.tsv")
+# COMPLEX32_ABUNDANCES = os.path.join(DATADIR, "meta", "complex32", "nanosim.abundances.tsv")
+METAGENOME_ABUNDANCES = os.path.join(DATADIR, "meta", "{metagenome}", "nanosim.abundances.tsv")
+METAGENOME_DIR = os.path.join(DATADIR, "meta", "{metagenome}")
+METAGENOME_FASTA = get_metagenome_files("meta{metagenome}", METAGENOME_ABUNDANCES)
 REPORT_TEX = os.path.join(REPORTDIR, "output", "{file_name}_k{k}ma{min_abundance}t{threads}", "{report_name}", "{report_file_name}.tex")
 REPORT_TEX_FAST = os.path.join(REPORTDIR, "output_fast", "{file_name}_k{k}ma{min_abundance}t{threads}", "{report_name}", "{report_file_name}.tex")
 #QUAST_REPORT_TEX = os.path.join(REPORTDIR, "quast_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.tex")
@@ -179,6 +181,25 @@ def safe_expand(str, **kwargs):
 
 def wildcard_format(str, wildcards):
     return str.format(**dict(wildcards.items()))
+
+
+
+
+import pandas as pd
+# Function to get the collection of fasta files for metagenomes
+def get_metagenome_files(new_folder_name, abundance_file):
+
+    abundances_df = pd.read_csv(abundances_file, sep='\t')
+    names = abundances_df["Size"]
+
+    result = []
+    for name in names:
+        if name.endswith(".fna") or name.endswith(".fasta"):
+            new_name = name
+            if new_name.endswith(".fna"): new_name = new_name[:-4] + ".fasta"
+            result.append(os.path.join(DATADIR, new_folder_name, new_name))
+
+
 
 
 def get_single_report_script_column_arguments_from_wildcards(wildcards):
@@ -304,9 +325,9 @@ rule create_combined_eaxmax_graph_for_fast_algorithms_only:
 # Rule to get sequences for metagenome data.
 localrules: metagenome_to_single_file
 rule metagenome_to_single_file:
-    input:  abundances = META_BASE7_ABUNDANCES,
-            references = META_BASE7_FASTA,
-    output: report = META_BASE7,
+    input:  abundances = METAGENOME_ABUNDANCES,
+            references = METAGENOME_FASTA,
+    output: report = METAGENOME,
     log:    log = "logs/metagenome_to_single_file/log.log",
     conda:  "config/conda-seaborn-env.yml"
     script: "scripts/metagenome_to_single_file.py"
@@ -316,56 +337,79 @@ rule metagenome_to_single_file:
 # Rule to concatenate metagenome data.
 localrules: metagenome_concatenate
 rule metagenome_concatenate:
-    input:  references = META_BASE7_FASTA,
-    output: report = META_BASE7_CONCAT,
+    input:  references = METAGENOME_FASTA,
+    output: report = METAGENOME_CONCAT,
     log:    log = "logs/metagenome_concatenate/log.log",
     conda:  "config/conda-seaborn-env.yml"
     script: "scripts/metagenome_concatenate.py"
 
 
-# Rule to get sequences for metagenome data.
-localrules: medium20_to_single_file
-rule medium20_to_single_file:
-    input:  abundances = MEDIUM20_ABUNDANCES,
-            references = MEDIUM20_FASTA,
-    output: report = MEDIUM20,
-    log:    log = "logs/medium20_to_single_file/log.log",
-    conda:  "config/conda-seaborn-env.yml"
-    script: "scripts/metagenome_to_single_file.py"
+
+# # Rule to get sequences for metagenome data.
+# localrules: metagenome_to_single_file
+# rule metagenome_to_single_file:
+#     input:  abundances = META_BASE7_ABUNDANCES,
+#             references = META_BASE7_FASTA,
+#     output: report = META_BASE7,
+#     log:    log = "logs/metagenome_to_single_file/log.log",
+#     conda:  "config/conda-seaborn-env.yml"
+#     script: "scripts/metagenome_to_single_file.py"
 
 
 
-# Rule to concatenate metagenome data.
-localrules: medium32_concatenate
-rule medium32_concatenate:
-    input:  references = COMPLEX32_FASTA,
-    output: report = COMPLEX32_CONCAT,
-    log:    log = "logs/medium20_concatenate/log.log",
-    conda:  "config/conda-seaborn-env.yml"
-    script: "scripts/metagenome_concatenate.py"
+# # Rule to concatenate metagenome data.
+# localrules: metagenome_concatenate
+# rule metagenome_concatenate:
+#     input:  references = META_BASE7_FASTA,
+#     output: report = META_BASE7_CONCAT,
+#     log:    log = "logs/metagenome_concatenate/log.log",
+#     conda:  "config/conda-seaborn-env.yml"
+#     script: "scripts/metagenome_concatenate.py"
+
+
+# # Rule to get sequences for metagenome data.
+# localrules: medium20_to_single_file
+# rule medium20_to_single_file:
+#     input:  abundances = MEDIUM20_ABUNDANCES,
+#             references = MEDIUM20_FASTA,
+#     output: report = MEDIUM20,
+#     log:    log = "logs/medium20_to_single_file/log.log",
+#     conda:  "config/conda-seaborn-env.yml"
+#     script: "scripts/metagenome_to_single_file.py"
 
 
 
-# Rule to get sequences for metagenome data.
-localrules: medium32_to_single_file
-rule medium32_to_single_file:
-    input:  abundances = COMPLEX32_ABUNDANCES,
-            references = COMPLEX32_FASTA,
-    output: report = COMPLEX32,
-    log:    log = "logs/medium20_to_single_file/log.log",
-    conda:  "config/conda-seaborn-env.yml"
-    script: "scripts/metagenome_to_single_file.py"
+# # Rule to concatenate metagenome data.
+# localrules: medium32_concatenate
+# rule medium32_concatenate:
+#     input:  references = COMPLEX32_FASTA,
+#     output: report = COMPLEX32_CONCAT,
+#     log:    log = "logs/medium20_concatenate/log.log",
+#     conda:  "config/conda-seaborn-env.yml"
+#     script: "scripts/metagenome_concatenate.py"
 
 
 
-# Rule to concatenate metagenome data.
-localrules: medium20_concatenate
-rule medium20_concatenate:
-    input:  references = MEDIUM20_FASTA,
-    output: report = MEDIUM20_CONCAT,
-    log:    log = "logs/medium20_concatenate/log.log",
-    conda:  "config/conda-seaborn-env.yml"
-    script: "scripts/metagenome_concatenate.py"
+# # Rule to get sequences for metagenome data.
+# localrules: medium32_to_single_file
+# rule medium32_to_single_file:
+#     input:  abundances = COMPLEX32_ABUNDANCES,
+#             references = COMPLEX32_FASTA,
+#     output: report = COMPLEX32,
+#     log:    log = "logs/medium20_to_single_file/log.log",
+#     conda:  "config/conda-seaborn-env.yml"
+#     script: "scripts/metagenome_to_single_file.py"
+
+
+
+# # Rule to concatenate metagenome data.
+# localrules: medium20_concatenate
+# rule medium20_concatenate:
+#     input:  references = MEDIUM20_FASTA,
+#     output: report = MEDIUM20_CONCAT,
+#     log:    log = "logs/medium20_concatenate/log.log",
+#     conda:  "config/conda-seaborn-env.yml"
+#     script: "scripts/metagenome_concatenate.py"
 
 
 
@@ -395,6 +439,13 @@ rule medium20_concatenate:
 ########################
 
 
+# Simulates abundances for a metagenome using the Poisson distribution
+rule generate_abundances:
+    input: reads = METAGENOME_DIR,
+    output: abundances = METAGENOME_ABUNDANCES,
+    log:    log = "logs/preprocessing_single_genome/meta_{metagenome}/log.log",
+    conda:  "config/conda-biopython-env.yml"
+    script: "scripts/calculate_abundances.py"
 
 
 # Rule to remove all the non-[A, C, G, T] characters from a fasta file. Should be ran first.
