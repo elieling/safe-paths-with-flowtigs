@@ -54,7 +54,7 @@ workflow.use_conda = True
 
 import pandas as pd
 # Function to get the collection of fasta files for metagenomes
-def get_metagenome_files(new_folder_name, abundance_file):
+def get_metagenome_files(new_folder_name, abundances_file):
     abundances_df = pd.read_csv(abundances_file, sep='\t')
     names = abundances_df["Size"]
     result = []
