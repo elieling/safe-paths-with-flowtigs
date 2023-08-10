@@ -51,6 +51,21 @@ print("Finished config preprocessing", flush = True)
 # Always use conda
 workflow.use_conda = True
 
+
+import pandas as pd
+# Function to get the collection of fasta files for metagenomes
+def get_metagenome_files(new_folder_name, abundance_file):
+    abundances_df = pd.read_csv(abundances_file, sep='\t')
+    names = abundances_df["Size"]
+    result = []
+    for name in names:
+        if name.endswith(".fna") or name.endswith(".fasta"):
+            new_name = name
+            if new_name.endswith(".fna"): new_name = new_name[:-4] + ".fasta"
+            result.append(os.path.join(DATADIR, new_folder_name, new_name))
+
+
+
 ############################
 ###### File Constants ######
 ############################
@@ -183,21 +198,6 @@ def wildcard_format(str, wildcards):
     return str.format(**dict(wildcards.items()))
 
 
-
-
-import pandas as pd
-# Function to get the collection of fasta files for metagenomes
-def get_metagenome_files(new_folder_name, abundance_file):
-
-    abundances_df = pd.read_csv(abundances_file, sep='\t')
-    names = abundances_df["Size"]
-
-    result = []
-    for name in names:
-        if name.endswith(".fna") or name.endswith(".fasta"):
-            new_name = name
-            if new_name.endswith(".fna"): new_name = new_name[:-4] + ".fasta"
-            result.append(os.path.join(DATADIR, new_folder_name, new_name))
 
 
 
