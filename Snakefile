@@ -99,7 +99,7 @@ PRACTICAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_multi-safe", "{file_nam
 ECOLI = os.path.join(DATADIR, "ecoli.fasta")
 ECOLI_CONCAT = os.path.join(DATADIR, "ecoli_concat.fasta")
 SINGLE = os.path.join(DATADIR, "{file_name}.fasta")
-SINGLE_CONCAT = os.path.join(DATADIR, "{file_name}_concat.fasta")
+SINGLE_CONCAT = os.path.join(DATADIR, "bac_{file_name}_concat.fasta")
 # META_BASE7 = os.path.join(DATADIR, "meta_base7.fasta")
 # META_BASE7_CONCAT = os.path.join(DATADIR, "meta_base7_concat.fasta")
 # MEDIUM20 = os.path.join(DATADIR, "meta_medium20.fasta")
@@ -139,11 +139,7 @@ META_BASE7_UNPREPROCESSED = [os.path.join(META_BASE7_DIR, "GCF_000005845.2_ASM58
 METAGENOME_ABUNDANCES = os.path.join(DATADIR, "meta", "{metagenome}", "nanosim.abundances.tsv")
 METAGENOME_DIR = os.path.join(DATADIR, "meta", "{metagenome}")
 # METAGENOME_FASTA = get_metagenome_files("meta{metagenome}", METAGENOME_ABUNDANCES)
-<<<<<<< HEAD
-METAGENOME_FASTA = "--{metagenome}-"
-=======
-METAGENOME_FASTA = os.path.join(DATADIR, "meta{metagenome}")
->>>>>>> 8865accf2dbc1c54e7b794eed92645fbc937eec0
+METAGENOME_FASTA = os.path.join(DATADIR, "preprocessed_metagenome", "{metagenome}")
 REPORT_TEX = os.path.join(REPORTDIR, "output", "{file_name}_k{k}ma{min_abundance}t{threads}", "{report_name}", "{report_file_name}.tex")
 REPORT_TEX_FAST = os.path.join(REPORTDIR, "output_fast", "{file_name}_k{k}ma{min_abundance}t{threads}", "{report_name}", "{report_file_name}.tex")
 #QUAST_REPORT_TEX = os.path.join(REPORTDIR, "quast_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.tex")
