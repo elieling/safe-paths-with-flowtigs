@@ -2,10 +2,27 @@
 
 import pandas as pd
 
-n_rows = len(snakemake.input.references)
+
+
+
+
+# Collecting fasta files for metagenomes
+
+abundances_df = pd.read_csv(snakemake.input.abundances, sep='\t')
+names = abundances_df["Size"]
+fasta_files = []
+for name in names:
+    if name.endswith(".fasta"):
+        fasta_files.append(os.path.join(snakemake.input.reference, name))
+
+
+
+# Concatenating the files
+
+n_rows = len(fasta_files)
 
 for i in range(n_rows):
-    with open(snakemake.input.references[i], 'r') as source:
+    with open(fasta_files[i], 'r') as source:
         with open(snakemake.output.report, 'a') as destination:
             content = source.read()
             destination.write(content)

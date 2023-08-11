@@ -52,17 +52,17 @@ print("Finished config preprocessing", flush = True)
 workflow.use_conda = True
 
 
-import pandas as pd
-# Function to get the collection of fasta files for metagenomes
-def get_metagenome_files(new_folder_name, abundances_file):
-    abundances_df = pd.read_csv(abundances_file, sep='\t')
-    names = abundances_df["Size"]
-    result = []
-    for name in names:
-        if name.endswith(".fna") or name.endswith(".fasta"):
-            new_name = name
-            if new_name.endswith(".fna"): new_name = new_name[:-4] + ".fasta"
-            result.append(os.path.join(DATADIR, new_folder_name, new_name))
+# import pandas as pd
+# # Function to get the collection of fasta files for metagenomes
+# def get_metagenome_files(new_folder_name, abundances_file):
+#     abundances_df = pd.read_csv(abundances_file, sep='\t')
+#     names = abundances_df["Size"]
+#     result = []
+#     for name in names:
+#         if name.endswith(".fna") or name.endswith(".fasta"):
+#             new_name = name
+#             if new_name.endswith(".fna"): new_name = new_name[:-4] + ".fasta"
+#             result.append(os.path.join(DATADIR, new_folder_name, new_name))
 
 
 
@@ -139,7 +139,11 @@ META_BASE7_UNPREPROCESSED = [os.path.join(META_BASE7_DIR, "GCF_000005845.2_ASM58
 METAGENOME_ABUNDANCES = os.path.join(DATADIR, "meta", "{metagenome}", "nanosim.abundances.tsv")
 METAGENOME_DIR = os.path.join(DATADIR, "meta", "{metagenome}")
 # METAGENOME_FASTA = get_metagenome_files("meta{metagenome}", METAGENOME_ABUNDANCES)
+<<<<<<< HEAD
 METAGENOME_FASTA = "--{metagenome}-"
+=======
+METAGENOME_FASTA = os.path.join(DATADIR, "meta{metagenome}")
+>>>>>>> 8865accf2dbc1c54e7b794eed92645fbc937eec0
 REPORT_TEX = os.path.join(REPORTDIR, "output", "{file_name}_k{k}ma{min_abundance}t{threads}", "{report_name}", "{report_file_name}.tex")
 REPORT_TEX_FAST = os.path.join(REPORTDIR, "output_fast", "{file_name}_k{k}ma{min_abundance}t{threads}", "{report_name}", "{report_file_name}.tex")
 #QUAST_REPORT_TEX = os.path.join(REPORTDIR, "quast_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.tex")
@@ -338,7 +342,8 @@ rule metagenome_to_single_file:
 # Rule to concatenate metagenome data.
 localrules: metagenome_concatenate
 rule metagenome_concatenate:
-    input:  references = METAGENOME_FASTA,
+    input:  abundances = METAGENOME_ABUNDANCES,
+            references = METAGENOME_FASTA,
     output: report = METAGENOME_CONCAT,
     log:    log = "logs/metagenome_concatenate/{metagenome}/log.log",
     conda:  "config/conda-seaborn-env.yml"
@@ -450,12 +455,21 @@ rule generate_abundances:
 
 
 # Rule to remove all the non-[A, C, G, T] characters from a fasta file. Should be ran first.
-rule preprocessing_single_metagenome:
+rule preprocessing_single_genome:
     input:  assembly = UNPREPROCESSED_METAGENOME,
     output: report = PREPROCESSED_METAGENOME,
     log:    log = "logs/preprocessing_single_genome/{metagenome}/{genome}/log.log",
     conda:  "config/conda-biopython-env.yml"
     script: "scripts/preprocessing.py"
+
+
+# Rule to remove all the non-[A, C, G, T] characters from a fasta file. Should be ran first.
+rule preprocessing_all_genomes:
+    input:  assembly = METAGENOME_DIR,
+    output: report = METAGENOME_FASTA,
+    log:    log = "logs/preprocessing_single_genome/{metagenome}/log.log",
+    conda:  "config/conda-biopython-env.yml"
+    script: "scripts/preprocessing_all_genomes.py"
 
 
 # Rule to circularize non-circular sequences of the genome or metagenome.
