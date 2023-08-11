@@ -138,7 +138,8 @@ META_BASE7_UNPREPROCESSED = [os.path.join(META_BASE7_DIR, "GCF_000005845.2_ASM58
 # COMPLEX32_ABUNDANCES = os.path.join(DATADIR, "meta", "complex32", "nanosim.abundances.tsv")
 METAGENOME_ABUNDANCES = os.path.join(DATADIR, "meta", "{metagenome}", "nanosim.abundances.tsv")
 METAGENOME_DIR = os.path.join(DATADIR, "meta", "{metagenome}")
-METAGENOME_FASTA = get_metagenome_files("meta{metagenome}", METAGENOME_ABUNDANCES)
+# METAGENOME_FASTA = get_metagenome_files("meta{metagenome}", METAGENOME_ABUNDANCES)
+METAGENOME_FASTA = "--{metagenome}-"
 REPORT_TEX = os.path.join(REPORTDIR, "output", "{file_name}_k{k}ma{min_abundance}t{threads}", "{report_name}", "{report_file_name}.tex")
 REPORT_TEX_FAST = os.path.join(REPORTDIR, "output_fast", "{file_name}_k{k}ma{min_abundance}t{threads}", "{report_name}", "{report_file_name}.tex")
 #QUAST_REPORT_TEX = os.path.join(REPORTDIR, "quast_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.tex")
@@ -328,7 +329,7 @@ rule metagenome_to_single_file:
     input:  abundances = METAGENOME_ABUNDANCES,
             references = METAGENOME_FASTA,
     output: report = METAGENOME,
-    log:    log = "logs/metagenome_to_single_file/log.log",
+    log:    log = "logs/metagenome_to_single_file/{metagenome}/log.log",
     conda:  "config/conda-seaborn-env.yml"
     script: "scripts/metagenome_to_single_file.py"
 
@@ -339,7 +340,7 @@ localrules: metagenome_concatenate
 rule metagenome_concatenate:
     input:  references = METAGENOME_FASTA,
     output: report = METAGENOME_CONCAT,
-    log:    log = "logs/metagenome_concatenate/log.log",
+    log:    log = "logs/metagenome_concatenate/{metagenome}/log.log",
     conda:  "config/conda-seaborn-env.yml"
     script: "scripts/metagenome_concatenate.py"
 
