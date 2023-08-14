@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import pandas as pd
-
+import os
 
 
 
@@ -13,7 +13,7 @@ names = abundances_df["Size"]
 fasta_files = []
 for name in names:
     if name.endswith(".fasta"):
-        fasta_files.append(os.path.join(snakemake.input.reference, name))
+        fasta_files.append(os.path.join(snakemake.input.references, name))
 
 
 

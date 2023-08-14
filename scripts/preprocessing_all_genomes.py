@@ -3,11 +3,19 @@
 from Bio import SeqIO
 from Bio.Seq import Seq
 import os
+from pathlib import Path
+import logging
 
 
+logging.basicConfig(filename='preprocessing_all_genomes.log', level=logging.INFO)
+logging.info('Logging initiated succesfully')
+counter = 1
+
+if not os.path.isdir(snakemake.output.report): os.mkdir(snakemake.output.report)
 for filename in os.listdir(snakemake.input.assembly):
     file = os.path.join(snakemake.input.assembly, filename)
     record_list = []
+    if os.path.isdir(file): continue
     with open(file, 'r') as infile:
 
         # Going through all the sequences from the input file
@@ -30,8 +38,10 @@ for filename in os.listdir(snakemake.input.assembly):
     # Writing our result to the output file
     if filename.endswith(".fna"): name = filename[:-4] + ".fasta"
     else: name = filename
+    # Path(os.path.join(snakemake.output.report, name)).touch()
     with open(os.path.join(snakemake.output.report, name), 'w') as outfile:
         for i in range(len(record_list)):
             outfile.write('>Sequence{}\n'.format(i))
             outfile.write('{}\n'.format(record_list[i]))
+    logging.info(f'File {counter} preprocessed')
     

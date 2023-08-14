@@ -462,9 +462,13 @@ rule preprocessing_single_genome:
 # Rule to remove all the non-[A, C, G, T] characters from a fasta file. Should be ran first.
 rule preprocessing_all_genomes:
     input:  assembly = METAGENOME_DIR,
-    output: report = METAGENOME_FASTA,
+    output: report = directory(METAGENOME_FASTA),
     log:    log = "logs/preprocessing_single_genome/{metagenome}/log.log",
     conda:  "config/conda-biopython-env.yml"
+    resources:
+            time_min = 1440, 
+            mem_mb = 10_000, # likely too much
+            queue = "medium,bigmem,aurinko",
     script: "scripts/preprocessing_all_genomes.py"
 
 
