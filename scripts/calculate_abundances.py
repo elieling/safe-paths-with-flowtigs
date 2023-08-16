@@ -2,6 +2,7 @@
 
 import os
 import numpy as np
+import math
 
 
 genomes = []
@@ -12,11 +13,16 @@ for file in os.listdir(folder):
 
 np.random.seed(42)
 results = []
+maximum = 0
 while len(results) < len(genomes):
-    value = np.random.lognormal(0, 1)
-    if value != 0.0: results.append(value)
+    value = np.random.lognormal(0, 2)
+    if value != 0.0: 
+        results.append(math.ceil(value))
+        maximum = max(maximum, math.ceil(value))
 print(results)
 with open(snakemake.output.abundances, 'w') as outfile:
     outfile.write("Size\t50000\n")
     for i in range(len(genomes)):
         outfile.write(str(genomes[i]) + "\t" + str(results[i]) + "\n")
+
+print("Maximum:", maximum)

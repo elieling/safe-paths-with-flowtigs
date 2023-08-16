@@ -331,6 +331,10 @@ rule metagenome_to_single_file:
     output: report = METAGENOME,
     log:    log = "logs/metagenome_to_single_file/{metagenome}/log.log",
     conda:  "config/conda-seaborn-env.yml"
+    resources:
+            time_min = 1440, 
+            mem_mb = 10_000, 
+            queue = "medium,bigmem,aurinko",
     script: "scripts/metagenome_to_single_file.py"
 
 
@@ -343,6 +347,10 @@ rule metagenome_concatenate:
     output: report = METAGENOME_CONCAT,
     log:    log = "logs/metagenome_concatenate/{metagenome}/log.log",
     conda:  "config/conda-seaborn-env.yml"
+    resources:
+            time_min = 600, 
+            mem_mb = 10_000,
+            queue = "medium,bigmem,aurinko",
     script: "scripts/metagenome_concatenate.py"
 
 
@@ -367,73 +375,14 @@ rule metagenome_concatenate:
 #     log:    log = "logs/metagenome_concatenate/log.log",
 #     conda:  "config/conda-seaborn-env.yml"
 #     script: "scripts/metagenome_concatenate.py"
+HMP = [os.path.join(DATADIR, 'meta73_species', 'Rhodobacter_sphaeroides_2.4.1_plasmid_D,_complete_sequence.fasta'), os.path.join(DATADIR, 'meta73_species', 'Deinococcus_radiodurans_R1_plasmid_CP1,_complete_sequence.fasta'), os.path.join(DATADIR, 'meta73_species', 'Methanobrevibacter_smithii_ATCC_35061_chromosome,_complete_genome.fasta'), os.path.join(DATADIR, 'meta73_species', 'Rhodobacter_sphaeroides_2.4.1_chromosome_1,_complete_sequence.fasta'), os.path.join(DATADIR, 'meta73_species', 'Streptococcus_mutans_UA159_GCA_000007465.2.fasta'), os.path.join(DATADIR, 'meta73_species', 'Bacillus_cereus_ATCC_10987_complete_genome.fasta'), os.path.join(DATADIR, 'meta73_species', '_Staphylococcus_aureus_subsp._aureus_USA300__TCH1516_chromosome_.fasta'), os.path.join(DATADIR, 'meta73_species', 'Bacteroides_vulgatus_ATCC_8482_chromosome,_complete_genome.fasta'), os.path.join(DATADIR, 'meta73_species', 'Rhodobacter_sphaeroides_2.4.1_plasmid_B,_complete_sequence.fasta'), os.path.join(DATADIR, 'meta73_species', 'Rhodobacter_sphaeroides_2.4.1_chromosome_2,_complete_sequence.fasta'), os.path.join(DATADIR, 'meta73_species', 'Escherichia_coli_str._K-12_substr._MG1655,_complete_genome.fasta'), os.path.join(DATADIR, 'meta73_species', 'Rhodobacter_sphaeroides_2.4.1_plasmid_C,_complete_sequence.fasta'), os.path.join(DATADIR, 'meta73_species', 'Rhodobacter_sphaeroides_2.4.1_plasmid_E,_partial_sequence.fasta'), os.path.join(DATADIR, 'meta73_species', 'Clostridium_beijerinckii_NCIMB_8052_chromosome,_complete_genome.fasta'), os.path.join(DATADIR, 'meta73_species', 'Streptococcus_pneumoniae_TIGR4_chromosome,_complete_genome.fasta'), os.path.join(DATADIR, 'meta73_species', 'Rhodobacter_sphaeroides_2.4.1_plasmid_A,_partial_sequence.fasta'), os.path.join(DATADIR, 'meta73_species', 'Candida_albicans_SC5314_GCA_000784635.1.fasta'), os.path.join(DATADIR, 'meta73_species', 'Actinomyces_odontolyticus_ATCC_17982_Scfld020_genomic_scaffold.fasta'), os.path.join(DATADIR, 'meta73_species', 'Neisseria_meningitidis_MC58_chromosome,_complete_genome.fasta'), os.path.join(DATADIR, 'meta73_species', 'Helicobacter_pylori_26695_chromosome_complete_genome.fasta'), os.path.join(DATADIR, 'meta73_species', 'Acinetobacter_baumannii_ATCC_17978_chromosome,_complete_genome.fasta'), os.path.join(DATADIR, 'meta73_species', 'Propionibacterium_acnes_KPA171202_chromosome,_complete_genome.fasta'), os.path.join(DATADIR, 'meta73_species', 'Actinomyces_odontolyticus_ATCC_17982_Scfld021_genomic_scaffold,.fasta'), os.path.join(DATADIR, 'meta73_species', 'Streptococcus_agalactiae_2603VR_chromosome,_complete_genome.fasta'), os.path.join(DATADIR, 'meta73_species', 'Deinococcus_radiodurans_R1_chromosome_2,_complete_sequence.fasta'), os.path.join(DATADIR, 'meta73_species', 'Deinococcus_radiodurans_R1_chromosome_1,_complete_sequence.fasta'), os.path.join(DATADIR, 'meta73_species', 'Staphylococcus_epidermidis_ATCC_12228_plasmid_pSE-12228-02,_complete_sequence.fasta'), os.path.join(DATADIR, 'meta73_species', 'Acinetobacter_baumannii_ATCC_17978_plasmid_pAB1,_complete_sequence.fasta'), os.path.join(DATADIR, 'meta73_species', 'Acinetobacter_baumannii_ATCC_17978_plasmid_pAB2,_complete_sequence.fasta'), os.path.join(DATADIR, 'meta73_species', 'Staphylococcus_epidermidis_ATCC_12228_plasmid_pSE-12228-04,_complete_sequence.fasta'), os.path.join(DATADIR, 'meta73_species', 'Pseudomonas_aeruginosa_PAO1_chromosome_complete_genome.fasta'), os.path.join(DATADIR, 'meta73_species', 'Deinococcus_radiodurans_R1_plasmid_MP1,_complete_sequence.fasta'), os.path.join(DATADIR, 'meta73_species', 'Enterococcus_faecalis_OG1RF_chromosome,_complete_genome.fasta'), os.path.join(DATADIR, 'meta73_species', '_Staphylococcus_aureus_subsp._aureus_USA300__TCH1516_plasmid_pUSA01-HOU_.fasta'), os.path.join(DATADIR, 'meta73_species', 'Staphylococcus_epidermidis_ATCC_12228_plasmid_pSE-12228-06,_complete_sequence.fasta'), os.path.join(DATADIR, 'meta73_species', 'Bacillus_cereus_ATCC_10987_plasmid_pBc10987,_complete_sequence.fasta'), os.path.join(DATADIR, 'meta73_species', 'Staphylococcus_epidermidis_ATCC_12228_plasmid_pSE-12228-03,_complete_sequence.fasta'), os.path.join(DATADIR, 'meta73_species', 'Listeria_monocytogenes_EGD-e,_complete_genome.fasta'), os.path.join(DATADIR, 'meta73_species', 'Staphylococcus_epidermidis_ATCC_12228_plasmid_pSE-12228-01,_complete_sequence.fasta'), os.path.join(DATADIR, 'meta73_species', 'Lactobacillus_gasseri_ATCC_33323_chromosome,_complete_genome.fasta'), os.path.join(DATADIR, 'meta73_species', '_Staphylococcus_aureus_subsp._aureus_USA300__TCH1516_plasmid_pUSA300HOUMR_.fasta'), os.path.join(DATADIR, 'meta73_species', 'Staphylococcus_epidermidis_ATCC_12228_plasmid_pSE-12228-05,_complete_sequence.fasta'), os.path.join(DATADIR, 'meta73_species', 'Staphylococcus_epidermidis_ATCC_12228_chromosome,_complete_genome.fasta'), os.path.join(DATADIR, 'meta73_species', 'Streptococcus_mutans_UA159_chromosome,_complete_genome.fasta')]
 
-
-# # Rule to get sequences for metagenome data.
-# localrules: medium20_to_single_file
-# rule medium20_to_single_file:
-#     input:  abundances = MEDIUM20_ABUNDANCES,
-#             references = MEDIUM20_FASTA,
-#     output: report = MEDIUM20,
-#     log:    log = "logs/medium20_to_single_file/log.log",
-#     conda:  "config/conda-seaborn-env.yml"
-#     script: "scripts/metagenome_to_single_file.py"
-
-
-
-# # Rule to concatenate metagenome data.
-# localrules: medium32_concatenate
-# rule medium32_concatenate:
-#     input:  references = COMPLEX32_FASTA,
-#     output: report = COMPLEX32_CONCAT,
-#     log:    log = "logs/medium20_concatenate/log.log",
-#     conda:  "config/conda-seaborn-env.yml"
-#     script: "scripts/metagenome_concatenate.py"
-
-
-
-# # Rule to get sequences for metagenome data.
-# localrules: medium32_to_single_file
-# rule medium32_to_single_file:
-#     input:  abundances = COMPLEX32_ABUNDANCES,
-#             references = COMPLEX32_FASTA,
-#     output: report = COMPLEX32,
-#     log:    log = "logs/medium20_to_single_file/log.log",
-#     conda:  "config/conda-seaborn-env.yml"
-#     script: "scripts/metagenome_to_single_file.py"
-
-
-
-# # Rule to concatenate metagenome data.
-# localrules: medium20_concatenate
-# rule medium20_concatenate:
-#     input:  references = MEDIUM20_FASTA,
-#     output: report = MEDIUM20_CONCAT,
-#     log:    log = "logs/medium20_concatenate/log.log",
-#     conda:  "config/conda-seaborn-env.yml"
-#     script: "scripts/metagenome_concatenate.py"
-
-
-
-# # Rule to remove all the non-[A, C, G, T] characters from a fasta file. Should be ran first.
-# rule preprocessing_single_genome:
-#     input:  assembly = UNPREPROCESSED_META_BASE7,
-#     output: report = PREPROCESSED_GENOME,
-#     log:    log = "logs/preprocessing_single_genome/{genome}/log.log",
-#     conda:  "config/conda-biopython-env.yml"
-#     script: "scripts/preprocessing.py"
-
-
-# # Rule to remove all the non-[A, C, G, T] characters from a fasta file. Should be ran first.
-# rule preprocessing_single_medium20_genome:
-#     input:  assembly = UNPREPROCESSED_MEDIUM20,
-#     output: report = PREPROCESSED_MEDIUM,
-#     log:    log = "logs/preprocessing_single_genome/{genome}/log.log",
-#     conda:  "config/conda-biopython-env.yml"
-#     script: "scripts/preprocessing.py"
-
-    
-
+rule many_rules:
+    input: HMP
+    output: [os.path.join(DATADIR, "test")]
+    shell: """
+    ls
+    """
 
 
 ########################
@@ -887,10 +836,10 @@ rule download_practical_omnitigs:
         rm -rf practical-omnitigs
         git clone https://github.com/algbio/practical-omnitigs.git
         cd practical-omnitigs
-        git checkout f1c451ee2ce59f6e63ca32c77ac0cd590a8d5ecb 
+        git checkout 16a17703e6cd060863857a2d348cdecb2df12aa5
         cd implementation
         cargo fetch
-    """ 
+    """ # f1c451ee2ce59f6e63ca32c77ac0cd590a8d5ecb 
 
 
 

@@ -11,6 +11,7 @@ for filename in os.listdir("/wrk-vakka/users/ebingerv/snakemake-flowtigs/data/me
     output_file = os.path.join("/wrk-vakka/users/ebingerv/snakemake-flowtigs/data/meta/Human_gut/", filename)
  
     if os.path.isdir(input_file): continue
+    if os.path.isfile(output_file): continue
 
     with gzip.open(input_file, 'rb') as input:
         with open(output_file, 'wb') as output:
