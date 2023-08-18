@@ -10,6 +10,8 @@ abundance_df = pd.read_csv(snakemake.input.abundances, sep='\t')
 names = abundance_df["Size"]
 fasta_files = []
 for name in names:
+    if name.endswith(".fna"):
+        name = name[:-4] + ".fasta"
     if name.endswith(".fasta"):
         fasta_files.append(os.path.join(snakemake.input.references, name))
 
