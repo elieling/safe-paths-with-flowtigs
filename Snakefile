@@ -622,8 +622,8 @@ rule add_longest_unaligned_contig_length_to_report:
     log:    log = "logs/the_longest_unaligned_{algorithm}/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
     conda:  "config/conda-seaborn-env.yml"
     resources: mem_mb = 495_000, 
-               time_min = 60,
-               queue = "short, medium, bigmem,aurinko",
+               time_min = 120,
+               queue = "medium,bigmem,aurinko",
     shell:"""
         mkdir -p {output}
         cp -r {input.directory}/* {output}

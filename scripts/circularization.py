@@ -13,8 +13,8 @@ with open(snakemake.input.assembly, 'r') as infile:
     with open(snakemake.output.report, 'w') as outfile:
 
         # Going through all the sequences from the input file
-        sequences=[i for i in SeqIO.parse(infile, 'fasta')]
-        for sequence in sequences:
+        # sequences=[i for i in SeqIO.parse(infile, 'fasta')]
+        for sequence in SeqIO.parse(infile, 'fasta'):
 
             # Extracting the actual sequence and transforming it to string format
             data = sequence.seq
