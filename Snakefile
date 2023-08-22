@@ -147,6 +147,13 @@ REPORT_TEX_FAST = os.path.join(REPORTDIR, "output_fast", "{file_name}_k{k}ma{min
 #QUAST_REPORT_TEX = os.path.join(REPORTDIR, "quast_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.tex")
 #QUAST_UNALIGNED = os.path.join(REPORTDIR, "quast_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}", "contigs_reports", "contigs_report_report.unaligned.info")
 #QUAST_EXTENDED_REPORT = os.path.join(REPORTDIR, "extended_quast_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.tex")
+LOG_UNITIGS = os.path.join(REPORTDIR, "safe_paths_unitigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "log.log") 
+LOG_NODE_TO_ARC = os.path.join(REPORTDIR, "node_to_arc", "{file_name}_k{k}ma{min_abundance}t{threads}", "log.log") 
+LOG_FLOWTIGS = os.path.join(REPORTDIR, "safe_paths_flowtigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "log.log") 
+LOG_TRIVIAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_trivial-omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "log.log") 
+LOG_MULTI_SAFE = os.path.join(REPORTDIR, "safe_paths_multi-safe", "{file_name}_k{k}ma{min_abundance}t{threads}", "log.log") 
+LOG_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "log.log") 
+LOG_ALGORITHM = os.path.join(REPORTDIR, "safe_paths_{algorithm}", "{wildcards.file_name}_k{wildcards.k}ma{wildcards.min_abundance}t{wildcards.threads}", "log.log") 
 
 
 
@@ -166,6 +173,49 @@ rule do_nothing:
 localrules: report_all
 rule report_all:
     input:  reports = expand(REPORT, species = ["ecoli", "scerevisiae"], k = [23, 31, 39]),
+
+
+
+##################################
+###### Resources evaluation ######
+##################################
+
+
+
+def decode_time(string):
+    try:
+        if string.count(':') == 2:
+            hours, minutes, seconds = map(float, string.split(':'))
+            time = datetime.timedelta(hours = hours, minutes = minutes, seconds = seconds)
+        elif string.count(':') == 1:
+            minutes, seconds = map(float, string.split(':'))
+            time = datetime.timedelta(minutes = minutes, seconds = seconds)
+        else:
+            raise Exception(f"unknown time string '{string}'")
+        return time.total_seconds()
+    except Exception:
+        traceback.print_exc()
+        sys.exit("Catched exception")
+
+
+def get_time_from_log(log_file_name):
+    with open(log_file_name, 'r') as input_file:
+        values = {"time": 0, "mem": 0}
+        for line in input_file:
+            if "Elapsed (wall clock) time (h:mm:ss or m:ss):" in line:
+                line = line.replace("Elapsed (wall clock) time (h:mm:ss or m:ss):", "").strip()
+                values["time"] = decode_time(line) + values["time"]
+            elif "Maximum resident set size" in line:
+                values["mem"] = max(int(line.split(':')[1].strip()), values["mem"])
+
+            assert "time" in values, f"No time found in {log_file_name}"
+            assert "mem" in values, f"No mem found in {log_file_name}"
+            return values
+
+    # runtime = [os.path.join(safe_format(LOG_ALGORITHM, algorithm = algorithm)) for algorithm in FAST_ALGORITHMS],    
+    # runtime = [os.path.join(safe_format(LOG_ALGORITHM, algorithm = algorithm)) for algorithm in ALGORITHMS],
+
+ 
 
 ###############################
 ###### Report Generation ######
@@ -252,6 +302,7 @@ rule create_single_report_tex:
             script_column_arguments = get_single_report_script_column_arguments_from_wildcards,
             name_file = REPORT_NAME_FILE,
             hashdir = REPORT_HASHDIR,
+            runtime = [get_time_from_log(safe_format(LOG_ALGORITHM, algorithm = algorithm)) for algorithm in ALGORITHMS],
     wildcard_constraints:
             report_name = "[^/]+",
     conda: "config/conda-latex-gen-env.yml" 
@@ -275,6 +326,7 @@ rule create_single_report_for_fast_algorithms_only:
             script_column_arguments = get_single_report_script_column_arguments_from_wildcards_fast,
             name_file = REPORT_NAME_FILE,
             hashdir = REPORT_HASHDIR,
+            runtime = [get_time_from_log(os.path.join(safe_format(LOG_ALGORITHM, algorithm = algorithm))) for algorithm in FAST_ALGORITHMS],
     wildcard_constraints:
             report_name = "[^/]+",
     conda: "config/conda-latex-gen-env.yml" 
@@ -315,6 +367,9 @@ rule create_combined_eaxmax_graph_for_fast_algorithms_only:
         mkdir -p "$(dirname '{output}')"
         python3 '{input.script}' '{params.input_quast_csvs}' '{output}'
         """
+
+
+
 
     
 
@@ -455,6 +510,7 @@ rule circularization:
 rule bcalm2_build:
     input:  references = GENOME_CIRCULAR_REFERENCES,
     output: tigs = BUILD_FA,
+            log = LOG_UNITIGS,
     log:    log = "logs/bcalm2/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
     params: references = lambda wildcards, input: "'" + "' '".join(input.references) + "'",
     conda:  "config/conda-bcalm2-env.yml",
@@ -469,6 +525,7 @@ rule bcalm2_build:
         rm -f '{log.log}'
         ${{CONDA_PREFIX}}/bin/time -v bcalm -nb-cores {threads} -kmer-size {wildcards.k} -in '{input.references}' -out '{output.tigs}' -abundance-min {wildcards.min_abundance} 2>&1 | tee -a '{log.log}'
         mv '{output.tigs}.unitigs.fa' '{output.tigs}'
+        cp {log.log} {output.log}
         """
 
 
@@ -500,6 +557,7 @@ rule node_to_arc_centric_dbg:
             binary = NODE_TO_ARC_CENTRIC_DBG_BINARY,
     log:    log = "logs/node_to_arc/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
     output: arc_centric_dbg = NODE_TO_ARC_CENTRIC_DBG,   # .edgelist
+            log = LOG_NODE_TO_ARC,
     conda:  "config/conda-time-env.yml",
     resources:
             time_min = 1440, # likely too much
@@ -507,7 +565,8 @@ rule node_to_arc_centric_dbg:
             queue = "short,medium,bigmem,aurinko",
     shell:  """
         rm -f '{log.log}'
-        ${{CONDA_PREFIX}}/bin/time -v '{input.binary}' -k {wildcards.k} --input '{input.node_centric_dbg}' --output '{output.arc_centric_dbg}'
+        ${{CONDA_PREFIX}}/bin/time -v '{input.binary}' -k {wildcards.k} --input '{input.node_centric_dbg}' --output '{output.arc_centric_dbg}' 2>&1 | tee -a '{log.log}'
+        cp {log.log} {output.log}
     """
 
 
@@ -542,6 +601,7 @@ rule safe_paths:
             binary = SAFE_PATHS_BINARY,
     log:    log = "logs/safe_paths/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
     output: safe_paths = SAFE_PATHS,
+            log = LOG_FLOWTIGS,
     conda:  "config/conda-time-env.yml",
     resources:
             time_min = 2500, # likely too much
@@ -549,7 +609,8 @@ rule safe_paths:
             queue = "medium,bigmem,aurinko",
     shell:  """
         rm -f '{log.log}'
-        ${{CONDA_PREFIX}}/bin/time -v '{input.binary}' -k {wildcards.k} --input '{input.arc_centric_dbg}' --output '{output.safe_paths}'
+        ${{CONDA_PREFIX}}/bin/time -v '{input.binary}' -k {wildcards.k} --input '{input.arc_centric_dbg}' --output '{output.safe_paths}' 2>&1 | tee -a '{log.log}'
+        cp {log.log} {output.log}
     """
 
 
@@ -682,6 +743,7 @@ rule practical_multisafe:
             binary = PRACTICAL_OMNITIGS_BINARY,
     log:    log = "logs/practical_omnitigs/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
     output: practical_omnitigs = PRACTICAL_OMNITIGS,  
+            log = LOG_MULTI_SAFE,
     conda:  "config/conda-rust-env.yml",
     resources:
             time_min = 4320, 
@@ -689,7 +751,8 @@ rule practical_multisafe:
             queue = "bigmem,aurinko",
     shell:  """
         rm -f '{log.log}'
-        '{input.binary}' compute-multi-safe-walks --file-format bcalm2 --input '{input.practical_omnitigs}' --output '{output.practical_omnitigs}' -k {wildcards.k}
+        '{input.binary}' compute-multi-safe-walks --file-format bcalm2 --input '{input.practical_omnitigs}' --output '{output.practical_omnitigs}' -k {wildcards.k} 2>&1 | tee -a '{log.log}'
+        cp {log.log} {output.log}
     """
 
 
@@ -699,6 +762,7 @@ rule practical_omitigs:
             binary = PRACTICAL_OMNITIGS_BINARY,
     log:    log = "logs/practical_test_omnitigs/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
     output: practical_omnitigs = PRACTICAL_TEST_OMNITIGS,  
+            log = LOG_OMNITIGS,
     conda:  "config/conda-rust-env.yml",
     resources:
             time_min = 4320, 
@@ -706,7 +770,8 @@ rule practical_omitigs:
             queue = "bigmem,aurinko",
     shell:  """
         rm -f '{log.log}'
-        '{input.binary}' compute-omnitigs --file-format bcalm2 --input '{input.practical_omnitigs}' --output '{output.practical_omnitigs}' -k {wildcards.k}
+        '{input.binary}' compute-omnitigs --file-format bcalm2 --input '{input.practical_omnitigs}' --output '{output.practical_omnitigs}' -k {wildcards.k} 2>&1 | tee -a '{log.log}'
+        cp {log.log} {output.log}
     """
 
 
@@ -716,6 +781,7 @@ rule practical_trivial_omitigs:
             binary = PRACTICAL_OMNITIGS_BINARY,
     log:    log = "logs/practical_trivial_omnitigs/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
     output: practical_omnitigs = PRACTICAL_TRIVIAL_OMNITIGS,  
+            log = LOG_TRIVIAL_OMNITIGS,
     conda:  "config/conda-rust-env.yml",
     resources:
             time_min = 1440, # likely too much
@@ -723,7 +789,8 @@ rule practical_trivial_omitigs:
             queue = "medium,bigmem,aurinko",
     shell:  """
         rm -f '{log.log}'
-        '{input.binary}' compute-trivial-omnitigs --non-scc --multi-safe --file-format bcalm2 --input '{input.practical_omnitigs}' --output '{output.practical_omnitigs}' -k {wildcards.k}
+        '{input.binary}' compute-trivial-omnitigs --non-scc --multi-safe --file-format bcalm2 --input '{input.practical_omnitigs}' --output '{output.practical_omnitigs}' -k {wildcards.k} 2>&1 | tee -a '{log.log}'
+        cp {log.log} {output.log}
     """
 
 
