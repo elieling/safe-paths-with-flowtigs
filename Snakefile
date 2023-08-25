@@ -336,42 +336,14 @@ rule create_combined_eaxmax_graph_for_fast_algorithms_only:
 
 
 
-def decode_time(string):
-    try:
-        if string.count(':') == 2:
-            hours, minutes, seconds = map(float, string.split(':'))
-            time = datetime.timedelta(hours = hours, minutes = minutes, seconds = seconds)
-        elif string.count(':') == 1:
-            minutes, seconds = map(float, string.split(':'))
-            time = datetime.timedelta(minutes = minutes, seconds = seconds)
-        else:
-            raise Exception(f"unknown time string '{string}'")
-        return time.total_seconds()
-    except Exception:
-        traceback.print_exc()
-        sys.exit("Catched exception")
-
-
-def get_time_from_log(log_file_name):
-    with open(log_file_name, 'r') as input_file:
-        values = {"time": 0, "mem": 0}
-        for line in input_file:
-            if "Elapsed (wall clock) time (h:mm:ss or m:ss):" in line:
-                line = line.replace("Elapsed (wall clock) time (h:mm:ss or m:ss):", "").strip()
-                values["time"] = decode_time(line) + values["time"]
-            elif "Maximum resident set size" in line:
-                values["mem"] = max(int(line.split(':')[1].strip()), values["mem"])
-
-            assert "time" in values, f"No time found in {log_file_name}"
-            assert "mem" in values, f"No mem found in {log_file_name}"
-            return values
-
-
+# Rule to gather rutimes and memory usage of algorithms into a tsv file.
+# Order: 
 rule gathering_runtimes:
-    input:  log_files = [os.path.join(safe_format(LOG_ALGORITHM, algorithm = algorithm)) for algorithm in ALGORITHMS], 
+    input:  log_files = [os.path.join(safe_format(LOG_ALGORITHM, algorithm = algorithm)) for algorithm in ALGORITHMS] + [LOG_NODE_TO_ARC], 
     output: report = ALL_RUNTIMES,
     log:    log = "logs/gathering_runtimes/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
     conda:  "config/conda-seaborn-env.yml"
+    params: row_names = ALGORITHM_COLUMN_NAMES + ["node_to_arc"]
     resources:
             time_min = 60, 
             mem_mb = 10_000, 
@@ -380,31 +352,19 @@ rule gathering_runtimes:
 
 
 rule gathering_fast_runtimes:
-    input:  log_files = [os.path.join(safe_format(LOG_ALGORITHM, algorithm = algorithm)) for algorithm in FAST_ALGORITHMS], 
+    input:  log_files = [os.path.join(safe_format(LOG_ALGORITHM, algorithm = algorithm)) for algorithm in FAST_ALGORITHMS] + [LOG_NODE_TO_ARC], 
     output: report = FAST_RUNTIMES,
-    log:    log = "logs/gathering_runtimes/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
+    log:    log = "logs/gathering_fast_runtimes/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
     conda:  "config/conda-seaborn-env.yml"
+    params: row_names = FAST_ALGORITHM_COLUMN_NAMES + ["node_to_arc"]
     resources:
             time_min = 60, 
             mem_mb = 10_000, 
             queue = "short,medium,bigmem,aurinko",
     script: "scripts/gather_runtimes.py"
 
-    # runtime = [os.path.join(safe_format(LOG_ALGORITHM, algorithm = algorithm)) for algorithm in FAST_ALGORITHMS],    
-    # runtime = [os.path.join(safe_format(LOG_ALGORITHM, algorithm = algorithm)) for algorithm in ALGORITHMS],
-    # runtime = [
-    #             get_time_from_log(
-    #                 os.path.join(REPORTDIR, safe_format("safe_paths_{algorithm}", algorithm=algorithm),
-    #                 "{wildcards.file_name}_k{wildcards.k}ma{wildcards.min_abundance}t{wildcards.threads}",
-    #                 "log.log")
-    #             )
-    #             for algorithm in ALGORITHMS
-    #         ]  
-    
-            # runtime = [get_time_from_log(os.path.join(safe_format(LOG_ALGORITHM, algorithm = algorithm))) for algorithm in FAST_ALGORITHMS],  
 
 
-    
 
 ###########################
 ###### Metagenomes ########

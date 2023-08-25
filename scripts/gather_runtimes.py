@@ -21,16 +21,13 @@ def decode_time(string):
 def get_time_from_log(log_file_name):
     with open(log_file_name, 'r') as input_file:
         values = {"time": 0, "mem": 0}
-        print("Hello")
         for line in input_file:
-            print(line)
             if "Elapsed (wall clock) time (h:mm:ss or m:ss):" in line:
                 line = line.replace("Elapsed (wall clock) time (h:mm:ss or m:ss):", "").strip()
                 values["time"] = decode_time(line) + values["time"]
                 print("*"*70)
                 print(log_file_name)
                 print("Line", line)
-                print("Values", values)
             elif "Maximum resident set size" in line:
                 values["mem"] = max(int(line.split(':')[1].strip()), values["mem"])
                 print("Values", values)
@@ -54,5 +51,6 @@ values = []
 for log_file in snakemake.input.log_files:
     values.append(get_time_from_log(log_file))
 
-df = pd.DataFrame(values)
-df.to_csv(snakemake.output.report, sep='\t', index=False)
+df = pd.DataFrame(values, index=snakemake.params.row_names)
+print(snakemake.params.row_names)
+df.to_csv(snakemake.output.report, sep='\t')
