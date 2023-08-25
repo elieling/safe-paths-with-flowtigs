@@ -1,4 +1,4 @@
-import itertools, sys, traceback, pathlib, os, time
+import itertools, sys, traceback, pathlib, os, time, datetime
 
 ###############################
 ###### Preprocess Config ######
@@ -153,8 +153,9 @@ LOG_FLOWTIGS = os.path.join(REPORTDIR, "safe_paths_flowtigs", "{file_name}_k{k}m
 LOG_TRIVIAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_trivial-omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "log.log") 
 LOG_MULTI_SAFE = os.path.join(REPORTDIR, "safe_paths_multi-safe", "{file_name}_k{k}ma{min_abundance}t{threads}", "log.log") 
 LOG_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "log.log") 
-LOG_ALGORITHM = os.path.join(REPORTDIR, "safe_paths_{algorithm}", "{wildcards.file_name}_k{wildcards.k}ma{wildcards.min_abundance}t{wildcards.threads}", "log.log") 
-
+LOG_ALGORITHM = os.path.join(REPORTDIR, "safe_paths_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}", "log.log") 
+ALL_RUNTIMES = os.path.join(REPORTDIR, "runtimes", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.tsv")
+FAST_RUNTIMES = os.path.join(REPORTDIR, "fast_runtimes", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.tsv")
 
 
 #     DATADIR = ... # wherever you have your data, e.g. /wrk-vakka/users/<your username>/flowtigs
@@ -174,46 +175,6 @@ localrules: report_all
 rule report_all:
     input:  reports = expand(REPORT, species = ["ecoli", "scerevisiae"], k = [23, 31, 39]),
 
-
-
-##################################
-###### Resources evaluation ######
-##################################
-
-
-
-def decode_time(string):
-    try:
-        if string.count(':') == 2:
-            hours, minutes, seconds = map(float, string.split(':'))
-            time = datetime.timedelta(hours = hours, minutes = minutes, seconds = seconds)
-        elif string.count(':') == 1:
-            minutes, seconds = map(float, string.split(':'))
-            time = datetime.timedelta(minutes = minutes, seconds = seconds)
-        else:
-            raise Exception(f"unknown time string '{string}'")
-        return time.total_seconds()
-    except Exception:
-        traceback.print_exc()
-        sys.exit("Catched exception")
-
-
-def get_time_from_log(log_file_name):
-    with open(log_file_name, 'r') as input_file:
-        values = {"time": 0, "mem": 0}
-        for line in input_file:
-            if "Elapsed (wall clock) time (h:mm:ss or m:ss):" in line:
-                line = line.replace("Elapsed (wall clock) time (h:mm:ss or m:ss):", "").strip()
-                values["time"] = decode_time(line) + values["time"]
-            elif "Maximum resident set size" in line:
-                values["mem"] = max(int(line.split(':')[1].strip()), values["mem"])
-
-            assert "time" in values, f"No time found in {log_file_name}"
-            assert "mem" in values, f"No mem found in {log_file_name}"
-            return values
-
-    # runtime = [os.path.join(safe_format(LOG_ALGORITHM, algorithm = algorithm)) for algorithm in FAST_ALGORITHMS],    
-    # runtime = [os.path.join(safe_format(LOG_ALGORITHM, algorithm = algorithm)) for algorithm in ALGORITHMS],
 
  
 
@@ -302,7 +263,6 @@ rule create_single_report_tex:
             script_column_arguments = get_single_report_script_column_arguments_from_wildcards,
             name_file = REPORT_NAME_FILE,
             hashdir = REPORT_HASHDIR,
-            runtime = [get_time_from_log(safe_format(LOG_ALGORITHM, algorithm = algorithm)) for algorithm in ALGORITHMS],
     wildcard_constraints:
             report_name = "[^/]+",
     conda: "config/conda-latex-gen-env.yml" 
@@ -326,7 +286,6 @@ rule create_single_report_for_fast_algorithms_only:
             script_column_arguments = get_single_report_script_column_arguments_from_wildcards_fast,
             name_file = REPORT_NAME_FILE,
             hashdir = REPORT_HASHDIR,
-            runtime = [get_time_from_log(os.path.join(safe_format(LOG_ALGORITHM, algorithm = algorithm))) for algorithm in FAST_ALGORITHMS],
     wildcard_constraints:
             report_name = "[^/]+",
     conda: "config/conda-latex-gen-env.yml" 
@@ -369,6 +328,80 @@ rule create_combined_eaxmax_graph_for_fast_algorithms_only:
         """
 
 
+
+
+##################################
+###### Resources evaluation ######
+##################################
+
+
+
+def decode_time(string):
+    try:
+        if string.count(':') == 2:
+            hours, minutes, seconds = map(float, string.split(':'))
+            time = datetime.timedelta(hours = hours, minutes = minutes, seconds = seconds)
+        elif string.count(':') == 1:
+            minutes, seconds = map(float, string.split(':'))
+            time = datetime.timedelta(minutes = minutes, seconds = seconds)
+        else:
+            raise Exception(f"unknown time string '{string}'")
+        return time.total_seconds()
+    except Exception:
+        traceback.print_exc()
+        sys.exit("Catched exception")
+
+
+def get_time_from_log(log_file_name):
+    with open(log_file_name, 'r') as input_file:
+        values = {"time": 0, "mem": 0}
+        for line in input_file:
+            if "Elapsed (wall clock) time (h:mm:ss or m:ss):" in line:
+                line = line.replace("Elapsed (wall clock) time (h:mm:ss or m:ss):", "").strip()
+                values["time"] = decode_time(line) + values["time"]
+            elif "Maximum resident set size" in line:
+                values["mem"] = max(int(line.split(':')[1].strip()), values["mem"])
+
+            assert "time" in values, f"No time found in {log_file_name}"
+            assert "mem" in values, f"No mem found in {log_file_name}"
+            return values
+
+
+rule gathering_runtimes:
+    input:  log_files = [os.path.join(safe_format(LOG_ALGORITHM, algorithm = algorithm)) for algorithm in ALGORITHMS], 
+    output: report = ALL_RUNTIMES,
+    log:    log = "logs/gathering_runtimes/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
+    conda:  "config/conda-seaborn-env.yml"
+    resources:
+            time_min = 60, 
+            mem_mb = 10_000, 
+            queue = "short,medium,bigmem,aurinko",
+    script: "scripts/gather_runtimes.py"
+
+
+rule gathering_fast_runtimes:
+    input:  log_files = [os.path.join(safe_format(LOG_ALGORITHM, algorithm = algorithm)) for algorithm in FAST_ALGORITHMS], 
+    output: report = FAST_RUNTIMES,
+    log:    log = "logs/gathering_runtimes/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
+    conda:  "config/conda-seaborn-env.yml"
+    resources:
+            time_min = 60, 
+            mem_mb = 10_000, 
+            queue = "short,medium,bigmem,aurinko",
+    script: "scripts/gather_runtimes.py"
+
+    # runtime = [os.path.join(safe_format(LOG_ALGORITHM, algorithm = algorithm)) for algorithm in FAST_ALGORITHMS],    
+    # runtime = [os.path.join(safe_format(LOG_ALGORITHM, algorithm = algorithm)) for algorithm in ALGORITHMS],
+    # runtime = [
+    #             get_time_from_log(
+    #                 os.path.join(REPORTDIR, safe_format("safe_paths_{algorithm}", algorithm=algorithm),
+    #                 "{wildcards.file_name}_k{wildcards.k}ma{wildcards.min_abundance}t{wildcards.threads}",
+    #                 "log.log")
+    #             )
+    #             for algorithm in ALGORITHMS
+    #         ]  
+    
+            # runtime = [get_time_from_log(os.path.join(safe_format(LOG_ALGORITHM, algorithm = algorithm))) for algorithm in FAST_ALGORITHMS],  
 
 
     
@@ -751,7 +784,7 @@ rule practical_multisafe:
             queue = "bigmem,aurinko",
     shell:  """
         rm -f '{log.log}'
-        '{input.binary}' compute-multi-safe-walks --file-format bcalm2 --input '{input.practical_omnitigs}' --output '{output.practical_omnitigs}' -k {wildcards.k} 2>&1 | tee -a '{log.log}'
+        ${{CONDA_PREFIX}}/bin/time -v '{input.binary}' compute-multi-safe-walks --file-format bcalm2 --input '{input.practical_omnitigs}' --output '{output.practical_omnitigs}' -k {wildcards.k} 2>&1 | tee -a '{log.log}'
         cp {log.log} {output.log}
     """
 
@@ -770,7 +803,7 @@ rule practical_omitigs:
             queue = "bigmem,aurinko",
     shell:  """
         rm -f '{log.log}'
-        '{input.binary}' compute-omnitigs --file-format bcalm2 --input '{input.practical_omnitigs}' --output '{output.practical_omnitigs}' -k {wildcards.k} 2>&1 | tee -a '{log.log}'
+        ${{CONDA_PREFIX}}/bin/time -v '{input.binary}' compute-omnitigs --file-format bcalm2 --input '{input.practical_omnitigs}' --output '{output.practical_omnitigs}' -k {wildcards.k} 2>&1 | tee -a '{log.log}'
         cp {log.log} {output.log}
     """
 
@@ -789,7 +822,7 @@ rule practical_trivial_omitigs:
             queue = "medium,bigmem,aurinko",
     shell:  """
         rm -f '{log.log}'
-        '{input.binary}' compute-trivial-omnitigs --non-scc --multi-safe --file-format bcalm2 --input '{input.practical_omnitigs}' --output '{output.practical_omnitigs}' -k {wildcards.k} 2>&1 | tee -a '{log.log}'
+        ${{CONDA_PREFIX}}/bin/time -v '{input.binary}' compute-trivial-omnitigs --non-scc --multi-safe --file-format bcalm2 --input '{input.practical_omnitigs}' --output '{output.practical_omnitigs}' -k {wildcards.k} 2>&1 | tee -a '{log.log}'
         cp {log.log} {output.log}
     """
 
