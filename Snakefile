@@ -256,6 +256,7 @@ def get_single_report_script_column_arguments_from_wildcards_fast(wildcards):
 rule create_single_report_tex:
     input:  quasts = [safe_format(QUAST_EXTENDED_OUTPUT_DIR, algorithm = algorithm) for algorithm in ALGORITHMS],
             combined_eaxmax_plot = REPORT_COMBINED_EAXMAX_PLOT,
+            runtimes = ALL_RUNTIMES,
             script = CONVERT_VALIDATION_OUTPUTS_TO_LATEX_SCRIPT,
     output: report = REPORT_TEX,
     log:    log = "logs/create_single_report/{file_name}_k{k}ma{min_abundance}t{threads}r{report_name}rf{report_file_name}/log.log",
@@ -279,6 +280,7 @@ rule create_single_report_tex:
 rule create_single_report_for_fast_algorithms_only:
     input:  quasts = [safe_format(QUAST_EXTENDED_OUTPUT_DIR, algorithm = algorithm) for algorithm in FAST_ALGORITHMS],
             combined_eaxmax_plot = REPORT_COMBINED_EAXMAX_PLOT_FAST,
+            runtimes = FAST_RUNTIMES,
             script = CONVERT_FAST_VALIDATION_OUTPUTS_TO_LATEX_SCRIPT,
     output: report = REPORT_TEX_FAST,
     log:    log = "logs/create_single_report/{file_name}_k{k}ma{min_abundance}t{threads}r{report_name}rf{report_file_name}/log.log",
