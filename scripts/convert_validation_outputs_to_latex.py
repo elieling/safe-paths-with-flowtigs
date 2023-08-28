@@ -14,10 +14,11 @@ graph_statistics_file_name = sys.argv[3]
 bandage_png_name = sys.argv[4]
 combined_eaxmax_plot_name = sys.argv[5]
 output_file_name = sys.argv[6]
+runtimes_file = sys.argv[7]
 
 experiments = []
 
-for i in range(7, len(sys.argv), 5):
+for i in range(8, len(sys.argv), 5):
     if i + 4 >= len(sys.argv):
         exit("Number of experiment parameters not divisible by 5")
 
@@ -454,7 +455,16 @@ write_table(output_file, "QUAST: statistics", len(experiments), [quast_table[0]]
 write_table(output_file, "QUAST: alignment statistics", len(experiments), [quast_table[0]] + quast_table[31:], midrules = [12, 21])
 write_table(output_file, "QUAST: misassembly statistics", len(experiments), quast_misassemblies_table)
 
-write_table(output_file, "Resource usage", len(experiments), resources_table)
+
+# Calculating resources
+import pandas as pd
+resource_df = pd.read_csv(runtimes_file, sep='\t', index_col=0)
+time_usage = "Runtime (s) & " + str(resource_df["time"]["unitigs"]) + " & " + str(resource_df["time"]["t. omnitigs"]) + " & " + str(resource_df["time"]["multi-safe"]) + " & " + str(resource_df["time"]["flowtigs"] + resource_df["time"]["node_to_arc"]) + " & " + str(resource_df["time"]["omnitigs"]) + " & " + str(resource_df["time"]["flowtigs"]) + "&" + str(resource_df["time"]["node_to_arc"]) + " \\\\"
+memory_usage = "Memory (mb) & " + str(round(resource_df["mem"]["unitigs"]/1000, 1)) + " & " + str(round(resource_df["mem"]["t. omnitigs"]/1000, 1)) + " & " + str(round(resource_df["mem"]["multi-safe"]/1000, 1)) + " & " + str(round((resource_df["mem"]["flowtigs"] + resource_df["mem"]["node_to_arc"])/1000, 1)) + " & " + str(round(resource_df["mem"]["omnitigs"]/1000, 1)) + " & " + str(round(resource_df["mem"]["flowtigs"]/1000, 1)) + "&" + str(round(resource_df["mem"]["node_to_arc"]/1000, 1)) + " \\\\"
+first_line = "Parameter & unitigs & trivial-omnitigs & multi-safe & flowtigs (total) & omnitigs & only node-to-arc & only flowtigs\\\\ \\hline\\\\"
+resources_table = [first_line, time_usage, memory_usage]
+
+write_table(output_file, "Resource usage", len(experiments) + 2, resources_table)
 
 
 from os import path

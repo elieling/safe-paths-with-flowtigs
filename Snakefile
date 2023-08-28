@@ -273,7 +273,7 @@ rule create_single_report_tex:
     shell: """
         mkdir -p '{params.hashdir}'
         echo '{wildcards.report_name} {params.genome_name} {wildcards.report_file_name}' > '{params.name_file}'
-        python3 '{input.script}' '{params.hashdir}' '{params.name_file}' 'none' 'none' '{input.combined_eaxmax_plot}' '{output}' {params.script_column_arguments}
+        python3 '{input.script}' '{params.hashdir}' '{params.name_file}' 'none' 'none' '{input.combined_eaxmax_plot}' '{output}' '{input.runtimes}' {params.script_column_arguments}
         """
 
 
@@ -297,7 +297,7 @@ rule create_single_report_for_fast_algorithms_only:
     shell: """
         mkdir -p '{params.hashdir}'
         echo '{wildcards.report_name} {params.genome_name} {wildcards.report_file_name}' > '{params.name_file}'
-        python3 '{input.script}' '{params.hashdir}' '{params.name_file}' 'none' 'none' '{input.combined_eaxmax_plot}' '{output}' {params.script_column_arguments}
+        python3 '{input.script}' '{params.hashdir}' '{params.name_file}' 'none' 'none' '{input.combined_eaxmax_plot}' '{output}' '{input.runtimes}' {params.script_column_arguments}
         """
 
 
