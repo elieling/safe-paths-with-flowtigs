@@ -8,7 +8,7 @@ if [ $# -eq 0 ]; then
 fi
 
 SOURCED_EBINGERV_BASHRC="false"
-source /home/ebingerv/.profile
+source /home/ebingerv/.bashrc
 cd /abga/work/elieling/safe-paths-with-flowtigs
 
 conda activate snakemake-flowtigs

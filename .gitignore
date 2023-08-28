@@ -7,3 +7,4 @@ validationtests
 combiner.py
 data/pdf
 data
+.logdir
