@@ -791,9 +791,10 @@ rule practical_trivial_omitigs:
 
 # Rule for running multiple pipelines at the same time. Insert the outputs of the pipelines that you want to run in the input of this rule.
 rule run_multiple_pipelines:
-    input: pipeline_outputs = [os.path.join(REPORTDIR, "output", "meta_HMP_Mock_k31ma1t28", "report_thu17-8", "report.tex"), os.path.join(REPORTDIR, "output", "meta_JGI_Mock_k31ma1t28", "report_thu17-8", "report.tex"), os.path.join(REPORTDIR, "output", "meta_73_species_k31ma1t28", "report_thu17-8", "report.tex")]
+    input: pipeline_outputs = [os.path.join(REPORTDIR, "output", "meta_medium20_k31ma1t28", "report_mon28-8", "report.tex"), os.path.join(REPORTDIR, "output", "meta_HMP_Mock_k31ma1t28", "report_mon28-8", "report.tex"), os.path.join(REPORTDIR, "output", "meta_JGI_Mock_k31ma1t28", "report_mon28-8", "report.tex"), os.path.join(REPORTDIR, "output", "meta_73_species_k31ma1t28", "report_mon28-8", "report.tex")]
     output: empty_file = os.path.join(REPORTDIR, "multiple_runs")
     shell:  """
+        cd data/reports
         touch multiple_runs
     """
 
