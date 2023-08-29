@@ -8,3 +8,4 @@ combiner.py
 data/pdf
 data
 .logdir
+preprocessing_all_genomes.log
