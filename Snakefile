@@ -98,8 +98,12 @@ PRACTICAL_OMNITIGS_BINARY = os.path.abspath("external_software/practical-omnitig
 PRACTICAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_multi-safe", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
 ECOLI = os.path.join(DATADIR, "ecoli.fasta")
 ECOLI_CONCAT = os.path.join(DATADIR, "ecoli_concat.fasta")
+HUMAN_GUT_FILE_LIST = os.path.join(DATADIR, "meta", "human_gut_files.tsv")
+HUMAN_GUT_FILES = os.path.join(DATADIR, "meta", "human_gut")
+HUMAN_GUT_EXTRACTED_FILES = os.path.join(DATADIR, "meta", "Human_gut")
 SINGLE = os.path.join(DATADIR, "{file_name}.fasta")
 SINGLE_CONCAT = os.path.join(DATADIR, "bac_{file_name}_concat.fasta")
+METADIR = os.path.join(DATADIR, "meta")
 # META_BASE7 = os.path.join(DATADIR, "meta_base7.fasta")
 # META_BASE7_CONCAT = os.path.join(DATADIR, "meta_base7_concat.fasta")
 # MEDIUM20 = os.path.join(DATADIR, "meta_medium20.fasta")
@@ -138,7 +142,7 @@ UNPREPROCESSED_METAGENOME = os.path.join(DATADIR, "meta", "{metagenome}", "{geno
 # META_BASE7_ABUNDANCES = os.path.join(META_BASE7_DIR, "nanosim.abundances.tsv")
 # MEDIUM20_ABUNDANCES = os.path.join(DATADIR, "meta", "medium20", "nanosim.abundances.tsv")
 # COMPLEX32_ABUNDANCES = os.path.join(DATADIR, "meta", "complex32", "nanosim.abundances.tsv")
-METAGENOME_ABUNDANCES = os.path.join(DATADIR, "meta", "{metagenome}", "nanosim.abundances.tsv")
+METAGENOME_ABUNDANCES = os.path.join(DATADIR, "meta", "abundances", "{metagenome}", "nanosim.abundances.tsv")
 METAGENOME_DIR = os.path.join(DATADIR, "meta", "{metagenome}")
 # METAGENOME_FASTA = get_metagenome_files("meta{metagenome}", METAGENOME_ABUNDANCES)
 METAGENOME_FASTA = os.path.join(DATADIR, "preprocessed_metagenome", "{metagenome}")
@@ -446,7 +450,7 @@ rule metagenome_concatenate:
 rule generate_abundances:
     input: reads = METAGENOME_DIR,
     output: abundances = METAGENOME_ABUNDANCES,
-    log:    log = "logs/preprocessing_single_genome/meta_{metagenome}/log.log",
+    log:    log = "logs/generate_abundances/meta_{metagenome}/log.log",
     conda:  "config/conda-biopython-env.yml"
     script: "scripts/calculate_abundances.py"
 
@@ -471,7 +475,7 @@ rule preprocessing_all_genomes:
     input:  assembly = METAGENOME_DIR,
     output: report = directory(METAGENOME_FASTA),
     log:    log = "logs/preprocessing_single_genome/{metagenome}/log.log",
-    conda:  "config/conda-biopython-env.yml"
+    conda:  "config/conda-joblib-env.yml"
     resources:
             time_min = 1440, 
             mem_mb = 10_000, # likely too much
@@ -837,6 +841,26 @@ rule download_ecoli:
         wget -O ecoli.fasta.gz https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/005/845/GCF_000005845.2_ASM584v2/GCF_000005845.2_ASM584v2_genomic.fna.gz
         gunzip ecoli.fasta.gz
     """
+
+# Rule to download the human gut metagenome data
+localrules: download_human_gut_files
+rule download_human_gut_files:
+    output: directory(HUMAN_GUT_FILES)
+    params: path = METADIR
+    threads: 28
+    conda: "config/conda-joblib-env.yml"
+    script: "scripts/download_human_gut_files.py"
+
+# Rule to extract the files of the human gut metagenome data
+localrules: extract_human_gut_files
+rule extract_human_gut_files:
+    input: HUMAN_GUT_FILES
+    output: directory(HUMAN_GUT_EXTRACTED_FILES)
+    params: path = METADIR
+    threads: 28
+    conda: "config/conda-joblib-env.yml"
+    script: "scripts/extract_human_gut_files.py"
+
 
 # Rule needed for run_quast. Just copies the file with a new name.
 rule ecoli_concat:

@@ -369,7 +369,7 @@ def get_values(string):
 
 
 def calculate_improvement(value, comparison):
-    if value == 0: return float('inf')
+    if value == 0: return float('NaN')
     return comparison * 100 / value - 100
 
 revision = subprocess.check_output(["git", "rev-parse", "HEAD"]).strip()

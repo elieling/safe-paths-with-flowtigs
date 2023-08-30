@@ -3,21 +3,23 @@ import numpy as np
 import pandas as pd
 import gzip
 import shutil
+from joblib import Parallel, delayed
 
 
-counter = 1
-for filename in os.listdir("/wrk-vakka/users/ebingerv/snakemake-flowtigs/data/meta/human_gut"):
-    input_file = os.path.join("/wrk-vakka/users/ebingerv/snakemake-flowtigs/data/meta/human_gut/", filename)
-    output_file = os.path.join("/wrk-vakka/users/ebingerv/snakemake-flowtigs/data/meta/Human_gut/", filename)
+def extract_single_file(filename):
+    input_file = os.path.join(snakemake.params.path, "human_gut/", filename)
+    output_file = os.path.join(snakemake.params.path, "Human_gut/", filename)
  
-    if os.path.isdir(input_file): continue
-    if os.path.isfile(output_file): continue
+    if os.path.isdir(input_file): return
+    if os.path.isfile(output_file): return
 
     with gzip.open(input_file, 'rb') as input:
         with open(output_file, 'wb') as output:
             shutil.copyfileobj(input, output)
 
-    print(f"{counter}/898 done.")
-    counter += 1
 
+os.mkdir(os.path.join(snakemake.params.path, "Human_gut"))
+Parallel(n_jobs=28)(delayed(extract_single_file)(filename) for filename in os.listdir(os.path.join(snakemake.params.path, "human_gut")))
+
+     
 
