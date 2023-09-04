@@ -335,6 +335,14 @@ rule create_combined_eaxmax_graph_for_fast_algorithms_only:
 
 
 
+rule copy_data_from_dx1:
+    output: "/abga/work/elieling/safe-paths-with-flowtigs/data/reports/circularization/meta_Human_gut_k31ma1t28/report.fasta"
+    shell: """
+        scp ebingerv@dx1-523-001:/abga/work/elieling/safe-paths-with-flowtigs/data/reports/circularization/meta_Human_gut_k31ma1t28/report.fasta data/reports/circularization/meta_Human_gut_k31ma1t28/
+    """
+
+
+
 
 ##################################
 ###### Resources evaluation ######
