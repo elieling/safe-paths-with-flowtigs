@@ -20,6 +20,7 @@ while len(results) < len(genomes):
         results.append(math.ceil(value))
         maximum = max(maximum, math.ceil(value))
 print(results)
+genomes.sort()
 with open(snakemake.output.abundances, 'w') as outfile:
     outfile.write("Size\t50000\n")
     for i in range(len(genomes)):
