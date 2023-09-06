@@ -592,7 +592,7 @@ rule build_safe_paths:
             queue = "aurinko,bigmem,short,medium",
     shell:  """
         cd external_software/safe-paths
-        cargo build --release -j {threads} --offline
+        cargo build --release -j {threads} 
     """
 
 
@@ -803,7 +803,7 @@ rule practical_trivial_omitigs:
 
 # Rule for running multiple pipelines at the same time. Insert the outputs of the pipelines that you want to run in the input of this rule.
 rule run_multiple_pipelines:
-    input: pipeline_outputs = [os.path.join(REPORTDIR, "output", "meta_medium20_k31ma1t28", "report_mon28-8", "report.tex"), os.path.join(REPORTDIR, "output", "meta_HMP_Mock_k31ma1t28", "report_mon28-8", "report.tex"), os.path.join(REPORTDIR, "output", "meta_JGI_Mock_k31ma1t28", "report_mon28-8", "report.tex"), os.path.join(REPORTDIR, "output", "meta_73_species_k31ma1t28", "report_mon28-8", "report.tex")]
+    input: pipeline_outputs = [os.path.join(REPORTDIR, "output", "meta_HMP_Mock_k31ma1t28", "report_mon4-9", "report.tex"), os.path.join(REPORTDIR, "output", "meta_JGI_Mock_k31ma1t28", "report_mon4-9", "report.tex"), os.path.join(REPORTDIR, "output", "meta_73_species_k31ma1t28", "report_mon4-9", "report.tex")]
     output: empty_file = os.path.join(REPORTDIR, "multiple_runs")
     shell:  """
         cd data/reports
@@ -937,8 +937,8 @@ rule install_quast:
         rm -rf quast
         git clone https://github.com/elieling/quast.git 
         cd quast
-        git checkout d370ad11d60122d11220fc212c44be1be88daf9c
-    """ # af809a144d007f8a31cfffee994b33362a3e379e
+        git checkout cf3870b84449d69de76cbb704f989c433a34e6f0
+    """ # d370ad11d60122d11220fc212c44be1be88daf9c af809a144d007f8a31cfffee994b33362a3e379e
 
 
 

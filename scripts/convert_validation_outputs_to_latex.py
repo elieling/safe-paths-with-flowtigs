@@ -407,20 +407,24 @@ write_table(output_file, "ContigValidator", len(experiments), contig_validator_t
 
 # Calculating improvements
 average_length = quast_table[16]
-ea5max = quast_table[52]
-ea10max = quast_table[53]
-ea15max = quast_table[54]
-ea20max = quast_table[55]
-ea25max = quast_table[56]
-ea30max = quast_table[57]
-ea35max = quast_table[58]
-ea40max = quast_table[59]
-ea45max = quast_table[60]
-ea50max = quast_table[61]
-ea75max = quast_table[72]
+median_length = quast_table[17]
+ea5max = quast_table[53]
+ea10max = quast_table[54]
+ea15max = quast_table[55]
+ea20max = quast_table[56]
+ea25max = quast_table[57]
+ea30max = quast_table[58]
+ea35max = quast_table[59]
+ea40max = quast_table[60]
+ea45max = quast_table[61]
+ea50max = quast_table[62]
+ea75max = quast_table[73]
 
 integer_average_lengths = get_values(average_length)
 average_length = "Improvement in average length of contigs (\%) & " + str(round(calculate_improvement(integer_average_lengths[0], integer_average_lengths[3]), 1)) + " & " + str(round(calculate_improvement(integer_average_lengths[1], integer_average_lengths[3]), 1)) + " & " + str(round(calculate_improvement(integer_average_lengths[2], integer_average_lengths[3]), 1)) + " & " + str(round(calculate_improvement(integer_average_lengths[3], integer_average_lengths[3]), 1)) + " & " + str(round(calculate_improvement(integer_average_lengths[4], integer_average_lengths[3]), 1)) + " \\\\"
+
+integer_median_lengths = get_values(median_length)
+median_length = "Improvement in median length of contigs (\%) & " + str(round(calculate_improvement(integer_median_lengths[0], integer_median_lengths[3]), 1)) + " & " + str(round(calculate_improvement(integer_median_lengths[1], integer_median_lengths[3]), 1)) + " & " + str(round(calculate_improvement(integer_median_lengths[2], integer_median_lengths[3]), 1)) + " & " + str(round(calculate_improvement(integer_median_lengths[3], integer_median_lengths[3]), 1)) + " & " + str(round(calculate_improvement(integer_median_lengths[4], integer_median_lengths[3]), 1)) + " \\\\"
 
 integer_ea50max = get_values(ea50max)
 ea50max = "Improvement in EA50max (\%) & " + str(round(calculate_improvement(integer_ea50max[0], integer_ea50max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea50max[1], integer_ea50max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea50max[2], integer_ea50max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea50max[3], integer_ea50max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea50max[4], integer_ea50max[3]), 1)) + " \\\\"
@@ -452,8 +456,8 @@ write_table(output_file, "QUAST: improvements of flowtigs compared to other algo
 
 write_table(output_file, "QUAST: \\# of contigs", len(experiments), quast_table[0:7])
 write_table(output_file, "QUAST: total length of contigs", len(experiments), [quast_table[0]] + quast_table[7:13])
-write_table(output_file, "QUAST: statistics", len(experiments), [quast_table[0]] + quast_table[13:31])
-write_table(output_file, "QUAST: alignment statistics", len(experiments), [quast_table[0]] + quast_table[31:], midrules = [12, 21])
+write_table(output_file, "QUAST: statistics", len(experiments), [quast_table[0]] + quast_table[13:32])
+write_table(output_file, "QUAST: alignment statistics", len(experiments), [quast_table[0]] + quast_table[32:], midrules = [12, 21])
 write_table(output_file, "QUAST: misassembly statistics", len(experiments), quast_misassemblies_table)
 
 
@@ -461,8 +465,8 @@ write_table(output_file, "QUAST: misassembly statistics", len(experiments), quas
 import pandas as pd
 resource_df = pd.read_csv(runtimes_file, sep='\t', index_col=0)
 time_usage = "Runtime (s) & " + str(resource_df["time"]["unitigs"]) + " & " + str(resource_df["time"]["t. omnitigs"]) + " & " + str(resource_df["time"]["multi-safe"]) + " & " + str(resource_df["time"]["flowtigs"] + resource_df["time"]["node_to_arc"]) + " & " + str(resource_df["time"]["omnitigs"]) + " & " + str(resource_df["time"]["flowtigs"]) + "&" + str(resource_df["time"]["node_to_arc"]) + " \\\\"
-memory_usage = "Memory (mb) & " + str(round(resource_df["mem"]["unitigs"]/1000, 1)) + " & " + str(round(resource_df["mem"]["t. omnitigs"]/1000, 1)) + " & " + str(round(resource_df["mem"]["multi-safe"]/1000, 1)) + " & " + str(round((resource_df["mem"]["flowtigs"] + resource_df["mem"]["node_to_arc"])/1000, 1)) + " & " + str(round(resource_df["mem"]["omnitigs"]/1000, 1)) + " & " + str(round(resource_df["mem"]["flowtigs"]/1000, 1)) + "&" + str(round(resource_df["mem"]["node_to_arc"]/1000, 1)) + " \\\\"
-first_line = "Parameter & unitigs & trivial-omnitigs & multi-safe & flowtigs (total) & omnitigs & only node-to-arc & only flowtigs\\\\ \\hline\\\\"
+memory_usage = "Memory (mb) & " + str(round(resource_df["mem"]["unitigs"]/1000, 1)) + " & " + str(round(resource_df["mem"]["t. omnitigs"]/1000, 1)) + " & " + str(round(resource_df["mem"]["multi-safe"]/1000, 1)) + " & " + str(round(max(resource_df["mem"]["flowtigs"], resource_df["mem"]["node_to_arc"])/1000, 1)) + " & " + str(round(resource_df["mem"]["omnitigs"]/1000, 1)) + " & " + str(round(resource_df["mem"]["flowtigs"]/1000, 1)) + "&" + str(round(resource_df["mem"]["node_to_arc"]/1000, 1)) + " \\\\"
+first_line = "Parameter & unitigs & trivial-omnitigs & multi-safe & flowtigs (total) & omnitigs & only flowtigs & only node-to-arc\\\\ \\hline\\\\"
 resources_table = [first_line, time_usage, memory_usage]
 
 write_table(output_file, "Resource usage", len(experiments) + 2, resources_table)

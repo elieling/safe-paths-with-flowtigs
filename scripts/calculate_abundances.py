@@ -11,7 +11,7 @@ for file in os.listdir(folder):
     if file.endswith(".fna") or file.endswith(".fasta"):
         genomes.append(file)
 
-np.random.seed(42)
+np.random.seed(0)
 results = []
 maximum = 0
 while len(results) < len(genomes):
