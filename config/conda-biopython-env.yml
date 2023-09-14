@@ -3,4 +3,3 @@ channels:
         - bioconda
 dependencies:
         - biopython==1.79
-        - asyncio==3.11.5

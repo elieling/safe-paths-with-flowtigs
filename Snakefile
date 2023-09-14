@@ -160,6 +160,7 @@ LOG_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_omnitigs", "{file_name}_k{k}m
 LOG_ALGORITHM = os.path.join(REPORTDIR, "safe_paths_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}", "log.log") 
 ALL_RUNTIMES = os.path.join(REPORTDIR, "runtimes", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.tsv")
 FAST_RUNTIMES = os.path.join(REPORTDIR, "fast_runtimes", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.tsv")
+GRAPH_STATISTICS = os.path.join(REPORTDIR, "graph_statistics", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.txt")
 
 
 #     DATADIR = ... # wherever you have your data, e.g. /wrk-vakka/users/<your username>/flowtigs
@@ -379,6 +380,19 @@ rule gathering_fast_runtimes:
 
 
 
+rule gather_graph_statistics:
+    input:  LOG_OMNITIGS,
+    output: GRAPH_STATISTICS,
+    log:    log = "logs/gathering_graph_statistics/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
+    conda:  "config/conda-seaborn-env.yml"
+    resources:
+            time_min = 60, 
+            mem_mb = 10_000, 
+            queue = "short,medium,bigmem,aurinko",
+    script: "scripts/gather_statistics.py"
+
+
+
 
 ###########################
 ###### Metagenomes ########
@@ -460,6 +474,10 @@ rule generate_abundances:
     output: abundances = METAGENOME_ABUNDANCES,
     log:    log = "logs/generate_abundances/meta_{metagenome}/log.log",
     conda:  "config/conda-biopython-env.yml"
+    resources:
+            time_min = 60, 
+            mem_mb = 1_000, # likely too much
+            queue = "short,medium,bigmem,aurinko",
     script: "scripts/calculate_abundances.py"
 
 
@@ -919,10 +937,10 @@ rule download_safe_paths:
         rm -rf safe-paths
         git clone https://github.com/elieling/safe-paths.git
         cd safe-paths
-        git checkout 19304e99283e336ebf15d5b206203da00b053f82
+        git checkout dc757da62b56de11acb277d33beb13ed509a58fe
 
         cargo fetch
-    """ 
+    """  # 19304e99283e336ebf15d5b206203da00b053f82
 
 
 localrules: install_quast
@@ -954,10 +972,10 @@ rule download_practical_omnitigs:
         rm -rf practical-omnitigs
         git clone https://github.com/algbio/practical-omnitigs.git
         cd practical-omnitigs
-        git checkout 16a17703e6cd060863857a2d348cdecb2df12aa5
+        git checkout 3784755de2a11c476ef5893b50183e19601e9f95
         cd implementation
         cargo fetch
-    """ # f1c451ee2ce59f6e63ca32c77ac0cd590a8d5ecb 
+    """ # 16a17703e6cd060863857a2d348cdecb2df12aa5 f1c451ee2ce59f6e63ca32c77ac0cd590a8d5ecb 
 
 
 
