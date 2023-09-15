@@ -972,10 +972,10 @@ rule download_practical_omnitigs:
         rm -rf practical-omnitigs
         git clone https://github.com/algbio/practical-omnitigs.git
         cd practical-omnitigs
-        git checkout 3784755de2a11c476ef5893b50183e19601e9f95
+        git checkout 9fa8497c8de99a70c05474c8fa8318dce49ddeb9
         cd implementation
         cargo fetch
-    """ # 16a17703e6cd060863857a2d348cdecb2df12aa5 f1c451ee2ce59f6e63ca32c77ac0cd590a8d5ecb 
+    """ # 3784755de2a11c476ef5893b50183e19601e9f95 16a17703e6cd060863857a2d348cdecb2df12aa5 f1c451ee2ce59f6e63ca32c77ac0cd590a8d5ecb 
 
 
 
