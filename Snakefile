@@ -49,7 +49,7 @@ build_cpus = 1
 print("Finished config preprocessing", flush = True)
 
 # Always use conda
-workflow.use_conda = True
+workflow._use_conda = True
 
 
 # import pandas as pd
@@ -433,36 +433,6 @@ rule metagenome_concatenate:
 
 
 
-# # Rule to get sequences for metagenome data.
-# localrules: metagenome_to_single_file
-# rule metagenome_to_single_file:
-#     input:  abundances = META_BASE7_ABUNDANCES,
-#             references = META_BASE7_FASTA,
-#     output: report = META_BASE7,
-#     log:    log = "logs/metagenome_to_single_file/log.log",
-#     conda:  "config/conda-seaborn-env.yml"
-#     script: "scripts/metagenome_to_single_file.py"
-
-
-
-# # Rule to concatenate metagenome data.
-# localrules: metagenome_concatenate
-# rule metagenome_concatenate:
-#     input:  references = META_BASE7_FASTA,
-#     output: report = META_BASE7_CONCAT,
-#     log:    log = "logs/metagenome_concatenate/log.log",
-#     conda:  "config/conda-seaborn-env.yml"
-#     script: "scripts/metagenome_concatenate.py"
-
-
-# rule many_rules:
-#     input: HMPJGI73
-#     output: [os.path.join(DATADIR, "test")]
-#     shell: """
-#     ls
-#     """
-
-
 ########################
 ###### Assembly ########
 ########################
@@ -542,8 +512,8 @@ rule bcalm2_build:
     threads: MAX_THREADS,
     shadow: "minimal"
     resources:
-            mem_mb = 1_500_000, # probably much more than needed
-            time_min = 1440,
+            mem_mb = 2_000_000, # probably much more than needed
+            time_min = 4320,
             cpus = build_cpus,
             queue = 'aurinko,bigmem', # I had some more complex expression here, the queues fitting to the time are on https://wiki.helsinki.fi/display/it4sci/HPC+Environment+User+Guide#HPCEnvironmentUserGuide-4.8.4Partitions-Ukko
     shell:  """
@@ -629,8 +599,8 @@ rule safe_paths:
             log = LOG_FLOWTIGS,
     conda:  "config/conda-time-env.yml",
     resources:
-            time_min = 2500, # likely too much
-            mem_mb = 1_000_000, # likely too much
+            time_min = 4320, # likely too much
+            mem_mb = 3_000_000, # likely too much
             queue = "medium,bigmem,aurinko",
     shell:  """
         rm -f '{log.log}'
