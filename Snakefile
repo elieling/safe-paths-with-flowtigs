@@ -343,9 +343,10 @@ rule copy_data_from_dx1:
     """
 
 rule copy_data_from_dx1_to_turso:
-    output: "/abga/work/elieling/safe-paths-with-flowtigs/data/reports/circularization/meta_Human_gut_k31ma1t28/report.fasta"
+    output: "/abga/work/elieling/safe-paths-with-flowtigs/data/reports/circularized.txt"
     shell: """
         scp ebingerv@dx1-523-001:/abga/work/elieling/safe-paths-with-flowtigs/data/reports/circularization/meta_Human_gut_k31ma1t28/report.fasta ebingerv@turso02:/wrk-vakka/users/ebingerv/snakemake-flowtigs/data/reports/circularization/meta_Human_gut_k31ma1t28/
+        touch data/reports/cirularized.txt"
     """
 
 
