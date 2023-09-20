@@ -8,7 +8,6 @@ with open(snakemake.input, 'r') as input_file:
                 break
 
         assert "statistics" in locals(), f"No statistics found in {snakemake.input}"
-        return statistics
 
 
 df = pd.DataFrame({'nodes': [statistics[0]], 'edges': [statistics[1]]})
