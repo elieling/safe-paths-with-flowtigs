@@ -402,7 +402,6 @@ rule gather_graph_statistics:
 
 
 # Rule to get sequences for metagenome data.
-localrules: metagenome_to_single_file
 rule metagenome_to_single_file:
     input:  abundances = METAGENOME_ABUNDANCES,
             references = METAGENOME_FASTA,
@@ -418,7 +417,6 @@ rule metagenome_to_single_file:
 
 
 # Rule to concatenate metagenome data.
-localrules: metagenome_concatenate
 rule metagenome_concatenate:
     input:  abundances = METAGENOME_ABUNDANCES,
             references = METAGENOME_FASTA,
@@ -474,7 +472,7 @@ rule preprocessing_all_genomes:
     conda:  "config/conda-joblib-env.yml"
     resources:
             time_min = 1440, 
-            mem_mb = 10_000, # likely too much
+            mem_mb = 100_000, # likely too much
             queue = "medium,bigmem,aurinko",
     script: "scripts/preprocessing_all_genomes.py"
 
@@ -484,7 +482,6 @@ rule preprocessing_all_genomes:
 # wildcards: k=size of kmers, file_name=name of the file with the data in the data folder,
 #   min_abundance=minimum abundance, threds=number of cpu cores used.
 # output: data of the circular sequences of the genome or metagenome in fasta format.
-localrules: circularization
 rule circularization:
     input:  assembly = GENOME_ALL_REFERENCES,
     output: report = GENOME_CIRCULAR_REFERENCES,
@@ -527,11 +524,12 @@ rule bcalm2_build:
 # Rule to set up the external software for the node_to_arc_centric_dbg rule.
 rule build_node_to_arc_centric_dbg:
     input:  "external_software/node-to-arc-centric-dbg/Cargo.toml",
-    output: NODE_TO_ARC_CENTRIC_DBG_BINARY,
+    output: NODE_TO_ARC_CENTRIC_DBG_BINARY,    
+    log:    log = "logs/node_to_arc_build/log.log",
     conda:  "config/conda-rust-env.yml",
     threads: MAX_THREADS,
     resources:
-            mem_mb = 1_000,
+            mem_mb = 100_000,
             time_min = 60,
             cpus = MAX_THREADS,
             queue = "aurinko,bigmem,short,medium",
