@@ -342,7 +342,11 @@ rule copy_data_from_dx1:
         scp ebingerv@dx1-523-001:/abga/work/elieling/safe-paths-with-flowtigs/data/reports/circularization/meta_Human_gut_k31ma1t28/report.fasta data/reports/circularization/meta_Human_gut_k31ma1t28/
     """
 
-
+rule copy_data_from_dx1_to_turso:
+    output: "/abga/work/elieling/safe-paths-with-flowtigs/data/reports/circularization/meta_Human_gut_k31ma1t28/report.fasta"
+    shell: """
+        scp ebingerv@dx1-523-001:/abga/work/elieling/safe-paths-with-flowtigs/data/reports/circularization/meta_Human_gut_k31ma1t28/report.fasta ebingerv@turso02:/wrk-vakka/users/ebingerv/snakemake-flowtigs/data/reports/circularization/meta_Human_gut_k31ma1t28/
+    """
 
 
 ##################################
@@ -734,7 +738,7 @@ rule build_practical_omnitigs:
 rule practical_multisafe:
     input:  practical_omnitigs = BUILD_FA,
             binary = PRACTICAL_OMNITIGS_BINARY,
-    log:    log = "logs/practical_omnitigs/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
+    log:    log = "logs/practical_multi-safe/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
     output: practical_omnitigs = PRACTICAL_OMNITIGS,  
             log = LOG_MULTI_SAFE,
     conda:  "config/conda-rust-env.yml",
@@ -753,7 +757,7 @@ rule practical_multisafe:
 rule practical_omitigs:
     input:  practical_omnitigs = BUILD_FA,
             binary = PRACTICAL_OMNITIGS_BINARY,
-    log:    log = "logs/practical_test_omnitigs/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
+    log:    log = "logs/practical_omnitigs/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
     output: practical_omnitigs = PRACTICAL_TEST_OMNITIGS,  
             log = LOG_OMNITIGS,
     conda:  "config/conda-rust-env.yml",
