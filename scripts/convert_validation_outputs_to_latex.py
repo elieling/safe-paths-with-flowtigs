@@ -15,10 +15,11 @@ bandage_png_name = sys.argv[4]
 combined_eaxmax_plot_name = sys.argv[5]
 output_file_name = sys.argv[6]
 runtimes_file = sys.argv[7]
+nodes_and_edges = sys.argv[8]
 
 experiments = []
 
-for i in range(8, len(sys.argv), 5):
+for i in range(9, len(sys.argv), 5):
     if i + 4 >= len(sys.argv):
         exit("Number of experiment parameters not divisible by 5")
 
@@ -398,7 +399,17 @@ for line in name_lines:
     output_file.write("\\item " + line)
 output_file.write("\\end{itemize}\n")
 
-write_table(output_file, "Genome Graph Statistics", 1, graph_statistics_table)
+
+# Reporting graph statistics
+import pandas as pd
+graph_df = pd.read_csv(nodes_and_edges, sep='\t', index_col=0)
+results = "Graph statistics & " + str(graph_df["nodes"]) + " & " + str(graph_df["edges"])  + " \\\\"
+first_line = "Parameter & nodes & edges\\\\ \\hline\\\\"
+graph_statistics_table = [first_line, results]
+
+
+
+write_table(output_file, "Genome Graph Statistics", 2, graph_statistics_table)
 
 write_table(output_file, "Algorithm Statistics", len(experiments), algorithm_table)
 
@@ -462,7 +473,6 @@ write_table(output_file, "QUAST: misassembly statistics", len(experiments), quas
 
 
 # Calculating resources
-import pandas as pd
 resource_df = pd.read_csv(runtimes_file, sep='\t', index_col=0)
 time_usage = "Runtime (s) & " + str(resource_df["time"]["unitigs"]) + " & " + str(resource_df["time"]["t. omnitigs"]) + " & " + str(resource_df["time"]["multi-safe"]) + " & " + str(resource_df["time"]["flowtigs"] + resource_df["time"]["node_to_arc"]) + " & " + str(resource_df["time"]["omnitigs"]) + " & " + str(resource_df["time"]["flowtigs"]) + "&" + str(resource_df["time"]["node_to_arc"]) + " \\\\"
 memory_usage = "Memory (mb) & " + str(round(resource_df["mem"]["unitigs"]/1000, 1)) + " & " + str(round(resource_df["mem"]["t. omnitigs"]/1000, 1)) + " & " + str(round(resource_df["mem"]["multi-safe"]/1000, 1)) + " & " + str(round(max(resource_df["mem"]["flowtigs"], resource_df["mem"]["node_to_arc"])/1000, 1)) + " & " + str(round(resource_df["mem"]["omnitigs"]/1000, 1)) + " & " + str(round(resource_df["mem"]["flowtigs"]/1000, 1)) + "&" + str(round(resource_df["mem"]["node_to_arc"]/1000, 1)) + " \\\\"

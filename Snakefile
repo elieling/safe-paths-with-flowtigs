@@ -263,6 +263,7 @@ rule create_single_report_tex:
             combined_eaxmax_plot = REPORT_COMBINED_EAXMAX_PLOT,
             runtimes = ALL_RUNTIMES,
             script = CONVERT_VALIDATION_OUTPUTS_TO_LATEX_SCRIPT,
+            graph_statistics = GRAPH_STATISTICS,
     output: report = REPORT_TEX,
     log:    log = "logs/create_single_report/{file_name}_k{k}ma{min_abundance}t{threads}r{report_name}rf{report_file_name}/log.log",
     params: genome_name = lambda wildcards: ", ".join(wildcards.file_name), 
@@ -278,7 +279,7 @@ rule create_single_report_tex:
     shell: """
         mkdir -p '{params.hashdir}'
         echo '{wildcards.report_name} {params.genome_name} {wildcards.report_file_name}' > '{params.name_file}'
-        python3 '{input.script}' '{params.hashdir}' '{params.name_file}' 'none' 'none' '{input.combined_eaxmax_plot}' '{output}' '{input.runtimes}' {params.script_column_arguments}
+        python3 '{input.script}' '{params.hashdir}' '{params.name_file}' 'none' 'none' '{input.combined_eaxmax_plot}' '{output}' '{input.runtimes}' '{input.graph_statistics}' {params.script_column_arguments}
         """
 
 
@@ -357,7 +358,6 @@ rule copy_data_from_dx1_to_turso:
 
 
 # Rule to gather rutimes and memory usage of algorithms into a tsv file.
-# Order: 
 rule gathering_runtimes:
     input:  log_files = [os.path.join(safe_format(LOG_ALGORITHM, algorithm = algorithm)) for algorithm in ALGORITHMS] + [LOG_NODE_TO_ARC], 
     output: report = ALL_RUNTIMES,
@@ -370,7 +370,7 @@ rule gathering_runtimes:
             queue = "short,medium,bigmem,aurinko",
     script: "scripts/gather_runtimes.py"
 
-
+# Rule to gather number of nodes and edges of De Bruijn Graph into a tsv file.
 rule gathering_fast_runtimes:
     input:  log_files = [os.path.join(safe_format(LOG_ALGORITHM, algorithm = algorithm)) for algorithm in FAST_ALGORITHMS] + [LOG_NODE_TO_ARC], 
     output: report = FAST_RUNTIMES,
