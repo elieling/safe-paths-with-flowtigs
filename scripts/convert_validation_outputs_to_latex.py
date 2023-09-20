@@ -403,7 +403,7 @@ output_file.write("\\end{itemize}\n")
 # Reporting graph statistics
 import pandas as pd
 graph_df = pd.read_csv(nodes_and_edges, sep='\t', index_col=0)
-results = "Graph statistics & " + str(graph_df["nodes"]) + " & " + str(graph_df["edges"])  + " \\\\"
+results = "Graph statistics & " + str(graph_df["nodes"][0]) + " & " + str(graph_df["edges"][0])  + " \\\\"
 first_line = "Parameter & nodes & edges\\\\ \\hline\\\\"
 graph_statistics_table = [first_line, results]
 

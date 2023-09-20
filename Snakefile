@@ -160,7 +160,7 @@ LOG_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_omnitigs", "{file_name}_k{k}m
 LOG_ALGORITHM = os.path.join(REPORTDIR, "safe_paths_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}", "log.log") 
 ALL_RUNTIMES = os.path.join(REPORTDIR, "runtimes", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.tsv")
 FAST_RUNTIMES = os.path.join(REPORTDIR, "fast_runtimes", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.tsv")
-GRAPH_STATISTICS = os.path.join(REPORTDIR, "graph_statistics", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.txt")
+GRAPH_STATISTICS = os.path.join(REPORTDIR, "graph_statistics", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.tsv")
 
 
 #     DATADIR = ... # wherever you have your data, e.g. /wrk-vakka/users/<your username>/flowtigs
@@ -386,8 +386,8 @@ rule gathering_fast_runtimes:
 
 
 rule gather_graph_statistics:
-    input:  LOG_OMNITIGS,
-    output: GRAPH_STATISTICS,
+    input:  log = LOG_OMNITIGS,
+    output: statistics = GRAPH_STATISTICS,
     log:    log = "logs/gathering_graph_statistics/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
     conda:  "config/conda-seaborn-env.yml"
     resources:
