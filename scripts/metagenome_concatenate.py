@@ -23,8 +23,15 @@ for name in names:
 
 n_rows = len(fasta_files)
 
+counter = 0
 for i in range(n_rows):
     with open(fasta_files[i], 'r') as source:
         with open(snakemake.output.report, 'a') as destination:
             content = source.read()
             destination.write(content)
+            print("Content: ", len(content))
+            for character in content:
+                if character in 'ACGT': counter += 1
+
+with open(snakemake.output.number_of_characters, 'a') as number:
+    number.write(str(counter))

@@ -16,10 +16,11 @@ combined_eaxmax_plot_name = sys.argv[5]
 output_file_name = sys.argv[6]
 runtimes_file = sys.argv[7]
 nodes_and_edges = sys.argv[8]
+number_of_characters = sys.argv[9]
 
 experiments = []
 
-for i in range(9, len(sys.argv), 5):
+for i in range(10, len(sys.argv), 5):
     if i + 4 >= len(sys.argv):
         exit("Number of experiment parameters not divisible by 5")
 
@@ -357,6 +358,7 @@ def write_image(output_file, caption, file, natwidth, natheight):
 
 def convert_to_int_or_float(number):
     print("NUMBER:", number)
+    if number == '': return 0
     try:
         return int(number)
     except ValueError:
@@ -403,13 +405,23 @@ output_file.write("\\end{itemize}\n")
 # Reporting graph statistics
 import pandas as pd
 graph_df = pd.read_csv(nodes_and_edges, sep='\t', index_col=0)
-results = "Graph statistics & " + str(graph_df["nodes"][0]) + " & " + str(graph_df["edges"][0])  + " \\\\"
-first_line = "Parameter & nodes & edges\\\\ \\hline\\\\"
-graph_statistics_table = [first_line, results]
+n_char = 0
+with open(number_of_characters, 'r') as characters:
+    n_char = characters.read()
+# results = "Graph statistics & " + str(graph_df["nodes"][0]) + " & " + str(graph_df["edges"][0]) + " & " + str(graph_df["edges in cycles"][0]) + " & " + n_char  + " \\\\"
+# first_line = "Parameter & nodes & edges & number of edges in all cycles & number of characters\\\\ \\hline\\\\"
+
+first_line = "Parameter & Graph statistics\\\\ \\hline\\\\"
+nodes = "Nodes in graph & " + str(graph_df["nodes"][0]) + " \\\\"
+edges = "Edges in graph & " + str(graph_df["edges"][0]) + " \\\\"
+edges_in_cycles = "Number of edges in all cycles & " + str(graph_df["edges in cycles"][0]) + " \\\\"
+n_characters = "Number of characters in metagenome & " + n_char + " \\\\"
+
+graph_statistics_table = [first_line, nodes, edges, edges_in_cycles, n_characters]
 
 
 
-write_table(output_file, "Genome Graph Statistics", 2, graph_statistics_table)
+write_table(output_file, "Genome Graph Statistics", 1, graph_statistics_table)
 
 write_table(output_file, "Algorithm Statistics", len(experiments), algorithm_table)
 
@@ -434,8 +446,8 @@ ea75max = quast_table[73]
 integer_average_lengths = get_values(average_length)
 average_length = "Improvement in average length of contigs (\%) & " + str(round(calculate_improvement(integer_average_lengths[0], integer_average_lengths[3]), 1)) + " & " + str(round(calculate_improvement(integer_average_lengths[1], integer_average_lengths[3]), 1)) + " & " + str(round(calculate_improvement(integer_average_lengths[2], integer_average_lengths[3]), 1)) + " & " + str(round(calculate_improvement(integer_average_lengths[3], integer_average_lengths[3]), 1)) + " & " + str(round(calculate_improvement(integer_average_lengths[4], integer_average_lengths[3]), 1)) + " \\\\"
 
-integer_median_lengths = get_values(median_length)
-median_length = "Improvement in median length of contigs (\%) & " + str(round(calculate_improvement(integer_median_lengths[0], integer_median_lengths[3]), 1)) + " & " + str(round(calculate_improvement(integer_median_lengths[1], integer_median_lengths[3]), 1)) + " & " + str(round(calculate_improvement(integer_median_lengths[2], integer_median_lengths[3]), 1)) + " & " + str(round(calculate_improvement(integer_median_lengths[3], integer_median_lengths[3]), 1)) + " & " + str(round(calculate_improvement(integer_median_lengths[4], integer_median_lengths[3]), 1)) + " \\\\"
+# integer_median_lengths = get_values(median_length)
+# median_length = "Improvement in median length of contigs (\%) & " + str(round(calculate_improvement(integer_median_lengths[0], integer_median_lengths[3]), 1)) + " & " + str(round(calculate_improvement(integer_median_lengths[1], integer_median_lengths[3]), 1)) + " & " + str(round(calculate_improvement(integer_median_lengths[2], integer_median_lengths[3]), 1)) + " & " + str(round(calculate_improvement(integer_median_lengths[3], integer_median_lengths[3]), 1)) + " & " + str(round(calculate_improvement(integer_median_lengths[4], integer_median_lengths[3]), 1)) + " \\\\"
 
 integer_ea50max = get_values(ea50max)
 ea50max = "Improvement in EA50max (\%) & " + str(round(calculate_improvement(integer_ea50max[0], integer_ea50max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea50max[1], integer_ea50max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea50max[2], integer_ea50max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea50max[3], integer_ea50max[3]), 1)) + " & " + str(round(calculate_improvement(integer_ea50max[4], integer_ea50max[3]), 1)) + " \\\\"

@@ -81,21 +81,17 @@ REPORT = os.path.join(REPORTDIR, "s{species}-k{k}", "report.txt")
 GENOME_ALL_REFERENCES = os.path.join(DATADIR, "{file_name}.fasta")
 GENOME_CONCAT_REFERENCES = os.path.join(DATADIR, "{file_name}_concat.fasta")
 GENOME_CIRCULAR_REFERENCES = os.path.join(REPORTDIR, "circularization", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
-# GENOME_CIRCULAR_CONCAT_REFERENCES = os.path.join(REPORTDIR, "circularization", "{file_name}_concat_k{k}ma{min_abundance}t{threads}", "report.fasta")
-BUILD_FA = os.path.join(REPORTDIR, "safe_paths_unitigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
-# BUILD_FA = os.path.join(REPORTDIR, "bcalm2", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
+BUILD_FA = os.path.join(REPORTDIR, "safe_paths_unitigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm1", "report.fasta")
 BUILD_LOG = os.path.join("logs", "build_{file_name}_k{k}ma{min_abundance}t{threads}", "log.log")
 NODE_TO_ARC_CENTRIC_DBG_BINARY = os.path.abspath("external_software/node-to-arc-centric-dbg/target/release/node-to-arc-centric-dbg")
 NODE_TO_ARC_CENTRIC_DBG = os.path.join(REPORTDIR, "node_to_arc", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.edgelist") #threads 28
 SAFE_PATHS_BINARY = os.path.abspath("external_software/safe-paths/target/release/flow_decomposition")
-SAFE_PATHS = os.path.join(REPORTDIR, "safe_paths_flowtigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta") 
-# EXTERNAL_SOFTWARE_ROOTDIR = os.path.join(DATADIR, "external_software")
-# QUAST_BINARY = os.path.join(EXTERNAL_SOFTWARE_ROOTDIR, "quast", "quast.py")
+SAFE_PATHS = os.path.join(REPORTDIR, "safe_paths_flowtigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm0", "report.fasta") 
 QUAST_BINARY = os.path.abspath("external_software/quast/quast.py")
-QUAST_OUTPUT_DIR = os.path.join(REPORTDIR, "quast_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}")
-QUAST_EXTENDED_OUTPUT_DIR = os.path.join(REPORTDIR, "extended_quast_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}")
+QUAST_OUTPUT_DIR = os.path.join(REPORTDIR, "quast_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}")
+QUAST_EXTENDED_OUTPUT_DIR = os.path.join(REPORTDIR, "extended_quast_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}")
 PRACTICAL_OMNITIGS_BINARY = os.path.abspath("external_software/practical-omnitigs/implementation/target/release/cli")
-PRACTICAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_multi-safe", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
+PRACTICAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_multi-safe", "{file_name}_k{k}ma{min_abundance}t{threads}nm0", "report.fasta")
 ECOLI = os.path.join(DATADIR, "ecoli.fasta")
 ECOLI_CONCAT = os.path.join(DATADIR, "ecoli_concat.fasta")
 HUMAN_GUT_FILE_LIST = os.path.join(DATADIR, "meta", "human_gut_files.tsv")
@@ -104,16 +100,10 @@ HUMAN_GUT_EXTRACTED_FILES = os.path.join(DATADIR, "meta", "Human_gut")
 SINGLE = os.path.join(DATADIR, "{file_name}.fasta")
 SINGLE_CONCAT = os.path.join(DATADIR, "bac_{file_name}_concat.fasta")
 METADIR = os.path.join(DATADIR, "meta")
-# META_BASE7 = os.path.join(DATADIR, "meta_base7.fasta")
-# META_BASE7_CONCAT = os.path.join(DATADIR, "meta_base7_concat.fasta")
-# MEDIUM20 = os.path.join(DATADIR, "meta_medium20.fasta")
-# MEDIUM20_CONCAT = os.path.join(DATADIR, "meta_medium20_concat.fasta")
-# COMPLEX32 = os.path.join(DATADIR, "meta_complex32.fasta")
-# COMPLEX32_CONCAT = os.path.join(DATADIR, "meta_complex32_concat.fasta")
 METAGENOME = os.path.join(DATADIR, "meta_{metagenome}.fasta")
 METAGENOME_CONCAT = os.path.join(DATADIR, "meta_{metagenome}_concat.fasta")
-PRACTICAL_TEST_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
-PRACTICAL_TRIVIAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_trivial-omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
+PRACTICAL_TEST_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm0", "report.fasta")
+PRACTICAL_TRIVIAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_trivial-omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm0", "report.fasta")
 ALGORITHMS = ["unitigs", "trivial-omnitigs", "multi-safe", "flowtigs", "omnitigs"] # values for the wildcard that chooses which tigs to generate
 ALGORITHM_COLUMN_NAMES = ["unitigs", "t. omnitigs", "multi-safe", "flowtigs", "omnitigs"] # column names for the different tigs
 FAST_ALGORITHMS = ["unitigs", "trivial-omnitigs", "flowtigs"] # algorithms that have a fast runtime
@@ -122,35 +112,17 @@ CONVERT_VALIDATION_OUTPUTS_TO_LATEX_SCRIPT = "scripts/convert_validation_outputs
 CONVERT_FAST_VALIDATION_OUTPUTS_TO_LATEX_SCRIPT = "scripts/convert_fast_validation_outputs_to_latex.py"
 CREATE_COMBINED_EAXMAX_PLOT_SCRIPT = "scripts/create_combined_eaxmax_plot.py"
 REPORT_SUBDIR = os.path.join(REPORTDIR, "final_reports", "final_reports_{file_name}k{k}ma{min_abundance}t{threads}")
-REPORT_COMBINED_EAXMAX_PLOT = os.path.join(REPORT_SUBDIR, "combined_eaxmax_plot.pdf")
-REPORT_COMBINED_EAXMAX_PLOT_FAST = os.path.join(REPORT_SUBDIR, "combined_eaxmax_plot_fast.pdf")
+REPORT_COMBINED_EAXMAX_PLOT = os.path.join(REPORT_SUBDIR, "combined_eaxmax_plot_nm{non_maximal}.pdf")
+REPORT_COMBINED_EAXMAX_PLOT_FAST = os.path.join(REPORT_SUBDIR, "combined_eaxmax_plot_fast_nm{non_maximal}.pdf")
 REPORT_NAME_FILE = os.path.join(REPORT_SUBDIR, "name.txt")
 REPORT_HASHDIR = os.path.join(REPORTDIR, "hashdir")
 META_BASE7_DIR = os.path.join(DATADIR, "meta", "base7")
-# UNPREPROCESSED_META_BASE7 = os.path.join(META_BASE7_DIR, "GCF_0{genome}_genomic.fna")
-# UNPREPROCESSED_MEDIUM20 = os.path.join(DATADIR, "meta", "metamedium20", "GCF_{genome}_genomic.fna")
-# PREPROCESSED_GENOME = os.path.join(DATADIR, "metabase7", "GCF_0{genome}_genomic.fasta")
-# PREPROCESSED_MEDIUM = os.path.join(DATADIR, "metamedium20", "GCF_{genome}_genomic.fasta")
-# UNPREPROCESSED_METAGENOME = os.path.join(DATADIR, "meta", "{metagenome}", "{genome}.fna")
 UNPREPROCESSED_METAGENOME = os.path.join(DATADIR, "meta", "{metagenome}", "{genome}.fasta")
-# PREPROCESSED_METAGENOME = os.path.join(DATADIR, "meta{metagenome}", "{genome}.fasta")
-# PREPROCESSED_METAGENOME = os.path.join(DATADIR, "preprocessed_metagenome", "{metagenome}", "{genome}.fasta")
-# META_BASE7_UNPREPROCESSED = [os.path.join(META_BASE7_DIR, "GCF_000005845.2_ASM584v2_genomic.fna"), os.path.join(META_BASE7_DIR, "GCF_000159115.1_ASM15911v1_genomic.fna"), os.path.join(META_BASE7_DIR, "GCF_000175375.1_ASM17537v1_genomic.fna"), os.path.join(META_BASE7_DIR, "GCF_000376705.1_ASM37670v1_genomic.fna"), os.path.join(META_BASE7_DIR, "GCF_003999335.1_ASM399933v1_genomic.fna"), os.path.join(META_BASE7_DIR, "GCF_017638885.1_ASM1763888v1_genomic.fna"), os.path.join(META_BASE7_DIR, "GCF_019890915.1_ASM1989091v1_genomic.fna")]
-# META_BASE7_FASTA = [os.path.join(DATADIR, "metabase7", "GCF_000005845.2_ASM584v2_genomic.fasta"), os.path.join(DATADIR, "metabase7", "GCF_000159115.1_ASM15911v1_genomic.fasta"), os.path.join(DATADIR, "metabase7", "GCF_000175375.1_ASM17537v1_genomic.fasta"), os.path.join(DATADIR, "metabase7", "GCF_000376705.1_ASM37670v1_genomic.fasta"), os.path.join(DATADIR, "metabase7", "GCF_003999335.1_ASM399933v1_genomic.fasta"), os.path.join(DATADIR, "metabase7", "GCF_017638885.1_ASM1763888v1_genomic.fasta"), os.path.join(DATADIR, "metabase7", "GCF_019890915.1_ASM1989091v1_genomic.fasta")]
-# MEDIUM20_FASTA = [os.path.join(DATADIR, "metamedium20", "GCF_000005845.2_ASM584v2_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000009045.1_ASM904v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000013285.1_ASM1328v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000025905.1_ASM2590v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000092125.1_ASM9212v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000143845.1_ASM14384v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000159115.1_ASM15911v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000175375.1_ASM17537v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000184345.1_ASM18434v2_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000185725.2_Segn_rugo_CDC_945_V2_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000196035.1_ASM19603v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000265425.1_ASM26542v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000325705.1_ASM32570v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_000376705.1_ASM37670v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_003999335.1_ASM399933v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_008632635.1_ASM863263v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_017638885.1_ASM1763888v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_019704535.1_ASM1970453v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_019890915.1_ASM1989091v1_genomic.fasta"), os.path.join(DATADIR, "metamedium20", "GCF_900638215.1_56553_A01_genomic.fasta")]
-# COMPLEX32_FASTA = [os.path.join(DATADIR, 'metacomplex32', 'GCF_000005845.2_ASM584v2_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000006925.2_ASM692v2_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000006945.2_ASM694v2_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000009045.1_ASM904v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000013285.1_ASM1328v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000025905.1_ASM2590v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000092125.1_ASM9212v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000143845.1_ASM14384v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000159115.1_ASM15911v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000160855.1_ASM16085v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000175375.1_ASM17537v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000179955.1_ASM17995v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000184345.1_ASM18434v2_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000185725.2_Segn_rugo_CDC_945_V2_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000196035.1_ASM19603v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000231385.2_ASM23138v3_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000233715.2_ASM23371v3_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000255115.2_ASM25511v3_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000265425.1_ASM26542v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000325705.1_ASM32570v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000376705.1_ASM37670v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_000439255.1_ASM43925v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_001905915.1_ASM190591v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_001932995.2_ASM193299v2_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_003028755.1_ASM302875v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_003999335.1_ASM399933v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_008632635.1_ASM863263v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_017638885.1_ASM1763888v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_018094625.1_ASM1809462v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_019704535.1_ASM1970453v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_019890915.1_ASM1989091v1_genomic.fasta'), os.path.join(DATADIR, 'metacomplex32', 'GCF_900638215.1_56553_A01_genomic.fasta')]
-# META_BASE7_ABUNDANCES = os.path.join(META_BASE7_DIR, "nanosim.abundances.tsv")
-# MEDIUM20_ABUNDANCES = os.path.join(DATADIR, "meta", "medium20", "nanosim.abundances.tsv")
-# COMPLEX32_ABUNDANCES = os.path.join(DATADIR, "meta", "complex32", "nanosim.abundances.tsv")
 METAGENOME_ABUNDANCES = os.path.join(DATADIR, "meta", "abundances", "{metagenome}", "nanosim.abundances.tsv")
 METAGENOME_DIR = os.path.join(DATADIR, "meta", "{metagenome}")
-# METAGENOME_FASTA = get_metagenome_files("meta{metagenome}", METAGENOME_ABUNDANCES)
 METAGENOME_FASTA = os.path.join(DATADIR, "preprocessed_metagenome", "{metagenome}")
-REPORT_TEX = os.path.join(REPORTDIR, "output", "{file_name}_k{k}ma{min_abundance}t{threads}", "{report_name}", "{report_file_name}.tex")
-REPORT_TEX_FAST = os.path.join(REPORTDIR, "output_fast", "{file_name}_k{k}ma{min_abundance}t{threads}", "{report_name}", "{report_file_name}.tex")
-#QUAST_REPORT_TEX = os.path.join(REPORTDIR, "quast_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.tex")
-#QUAST_UNALIGNED = os.path.join(REPORTDIR, "quast_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}", "contigs_reports", "contigs_report_report.unaligned.info")
-#QUAST_EXTENDED_REPORT = os.path.join(REPORTDIR, "extended_quast_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.tex")
+REPORT_TEX = os.path.join(REPORTDIR, "output", "{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}", "{report_name}", "{report_file_name}.tex")
+REPORT_TEX_FAST = os.path.join(REPORTDIR, "output_fast", "{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}", "{report_name}", "{report_file_name}.tex")
 LOG_UNITIGS = os.path.join(REPORTDIR, "safe_paths_unitigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "log.log") 
 LOG_NODE_TO_ARC = os.path.join(REPORTDIR, "node_to_arc", "{file_name}_k{k}ma{min_abundance}t{threads}", "log.log") 
 LOG_FLOWTIGS = os.path.join(REPORTDIR, "safe_paths_flowtigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "log.log") 
@@ -161,9 +133,13 @@ LOG_ALGORITHM = os.path.join(REPORTDIR, "safe_paths_{algorithm}", "{file_name}_k
 ALL_RUNTIMES = os.path.join(REPORTDIR, "runtimes", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.tsv")
 FAST_RUNTIMES = os.path.join(REPORTDIR, "fast_runtimes", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.tsv")
 GRAPH_STATISTICS = os.path.join(REPORTDIR, "graph_statistics", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.tsv")
-
+NUMBER_OF_CHARACTERS_IN_CONCATENATED_METAGENOME = os.path.join(REPORTDIR, "number_of_characters", "meta_{metagenome}_characters", "report.txt")
+NUMBER_OF_CHARACTERS = os.path.join(REPORTDIR, "number_of_characters", "{file_name}_characters", "report.txt")
+SAFE_PATHS_WITH_NON_MAXIMAL = os.path.join(REPORTDIR, "safe_paths_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}nm1", "report.fasta") 
+SAFE_PATHS_WITH_ONLY_MAXIMAL = os.path.join(REPORTDIR, "safe_paths_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}nm0", "report.fasta") 
 
 #     DATADIR = ... # wherever you have your data, e.g. /wrk-vakka/users/<your username>/flowtigs
+
 
 #################################
 ###### Global report rules ######
@@ -264,8 +240,9 @@ rule create_single_report_tex:
             runtimes = ALL_RUNTIMES,
             script = CONVERT_VALIDATION_OUTPUTS_TO_LATEX_SCRIPT,
             graph_statistics = GRAPH_STATISTICS,
+            number_of_characters = NUMBER_OF_CHARACTERS,
     output: report = REPORT_TEX,
-    log:    log = "logs/create_single_report/{file_name}_k{k}ma{min_abundance}t{threads}r{report_name}rf{report_file_name}/log.log",
+    log:    log = "logs/create_single_report/{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}r{report_name}rf{report_file_name}/log.log",
     params: genome_name = lambda wildcards: ", ".join(wildcards.file_name), 
             script_column_arguments = get_single_report_script_column_arguments_from_wildcards,
             name_file = REPORT_NAME_FILE,
@@ -279,7 +256,7 @@ rule create_single_report_tex:
     shell: """
         mkdir -p '{params.hashdir}'
         echo '{wildcards.report_name} {params.genome_name} {wildcards.report_file_name}' > '{params.name_file}'
-        python3 '{input.script}' '{params.hashdir}' '{params.name_file}' 'none' 'none' '{input.combined_eaxmax_plot}' '{output}' '{input.runtimes}' '{input.graph_statistics}' {params.script_column_arguments}
+        python3 '{input.script}' '{params.hashdir}' '{params.name_file}' 'none' 'none' '{input.combined_eaxmax_plot}' '{output}' '{input.runtimes}' '{input.graph_statistics}' '{input.number_of_characters}' {params.script_column_arguments}
         """
 
 
@@ -289,7 +266,7 @@ rule create_single_report_for_fast_algorithms_only:
             runtimes = FAST_RUNTIMES,
             script = CONVERT_FAST_VALIDATION_OUTPUTS_TO_LATEX_SCRIPT,
     output: report = REPORT_TEX_FAST,
-    log:    log = "logs/create_single_report/{file_name}_k{k}ma{min_abundance}t{threads}r{report_name}rf{report_file_name}/log.log",
+    log:    log = "logs/create_single_report/{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}r{report_name}rf{report_file_name}/log.log",
     params: genome_name = lambda wildcards: ", ".join(wildcards.file_name), 
             script_column_arguments = get_single_report_script_column_arguments_from_wildcards_fast,
             name_file = REPORT_NAME_FILE,
@@ -386,7 +363,8 @@ rule gathering_fast_runtimes:
 
 
 rule gather_graph_statistics:
-    input:  log = LOG_OMNITIGS,
+    input:  log = LOG_MULTI_SAFE,
+            edges_in_cycles = LOG_FLOWTIGS,
     output: statistics = GRAPH_STATISTICS,
     log:    log = "logs/gathering_graph_statistics/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
     conda:  "config/conda-seaborn-env.yml"
@@ -426,6 +404,7 @@ rule metagenome_concatenate:
     input:  abundances = METAGENOME_ABUNDANCES,
             references = METAGENOME_FASTA,
     output: report = METAGENOME_CONCAT,
+            number_of_characters = NUMBER_OF_CHARACTERS_IN_CONCATENATED_METAGENOME
     log:    log = "logs/metagenome_concatenate/{metagenome}/log.log",
     conda:  "config/conda-seaborn-env.yml"
     resources:
@@ -614,6 +593,19 @@ rule safe_paths:
 
 
 
+# Rule to add unitigs to output file
+rule add_non_maximal_paths:
+    input:  safe_paths = SAFE_PATHS_WITH_ONLY_MAXIMAL,
+            unitigs = BUILD_FA,
+    log:    log = "logs/add_non_maximal_paths_{algorithm}/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
+    output: all_safe_paths = SAFE_PATHS_WITH_NON_MAXIMAL,
+    conda:  "config/conda-seaborn-env.yml",
+    resources:
+            time_min = 600, # likely too much
+            mem_mb = 100_000, # likely too much
+            queue = "medium,bigmem,aurinko",
+    script: "scripts/add_non_maximal.py"
+
 # Rule to make a report of the results.
 # input: 
 #   contigs: List of safe paths in fasta format.
@@ -628,7 +620,7 @@ rule safe_paths:
 #   threads: number of cpu cores used.
 # output: report in .tex, .tsv, .txt, and .pdf formats
 rule run_quast:
-    input:  contigs = os.path.join(REPORTDIR, "safe_paths_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta"),
+    input:  contigs = os.path.join(REPORTDIR, "safe_paths_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}", "report.fasta"),
             references = [GENOME_CONCAT_REFERENCES], # list of references
             script = QUAST_BINARY,
             error_report = "config/quast_error_report.tex",
@@ -645,7 +637,7 @@ rule run_quast:
                queue = "bigmem,aurinko", # I had some more complex expression here, the queues fitting to the time are on https://wiki.helsinki.fi/display/it4sci/HPC+Environment+User+Guide#HPCEnvironmentUserGuide-4.8.4Partitions-Ukko
     shell:  """
         set +e 
-        ${{CONDA_PREFIX}}/bin/time -v {input.script} -t {threads} --no-html -o '{output.directory}' {params.references} '{input.contigs}'
+        ${{CONDA_PREFIX}}/bin/time -v {input.script} --use-all-alignments --ambiguity-usage all --ambiguity-score 1.0 -t {threads} --no-html -o '{output.directory}' {params.references} '{input.contigs}'
         set -e
         
         if [ $? -ne 0 ]; then
@@ -678,7 +670,7 @@ rule add_longest_unaligned_contig_length_to_report:
     input: directory = QUAST_OUTPUT_DIR,
            script = "scripts/longest_unaligned_contig.py",
     output: directory(QUAST_EXTENDED_OUTPUT_DIR)
-    log:    log = "logs/the_longest_unaligned_{algorithm}/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
+    log:    log = "logs/the_longest_unaligned_{algorithm}/{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}/log.log",
     conda:  "config/conda-seaborn-env.yml"
     resources: mem_mb = 495_000, 
                time_min = 120,
@@ -794,7 +786,7 @@ rule practical_trivial_omitigs:
 
 # Rule for running multiple pipelines at the same time. Insert the outputs of the pipelines that you want to run in the input of this rule.
 rule run_multiple_pipelines:
-    input: pipeline_outputs = [os.path.join(REPORTDIR, "output", "meta_HMP_Mock_k31ma1t28", "report_mon4-9", "report.tex"), os.path.join(REPORTDIR, "output", "meta_JGI_Mock_k31ma1t28", "report_mon4-9", "report.tex"), os.path.join(REPORTDIR, "output", "meta_73_species_k31ma1t28", "report_mon4-9", "report.tex")]
+    input: pipeline_outputs = [os.path.join(REPORTDIR, "output", "meta_HMP_Mock_k31ma1t28nm1", "report_28-9", "report.tex"), os.path.join(REPORTDIR, "output", "meta_JGI_Mock_k31ma1t28nm1", "report_28-9", "report.tex"), os.path.join(REPORTDIR, "output", "meta_medium20_k31ma1t28nm1", "report_28-9", "report.tex"), os.path.join(REPORTDIR, "output", "meta_base7_k31ma1t28nm1", "report_28-9", "report.tex"), os.path.join(REPORTDIR, "output", "meta_complex32_k31ma1t28nm1", "report_28-9", "report.tex")]
     output: empty_file = os.path.join(REPORTDIR, "multiple_runs")
     shell:  """
         cd data/reports
