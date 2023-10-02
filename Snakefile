@@ -81,7 +81,8 @@ REPORT = os.path.join(REPORTDIR, "s{species}-k{k}", "report.txt")
 GENOME_ALL_REFERENCES = os.path.join(DATADIR, "{file_name}.fasta")
 GENOME_CONCAT_REFERENCES = os.path.join(DATADIR, "{file_name}_concat.fasta")
 GENOME_CIRCULAR_REFERENCES = os.path.join(REPORTDIR, "circularization", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
-BUILD_FA = os.path.join(REPORTDIR, "safe_paths_unitigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm1", "report.fasta")
+BUILD_FA = os.path.join(REPORTDIR, "safe_paths_unitigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm0", "report.fasta")
+# BUILD_FA_NM = os.path.join(REPORTDIR, "safe_paths_unitigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm0", "report.fasta")
 BUILD_LOG = os.path.join("logs", "build_{file_name}_k{k}ma{min_abundance}t{threads}", "log.log")
 NODE_TO_ARC_CENTRIC_DBG_BINARY = os.path.abspath("external_software/node-to-arc-centric-dbg/target/release/node-to-arc-centric-dbg")
 NODE_TO_ARC_CENTRIC_DBG = os.path.join(REPORTDIR, "node_to_arc", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.edgelist") #threads 28
@@ -104,8 +105,8 @@ METAGENOME = os.path.join(DATADIR, "meta_{metagenome}.fasta")
 METAGENOME_CONCAT = os.path.join(DATADIR, "meta_{metagenome}_concat.fasta")
 PRACTICAL_TEST_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm0", "report.fasta")
 PRACTICAL_TRIVIAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_trivial-omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm0", "report.fasta")
-ALGORITHMS = ["unitigs", "trivial-omnitigs", "multi-safe", "flowtigs", "omnitigs"] # values for the wildcard that chooses which tigs to generate
-ALGORITHM_COLUMN_NAMES = ["unitigs", "t. omnitigs", "multi-safe", "flowtigs", "omnitigs"] # column names for the different tigs
+ALGORITHMS = ["unitigs", "trivial-omnitigs", "multi-safe", "flowtigs"] # values for the wildcard that chooses which contigs to generate
+ALGORITHM_COLUMN_NAMES = ["unitigs", "t. omnitigs", "multi-safe", "flowtigs"] # column names for the different tigs
 FAST_ALGORITHMS = ["unitigs", "trivial-omnitigs", "flowtigs"] # algorithms that have a fast runtime
 FAST_ALGORITHM_COLUMN_NAMES = ["unitigs", "t. omnitigs", "flowtigs"] # column names for algorithms that have a fast runtime
 CONVERT_VALIDATION_OUTPUTS_TO_LATEX_SCRIPT = "scripts/convert_validation_outputs_to_latex.py"
@@ -136,6 +137,7 @@ GRAPH_STATISTICS = os.path.join(REPORTDIR, "graph_statistics", "{file_name}_k{k}
 NUMBER_OF_CHARACTERS_IN_CONCATENATED_METAGENOME = os.path.join(REPORTDIR, "number_of_characters", "meta_{metagenome}_characters", "report.txt")
 NUMBER_OF_CHARACTERS = os.path.join(REPORTDIR, "number_of_characters", "{file_name}_characters", "report.txt")
 SAFE_PATHS_WITH_NON_MAXIMAL = os.path.join(REPORTDIR, "safe_paths_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}nm1", "report.fasta") 
+SAFE_PATHS_WITH_NON_MAXIMAL_NOT_UNIQUIFIED = os.path.join(REPORTDIR, "safe_paths_{algorithm}_not_uniquified", "{file_name}_k{k}ma{min_abundance}t{threads}nm1", "report.fasta") 
 SAFE_PATHS_WITH_ONLY_MAXIMAL = os.path.join(REPORTDIR, "safe_paths_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}nm0", "report.fasta") 
 
 #     DATADIR = ... # wherever you have your data, e.g. /wrk-vakka/users/<your username>/flowtigs
@@ -314,18 +316,6 @@ rule create_combined_eaxmax_graph_for_fast_algorithms_only:
 
 
 
-rule copy_data_from_dx1:
-    output: "/abga/work/elieling/safe-paths-with-flowtigs/data/reports/circularization/meta_Human_gut_k31ma1t28/report.fasta"
-    shell: """
-        scp ebingerv@dx1-523-001:/abga/work/elieling/safe-paths-with-flowtigs/data/reports/circularization/meta_Human_gut_k31ma1t28/report.fasta data/reports/circularization/meta_Human_gut_k31ma1t28/
-    """
-
-rule copy_data_from_dx1_to_turso:
-    output: "/abga/work/elieling/safe-paths-with-flowtigs/data/reports/circularized.txt"
-    shell: """
-        scp ebingerv@dx1-523-001:/abga/work/elieling/safe-paths-with-flowtigs/data/reports/circularization/meta_Human_gut_k31ma1t28/report.fasta ebingerv@turso02:/wrk-vakka/users/ebingerv/snakemake-flowtigs/data/reports/circularization/meta_Human_gut_k31ma1t28/
-        touch data/reports/cirularized.txt"
-    """
 
 
 ##################################
@@ -505,6 +495,16 @@ rule bcalm2_build:
         """
 
 
+
+# Unitigs file is similar with nm = 0 and nm = 1.
+# rule bcalm_nm1:
+#     input: BUILD_FA,
+#     output: BUILD_FA_NM,
+#     shell: """
+#     cp {input} {output}
+#     """
+
+
 # Rule to set up the external software for the node_to_arc_centric_dbg rule.
 rule build_node_to_arc_centric_dbg:
     input:  "external_software/node-to-arc-centric-dbg/Cargo.toml",
@@ -591,20 +591,29 @@ rule safe_paths:
     """
 
 
-
-
 # Rule to add unitigs to output file
 rule add_non_maximal_paths:
     input:  safe_paths = SAFE_PATHS_WITH_ONLY_MAXIMAL,
             unitigs = BUILD_FA,
     log:    log = "logs/add_non_maximal_paths_{algorithm}/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
-    output: all_safe_paths = SAFE_PATHS_WITH_NON_MAXIMAL,
+    output: all_safe_paths = SAFE_PATHS_WITH_NON_MAXIMAL_NOT_UNIQUIFIED,
     conda:  "config/conda-seaborn-env.yml",
     resources:
             time_min = 600, # likely too much
             mem_mb = 100_000, # likely too much
             queue = "medium,bigmem,aurinko",
     script: "scripts/add_non_maximal.py"
+
+
+# Uniquifies fasta ids of concatenated sequence lists
+rule uniquify_fasta_ids:
+    input:  safe_paths = SAFE_PATHS_WITH_NON_MAXIMAL_NOT_UNIQUIFIED,
+    output: uniquified = SAFE_PATHS_WITH_NON_MAXIMAL,
+    conda:  "config/conda-biopython-env.yml"
+    script: "scripts/uniquify_fasta_ids.py"
+
+
+
 
 # Rule to make a report of the results.
 # input: 
@@ -637,7 +646,7 @@ rule run_quast:
                queue = "bigmem,aurinko", # I had some more complex expression here, the queues fitting to the time are on https://wiki.helsinki.fi/display/it4sci/HPC+Environment+User+Guide#HPCEnvironmentUserGuide-4.8.4Partitions-Ukko
     shell:  """
         set +e 
-        ${{CONDA_PREFIX}}/bin/time -v {input.script} --use-all-alignments --ambiguity-usage all --ambiguity-score 1.0 -t {threads} --no-html -o '{output.directory}' {params.references} '{input.contigs}'
+        ${{CONDA_PREFIX}}/bin/time -v {input.script} -i 15 --use-all-alignments --ambiguity-usage all --ambiguity-score 1.0 -t {threads} --no-html -o '{output.directory}' {params.references} '{input.contigs}'
         set -e
         
         if [ $? -ne 0 ]; then
