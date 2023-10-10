@@ -71,6 +71,7 @@ ECOLI_CONCAT = os.path.join(DATADIR, "ecoli_concat.fasta")
 HUMAN_GUT_FILE_LIST = os.path.join(DATADIR, "meta", "human_gut_files.tsv")
 HUMAN_GUT_FILES = os.path.join(DATADIR, "meta", "human_gut")
 HUMAN_GUT_EXTRACTED_FILES = os.path.join(DATADIR, "meta", "Human_gut")
+SELECTED_HUMAN_GUT_FILES = os.path.join(DATADIR, "meta", "Human_gut_n{n_files}_files")
 SINGLE = os.path.join(DATADIR, "{file_name}.fasta")
 SINGLE_CONCAT = os.path.join(DATADIR, "bac_{file_name}_concat.fasta")
 METADIR = os.path.join(DATADIR, "meta")
@@ -409,6 +410,16 @@ rule preprocessing_all_genomes:
     script: "scripts/preprocessing_all_genomes.py"
 
 
+rule select_human_gut_files:
+    input:  file_list = HUMAN_GUT_FILE_LIST,
+            all_files = HUMAN_GUT_EXTRACTED_FILES,
+    output: selected_files = directory(SELECTED_HUMAN_GUT_FILES),
+    log:    log = "logs/Selecting_human_gut_files_n{n_files}/log.log",
+    params: n_files = lambda wildcards: ", ".join(wildcards.n_files), 
+    conda:  "config/conda-seaborn-env.yml",
+    script: "scripts/select_human_gut_files.py"
+
+
 # Rule to circularize non-circular sequences of the genome or metagenome.
 # input: data of the non-circular sequences of the genome or metagenome in fasta format.
 # wildcards: k=size of kmers, file_name=name of the file with the data in the data folder,
@@ -595,7 +606,7 @@ rule run_quast:
                queue = "bigmem,aurinko", 
     shell:  """
         set +e 
-        ${{CONDA_PREFIX}}/bin/time -v {input.script} -i 15 --use-all-alignments --ambiguity-usage all --ambiguity-score 1.0 -t {threads} --no-html -o '{output.directory}' {params.references} '{input.contigs}'
+        ${{CONDA_PREFIX}}/bin/time -v {input.script} --use-all-alignments --ambiguity-usage all --ambiguity-score 1.0 -t {threads} --no-html -o '{output.directory}' {params.references} '{input.contigs}'
         set -e
         
         if [ $? -ne 0 ]; then
@@ -744,11 +755,11 @@ rule practical_trivial_omitigs:
 
 # Rule for running multiple pipelines at the same time. Insert the outputs of the pipelines that you want to run in the input of this rule.
 rule run_multiple_pipelines:
-    input: pipeline_outputs = [os.path.join(REPORTDIR, "output", "meta_HMP_Mock_k31ma1t28nm1", "report_{date}", "report.tex"), os.path.join(REPORTDIR, "output", "meta_JGI_Mock_k31ma1t28nm1", "report_{date}", "report.tex"), os.path.join(REPORTDIR, "output", "meta_medium20_k31ma1t28nm1", "report_{date}", "report.tex"), os.path.join(REPORTDIR, "output", "meta_base7_k31ma1t28nm1", "report_{date}", "report.tex"), os.path.join(REPORTDIR, "output", "meta_complex32_k31ma1t28nm1", "report_{date}", "report.tex")]
-    output: empty_file = os.path.join(REPORTDIR, "multiple_runs_{date}")
+    input: pipeline_outputs = [os.path.join(REPORTDIR, "output", "meta_HMP_Mock_k31ma1t28nm{nonmaximal}", "report_{date}", "report.tex"), os.path.join(REPORTDIR, "output", "meta_JGI_Mock_k31ma1t28nm{nonmaximal}", "report_{date}", "report.tex"), os.path.join(REPORTDIR, "output", "meta_medium20_k31ma1t28nm{nonmaximal}", "report_{date}", "report.tex"), os.path.join(REPORTDIR, "output", "meta_base7_k31ma1t28nm{nonmaximal}", "report_{date}", "report.tex"), os.path.join(REPORTDIR, "output", "meta_complex32_k31ma1t28nm{nonmaximal}", "report_{date}", "report.tex")]
+    output: empty_file = os.path.join(REPORTDIR, "multiple_runs_{date}_nm{nonmaximal}")
     shell:  """
         cd data/reports
-        touch multiple_runs_{wildcards.date}
+        touch multiple_runs_{wildcards.date}_nm{wildcards.nonmaximal}
     """
 
 
