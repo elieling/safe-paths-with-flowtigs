@@ -1,10 +1,10 @@
 # Snakemake Flowtigs
 
-A snakmake pipeline for calculating safe paths with flowtigs from a De Bruijn graph of DNA or RNA reads in metagenomes. The pipeline also does all the pre-processing and the post-processing, and compares the results with multi-safe, trivial ominitigs and unitigs.
+A snakmake pipeline for comparing various safe paths with flowtigs in a De Bruijn graph of DNA reads in metagenomes. The pipeline also does all the pre-processing and the post-processing, and compares the results with structural contigs, extended contigs and unitigs.
 
 ## Input
 
-The input dataset should be a folder located in the folder `data/meta/` from the root of this project. The input folder sould contain all the genome reads as fasta files with the ending ".fasta" or ".fna". The folder can contain other files as long as they don't have these endings.
+The input dataset should be a folder located in the folder `data/meta/` from the root of this project. The input folder should contain all the genome reads as fasta files with the ending ".fasta" or ".fna". The folder can contain other files as long as they don't have these endings.
 
 ## Output
 
@@ -26,8 +26,8 @@ To run the pipeline:
 
 ## Changing Parameters
 
-The pipeline parameters can be changed by modifying the `k31ma1t28nm1` part of the runnign command. This will also change the name of the output file accordingly. The four parameters are represented by characters, followed by an integer indicating their value:
+The pipeline parameters can be changed by modifying the `k31ma1t28nm1` part of the running command. This will also change the name of the output file accordingly. The four parameters are represented by characters, followed by an integer indicating their value:
 - k: size of the k-mers used in the De Bruijn graph.
 - ma: minimum adundance.
 - t: number of threads used.
-- nm: binary value representing whether or not to append the unitigs to the results of the other safe-path-algorithms. Use 1 to append unitigs, and 0 to not append them.
+- nm: binary value representing whether or not to append the unitigs to the results of the other safe-walk-algorithms. Use 1 to append unitigs, and 0 to not append them.
