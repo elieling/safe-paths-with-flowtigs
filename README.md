@@ -4,7 +4,7 @@ A snakmake pipeline for comparing various safe paths with flowtigs in a De Bruij
 
 ## Input
 
-The input dataset should be a folder located in the folder `data/meta/` from the root of this project. The input folder should contain all the genome reads as fasta files with the ending ".fasta" or ".fna". The folder can contain other files as long as they don't have these endings.
+The input dataset should be a folder located in the folder `data/meta/` from the root of this project. The input folder should contain all the genome reads as fasta files with the ending ".fasta" or ".fna". The folder can contain other files as long as they don't have these endings. The five input datasets used in the experiments can be found [here](https://zenodo.org/record/8434267).
 
 ## Output
 
