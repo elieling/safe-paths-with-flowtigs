@@ -452,10 +452,10 @@ rule bcalm2_build:
     threads: MAX_THREADS,
     shadow: "minimal"
     resources:
-            mem_mb = 2_000_000, 
-            time_min = 4320,
+            mem_mb = 1_000_000, 
+            time_min = 1440,
             cpus = build_cpus,
-            queue = 'aurinko,bigmem',
+            queue = 'aurinko,bigmem,medium',
     shell:  """
         rm -f '{log.log}'
         ${{CONDA_PREFIX}}/bin/time -v bcalm -nb-cores {threads} -kmer-size {wildcards.k} -in '{input.references}' -out '{output.tigs}' -abundance-min {wildcards.min_abundance} 2>&1 | tee -a '{log.log}'
@@ -541,8 +541,8 @@ rule flowtigs:
             log = LOG_FLOWTIGS,
     conda:  "config/conda-time-env.yml",
     resources:
-            time_min = 4320, 
-            mem_mb = 3_000_000,
+            time_min = 1440, 
+            mem_mb = 1_000_000,
             queue = "medium,bigmem,aurinko",
     shell:  """
         rm -f '{log.log}'
@@ -870,7 +870,7 @@ rule download_flowtigs:
         rm -rf flowtigs
         git clone https://github.com/elieling/flowtigs.git
         cd flowtigs
-        git checkout 2685085eab02c124b8a62787bf75e4922b252882
+        git checkout cdf3b7947050c972212a64e84de9ab88b47a348e 
 
         cargo fetch
     """ 
