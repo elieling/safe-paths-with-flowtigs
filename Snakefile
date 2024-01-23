@@ -542,7 +542,7 @@ rule flowtigs:
     conda:  "config/conda-time-env.yml",
     resources:
             time_min = 1440, 
-            mem_mb = 1_000_000,
+            mem_mb = 495_000,
             queue = "medium,bigmem,aurinko",
     shell:  """
         rm -f '{log.log}'
@@ -600,7 +600,7 @@ rule run_quast:
     params: references = lambda wildcards, input: "-r '" + "' -r '".join(input.references) + "'",
     conda: "config/conda-quast-env.yml"
     threads: 14,
-    resources: mem_mb = 1_000_000, 
+    resources: mem_mb = 495_000, 
                cpus = 14,
                time_min = 1440,
                queue = "bigmem,aurinko", 
@@ -870,7 +870,7 @@ rule download_flowtigs:
         rm -rf flowtigs
         git clone https://github.com/elieling/flowtigs.git
         cd flowtigs
-        git checkout cdf3b7947050c972212a64e84de9ab88b47a348e 
+        git checkout 2685085eab02c124b8a62787bf75e4922b252882  
 
         cargo fetch
     """ 
