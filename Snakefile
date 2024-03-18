@@ -77,6 +77,10 @@ SINGLE_CONCAT = os.path.join(DATADIR, "bac_{file_name}_concat.fasta")
 METADIR = os.path.join(DATADIR, "meta")
 METAGENOME = os.path.join(DATADIR, "meta_{metagenome}.fasta")
 METAGENOME_CONCAT = os.path.join(DATADIR, "meta_{metagenome}_concat.fasta")
+REAL_METAGENOME = os.path.join(DATADIR, "real_{metagenome}.fasta")
+REAL_METAGENOME_CONCAT = os.path.join(DATADIR, "real_{metagenome}_concat.fasta")
+METAGENOME_REFERENCE = os.path.join(DATADIR, "preprocessed_metagenome", "{metagenome}_reference")
+METAGENOME_ABUNDANCES_REFERENCE = os.path.join(DATADIR, "meta", "abundances", "{metagenome}_reference", "nanosim.abundances.tsv")
 PRACTICAL_TEST_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm0", "report.fasta")
 PRACTICAL_TRIVIAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_trivial-omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm0", "report.fasta")
 ALGORITHMS = ["unitigs", "trivial-omnitigs", "multi-safe", "flowtigs"] # values for the wildcard that chooses which contigs to generate
@@ -95,6 +99,7 @@ META_BASE7_DIR = os.path.join(DATADIR, "meta", "base7")
 UNPREPROCESSED_METAGENOME = os.path.join(DATADIR, "meta", "{metagenome}", "{genome}.fasta")
 METAGENOME_ABUNDANCES = os.path.join(DATADIR, "meta", "abundances", "{metagenome}", "nanosim.abundances.tsv")
 METAGENOME_DIR = os.path.join(DATADIR, "meta", "{metagenome}")
+METAGENOME_FASTA_NOT_CONCAT = os.path.join(DATADIR, "preprocessed_metagenome_not_concat", "{metagenome}")
 METAGENOME_FASTA = os.path.join(DATADIR, "preprocessed_metagenome", "{metagenome}")
 REPORT_TEX = os.path.join(REPORTDIR, "output", "{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}", "{report_name}", "{report_file_name}.tex")
 REPORT_TEX_FAST = os.path.join(REPORTDIR, "output_fast", "{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}", "{report_name}", "{report_file_name}.tex")
@@ -109,6 +114,8 @@ ALL_RUNTIMES = os.path.join(REPORTDIR, "runtimes", "{file_name}_k{k}ma{min_abund
 FAST_RUNTIMES = os.path.join(REPORTDIR, "fast_runtimes", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.tsv")
 GRAPH_STATISTICS = os.path.join(REPORTDIR, "graph_statistics", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.tsv")
 NUMBER_OF_CHARACTERS_IN_CONCATENATED_METAGENOME = os.path.join(REPORTDIR, "number_of_characters", "meta_{metagenome}_characters", "report.txt")
+REAL_NUMBER_OF_CHARACTERS_IN_CONCATENATED_METAGENOME = os.path.join(REPORTDIR, "number_of_characters", "real_{metagenome}_characters", "report.txt")
+REAL_NUMBER_OF_CHARACTERS_IN_CONCATENATED_REFERENCE_METAGENOME = os.path.join(REPORTDIR, "number_of_characters", "real_{metagenome}_reference_characters", "report.txt")
 NUMBER_OF_CHARACTERS = os.path.join(REPORTDIR, "number_of_characters", "{file_name}_characters", "report.txt")
 SAFE_PATHS_WITH_NON_MAXIMAL = os.path.join(REPORTDIR, "safe_paths_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}nm1", "report.fasta") 
 SAFE_PATHS_WITH_NON_MAXIMAL_NOT_UNIQUIFIED = os.path.join(REPORTDIR, "safe_paths_{algorithm}_not_uniquified", "{file_name}_k{k}ma{min_abundance}t{threads}nm1", "report.fasta") 
@@ -348,6 +355,19 @@ rule gather_graph_statistics:
 # Rules to gather the data from metagenomes to a single file
 
 
+# Rule to concatenate the chromosomes of a bacteria into one file.
+rule concatenating_chromosomes:
+    input:  assembly = METAGENOME_FASTA_NOT_CONCAT,
+    output: report = directory(METAGENOME_FASTA),
+    log:    log = "logs/concatenating_chromosomes/{metagenome}/log.log",
+    conda:  "config/conda-biopython-env.yml"
+    resources:
+            mem_mb = 495_000, 
+            time_min = 1440,
+            queue = 'aurinko,bigmem,medium',
+    script: "scripts/concatenate_chromosomes.py"
+
+
 # Rule to get sequences for metagenome data.
 rule metagenome_to_single_file:
     input:  abundances = METAGENOME_ABUNDANCES,
@@ -378,6 +398,35 @@ rule metagenome_concatenate:
     script: "scripts/metagenome_concatenate.py"
 
 
+# Rule to concatenate metagenome data without added abundances.
+rule real_metagenome_concatenate:
+    input:  references = METAGENOME_FASTA,
+            abundances = METAGENOME_ABUNDANCES,
+    output: report = REAL_METAGENOME,
+            number_of_characters = REAL_NUMBER_OF_CHARACTERS_IN_CONCATENATED_METAGENOME
+    log:    log = "logs/real_metagenome_concatenate/{metagenome}/log.log",
+    conda:  "config/conda-seaborn-env.yml"
+    resources:
+            time_min = 600, 
+            mem_mb = 10_000,
+            queue = "medium,bigmem,aurinko",
+    script: "scripts/metagenome_concatenate.py"
+
+
+# Rule to concatenate metagenome data without added abundances.
+rule real_metagenome_reference_concatenate:
+    input:  references = METAGENOME_REFERENCE,
+            abundances = METAGENOME_ABUNDANCES_REFERENCE,
+    output: report = REAL_METAGENOME_CONCAT,
+            number_of_characters = REAL_NUMBER_OF_CHARACTERS_IN_CONCATENATED_REFERENCE_METAGENOME
+    log:    log = "logs/real_metagenome_reference_concatenate/{metagenome}/log.log",
+    conda:  "config/conda-seaborn-env.yml"
+    resources:
+            time_min = 600, 
+            mem_mb = 10_000,
+            queue = "medium,bigmem,aurinko",
+    script: "scripts/metagenome_concatenate.py"
+
 
 ########################
 ###### Assembly ########
@@ -400,7 +449,7 @@ rule generate_abundances:
 # Rule to remove all the non-[A, C, G, T] characters from a fasta file. Should be ran first.
 rule preprocessing_all_genomes:
     input:  assembly = METAGENOME_DIR,
-    output: report = directory(METAGENOME_FASTA),
+    output: report = directory(METAGENOME_FASTA_NOT_CONCAT),
     log:    log = "logs/preprocessing_single_genome/{metagenome}/log.log",
     conda:  "config/conda-joblib-env.yml"
     resources:
@@ -600,7 +649,7 @@ rule run_quast:
     params: references = lambda wildcards, input: "-r '" + "' -r '".join(input.references) + "'",
     conda: "config/conda-quast-env.yml"
     threads: 14,
-    resources: mem_mb = 495_000, 
+    resources: mem_mb = 1_495_000, 
                cpus = 14,
                time_min = 1440,
                queue = "bigmem,aurinko", 
@@ -641,7 +690,7 @@ rule add_longest_unaligned_contig_length_to_report:
     output: directory(QUAST_EXTENDED_OUTPUT_DIR)
     log:    log = "logs/the_longest_unaligned_{algorithm}/{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}/log.log",
     conda:  "config/conda-seaborn-env.yml"
-    resources: mem_mb = 495_000, 
+    resources: mem_mb = 995_000, 
                time_min = 120,
                queue = "medium,bigmem,aurinko",
     shell:"""
@@ -760,7 +809,7 @@ rule run_multiple_pipelines:
     shell:  """
         cd data/reports
         touch multiple_runs_{wildcards.date}_nm{wildcards.nonmaximal}
-    """
+    """ # os.path.join(REPORTDIR, "output", "meta_HMP_Modified_k31ma1t28nm{nonmaximal}", "report_{date}", "report.tex"), 
 
 
 #######################
@@ -870,7 +919,7 @@ rule download_flowtigs:
         rm -rf flowtigs
         git clone https://github.com/elieling/flowtigs.git
         cd flowtigs
-        git checkout 2685085eab02c124b8a62787bf75e4922b252882  
+        git checkout cdf3b7947050c972212a64e84de9ab88b47a348e  
 
         cargo fetch
     """ 
