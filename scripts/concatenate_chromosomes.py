@@ -11,7 +11,7 @@ if os.path.exists(snakemake.output.report): print("YES")
 else: print("NO")
 
 files = os.listdir(snakemake.input.assembly)
-fasta_files = [file for file in files if file.endswith(".fna") or file.endswith(".fasta")]
+fasta_files = [file for file in files if file.endswith(".fna") or file.endswith(".fasta") or file.endswith(".fq")]
 
 for file in fasta_files:
     filename = os.path.basename(file)
