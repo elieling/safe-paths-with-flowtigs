@@ -60,7 +60,9 @@ BUILD_LOG = os.path.join("logs", "build_{file_name}_k{k}ma{min_abundance}t{threa
 NODE_TO_ARC_CENTRIC_DBG_BINARY = os.path.abspath("external_software/node-to-arc-centric-dbg/target/release/node-to-arc-centric-dbg")
 NODE_TO_ARC_CENTRIC_DBG = os.path.join(REPORTDIR, "node_to_arc", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.edgelist") 
 FLOWTIGS_BINARY = os.path.abspath("external_software/flowtigs/target/release/flowtigs")
+FLOWTIGS_BINARY_REAL = os.path.abspath("external_software/flowtigs-with-real-data/target/release/flowtigs")
 SAFE_PATHS = os.path.join(REPORTDIR, "safe_paths_flowtigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm0", "report.fasta") 
+SAFE_PATHS_REAL = os.path.join(REPORTDIR, "safe_paths_real_flowtigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm0", "report.fasta") 
 QUAST_BINARY = os.path.abspath("external_software/quast/quast.py")
 QUAST_OUTPUT_DIR = os.path.join(REPORTDIR, "quast_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}")
 QUAST_EXTENDED_OUTPUT_DIR = os.path.join(REPORTDIR, "extended_quast_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}")
@@ -85,7 +87,7 @@ PRACTICAL_TEST_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_omnitigs", "{file_
 PRACTICAL_TRIVIAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_trivial-omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm0", "report.fasta")
 ALGORITHMS = ["unitigs", "trivial-omnitigs", "multi-safe", "flowtigs"] # values for the wildcard that chooses which contigs to generate
 ALGORITHM_COLUMN_NAMES = ["unitigs", "t. omnitigs", "multi-safe", "flowtigs"] # column names for the different contigs
-FAST_ALGORITHMS = ["unitigs", "trivial-omnitigs", "flowtigs"] # algorithms that have a fast runtime
+FAST_ALGORITHMS = ["unitigs", "trivial-omnitigs", "real_flowtigs"] # algorithms that have a fast runtime
 FAST_ALGORITHM_COLUMN_NAMES = ["unitigs", "t. omnitigs", "flowtigs"] # column names for algorithms that have a fast runtime
 CONVERT_VALIDATION_OUTPUTS_TO_LATEX_SCRIPT = "scripts/convert_validation_outputs_to_latex.py"
 CONVERT_FAST_VALIDATION_OUTPUTS_TO_LATEX_SCRIPT = "scripts/convert_fast_validation_outputs_to_latex.py"
@@ -106,6 +108,7 @@ REPORT_TEX_FAST = os.path.join(REPORTDIR, "output_fast", "{file_name}_k{k}ma{min
 LOG_UNITIGS = os.path.join(REPORTDIR, "safe_paths_unitigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "log.log") 
 LOG_NODE_TO_ARC = os.path.join(REPORTDIR, "node_to_arc", "{file_name}_k{k}ma{min_abundance}t{threads}", "log.log") 
 LOG_FLOWTIGS = os.path.join(REPORTDIR, "safe_paths_flowtigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "log.log") 
+LOG_FLOWTIGS_REAL = os.path.join(REPORTDIR, "safe_paths_flowtigs_real", "{file_name}_k{k}ma{min_abundance}t{threads}", "log.log") 
 LOG_TRIVIAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_trivial-omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "log.log") 
 LOG_MULTI_SAFE = os.path.join(REPORTDIR, "safe_paths_multi-safe", "{file_name}_k{k}ma{min_abundance}t{threads}", "log.log") 
 LOG_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "log.log") 
@@ -575,6 +578,22 @@ rule build_safe_paths:
     """
 
 
+rule build_flowtigs_for_real_data:
+    input:  "external_software/flowtigs-with-real-data/Cargo.toml",
+    output: FLOWTIGS_BINARY_REAL,
+    conda:  "config/conda-rust-env.yml",
+    threads: MAX_THREADS,
+    resources:
+            mem_mb = 10000,
+            time_min = 60,
+            cpus = MAX_THREADS,
+            queue = "aurinko,bigmem,short,medium",
+    shell:  """
+        cd external_software/flowtigs-with-real-data
+        cargo build --release -j {threads} 
+    """
+
+
 # Rule to get the safe paths from the edge-centric weighted De Bruijn graph given by
 #   the node_to_arc_centric_dbg rule.
 # input: output of node_to_arc_centric_dbg and output of build_safe_paths.
@@ -588,6 +607,24 @@ rule flowtigs:
     log:    log = "logs/flowtigs/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
     output: safe_paths = SAFE_PATHS,
             log = LOG_FLOWTIGS,
+    conda:  "config/conda-time-env.yml",
+    resources:
+            time_min = 1440, 
+            mem_mb = 495_000,
+            queue = "medium,bigmem,aurinko",
+    shell:  """
+        rm -f '{log.log}'
+        ${{CONDA_PREFIX}}/bin/time -v '{input.binary}' -k {wildcards.k} --input '{input.arc_centric_dbg}' --output '{output.safe_paths}' 2>&1 | tee -a '{log.log}'
+        cp {log.log} {output.log}
+    """
+
+
+rule flowtigs_real_data:
+    input:  arc_centric_dbg = NODE_TO_ARC_CENTRIC_DBG,
+            binary = FLOWTIGS_BINARY_REAL,
+    log:    log = "logs/flowtigs_real_data/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
+    output: safe_paths = SAFE_PATHS_REAL,
+            log = LOG_FLOWTIGS_REAL,
     conda:  "config/conda-time-env.yml",
     resources:
             time_min = 1440, 
@@ -920,6 +957,25 @@ rule download_flowtigs:
         git clone https://github.com/elieling/flowtigs.git
         cd flowtigs
         git checkout cdf3b7947050c972212a64e84de9ab88b47a348e  
+
+        cargo fetch
+    """ 
+
+
+# Rule to download the external software used for calculatings safe paths from an arc-centric De Bruijn graph, that works both with simulated and real data.
+localrules: download_flowtigs_for_real_data
+rule download_flowtigs_for_real_data:
+    output: "external_software/flowtigs-with-real-data/Cargo.toml"
+    conda:  "config/conda-rust-env.yml"
+    threads: 1
+    shell:  """
+        mkdir -p external_software
+        cd external_software
+
+        rm -rf flowtigs-with-real-data
+        git clone https://github.com/elieling/flowtigs-with-real-data
+        cd flowtigs-with-real-data
+        git checkout 7766a4ffa50bbbd6265e2ec5010460b602c2b78b  
 
         cargo fetch
     """ 
