@@ -53,16 +53,20 @@ ASSEMBLY_SOURCE_READS = os.path.join(DATADIR, "assembly", "s{species}-k{k}", "re
 ASSEMBLY = os.path.join(DATADIR, "assembly", "s{species}-k{k}", "assembly.fa")
 REPORT = os.path.join(REPORTDIR, "s{species}-k{k}", "report.txt")
 GENOME_ALL_REFERENCES = os.path.join(DATADIR, "{file_name}.fasta")
+REAL_GENOME = os.path.join(DATADIR, "meta", "{metagenome}", "SRR13128014.fq")
 GENOME_CONCAT_REFERENCES = os.path.join(DATADIR, "{file_name}_concat.fasta")
 GENOME_CIRCULAR_REFERENCES = os.path.join(REPORTDIR, "circularization", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
+GENOME_META_CIRCULAR_REFERENCES = os.path.join(REPORTDIR, "circularization", "meta_{metagenome}_k{k}ma{min_abundance}t{threads}", "report.fasta")
 BUILD_FA = os.path.join(REPORTDIR, "safe_paths_unitigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm0", "report.fasta")
+BUILD_FA_META = os.path.join(REPORTDIR, "safe_paths_unitigs", "meta_{metagenome}_k{k}ma{min_abundance}t{threads}nm0", "report.fasta")
+BUILD_FA_REAL = os.path.join(REPORTDIR, "safe_paths_unitigs", "real_{metagenome}_k{k}ma{min_abundance}t{threads}nm0", "report.fasta")
 BUILD_LOG = os.path.join("logs", "build_{file_name}_k{k}ma{min_abundance}t{threads}", "log.log")
 NODE_TO_ARC_CENTRIC_DBG_BINARY = os.path.abspath("external_software/node-to-arc-centric-dbg/target/release/node-to-arc-centric-dbg")
 NODE_TO_ARC_CENTRIC_DBG = os.path.join(REPORTDIR, "node_to_arc", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.edgelist") 
 FLOWTIGS_BINARY = os.path.abspath("external_software/flowtigs/target/release/flowtigs")
 FLOWTIGS_BINARY_REAL = os.path.abspath("external_software/flowtigs-with-real-data/target/release/flowtigs")
 SAFE_PATHS = os.path.join(REPORTDIR, "safe_paths_flowtigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm0", "report.fasta") 
-SAFE_PATHS_REAL = os.path.join(REPORTDIR, "safe_paths_real_flowtigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm0", "report.fasta") 
+SAFE_PATHS_REAL = os.path.join(REPORTDIR, "safe_paths_flowtigs_real", "{file_name}_k{k}ma{min_abundance}t{threads}nm0", "report.fasta") 
 QUAST_BINARY = os.path.abspath("external_software/quast/quast.py")
 QUAST_OUTPUT_DIR = os.path.join(REPORTDIR, "quast_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}")
 QUAST_EXTENDED_OUTPUT_DIR = os.path.join(REPORTDIR, "extended_quast_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}")
@@ -87,7 +91,7 @@ PRACTICAL_TEST_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_omnitigs", "{file_
 PRACTICAL_TRIVIAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_trivial-omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm0", "report.fasta")
 ALGORITHMS = ["unitigs", "trivial-omnitigs", "multi-safe", "flowtigs"] # values for the wildcard that chooses which contigs to generate
 ALGORITHM_COLUMN_NAMES = ["unitigs", "t. omnitigs", "multi-safe", "flowtigs"] # column names for the different contigs
-FAST_ALGORITHMS = ["unitigs", "trivial-omnitigs", "real_flowtigs"] # algorithms that have a fast runtime
+FAST_ALGORITHMS = ["unitigs", "trivial-omnitigs", "flowtigs_real"] # algorithms that have a fast runtime
 FAST_ALGORITHM_COLUMN_NAMES = ["unitigs", "t. omnitigs", "flowtigs"] # column names for algorithms that have a fast runtime
 CONVERT_VALIDATION_OUTPUTS_TO_LATEX_SCRIPT = "scripts/convert_validation_outputs_to_latex.py"
 CONVERT_FAST_VALIDATION_OUTPUTS_TO_LATEX_SCRIPT = "scripts/convert_fast_validation_outputs_to_latex.py"
@@ -105,7 +109,8 @@ METAGENOME_FASTA_NOT_CONCAT = os.path.join(DATADIR, "preprocessed_metagenome_not
 METAGENOME_FASTA = os.path.join(DATADIR, "preprocessed_metagenome", "{metagenome}")
 REPORT_TEX = os.path.join(REPORTDIR, "output", "{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}", "{report_name}", "{report_file_name}.tex")
 REPORT_TEX_FAST = os.path.join(REPORTDIR, "output_fast", "{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}", "{report_name}", "{report_file_name}.tex")
-LOG_UNITIGS = os.path.join(REPORTDIR, "safe_paths_unitigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "log.log") 
+LOG_UNITIGS = os.path.join(REPORTDIR, "safe_paths_unitigs", "meta_{metagenome}_k{k}ma{min_abundance}t{threads}", "log.log") 
+LOG_UNITIGS_REAL = os.path.join(REPORTDIR, "safe_paths_unitigs", "real_{metagenome}_k{k}ma{min_abundance}t{threads}", "log.log") 
 LOG_NODE_TO_ARC = os.path.join(REPORTDIR, "node_to_arc", "{file_name}_k{k}ma{min_abundance}t{threads}", "log.log") 
 LOG_FLOWTIGS = os.path.join(REPORTDIR, "safe_paths_flowtigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "log.log") 
 LOG_FLOWTIGS_REAL = os.path.join(REPORTDIR, "safe_paths_flowtigs_real", "{file_name}_k{k}ma{min_abundance}t{threads}", "log.log") 
@@ -495,10 +500,33 @@ rule circularization:
 #   min_abundance=minimum abundance, threds=number of cpu cores used.
 # output: Node-centric weighted De Bruijn graph with k-mers of size k in fasta format.
 rule bcalm2_build:
-    input:  references = GENOME_CIRCULAR_REFERENCES,
-    output: tigs = BUILD_FA,
+    input:  references = GENOME_META_CIRCULAR_REFERENCES,
+    output: tigs = BUILD_FA_META,
             log = LOG_UNITIGS,
-    log:    log = "logs/bcalm2/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
+    log:    log = "logs/bcalm2/meta_{metagenome}_k{k}ma{min_abundance}t{threads}/log.log",
+    params: references = lambda wildcards, input: "'" + "' '".join(input.references) + "'",
+    conda:  "config/conda-bcalm2-env.yml",
+    threads: MAX_THREADS,
+    shadow: "minimal"
+    resources:
+            mem_mb = 1_000_000, 
+            time_min = 1440,
+            cpus = build_cpus,
+            queue = 'aurinko,bigmem,medium',
+    shell:  """
+        rm -f '{log.log}'
+        ${{CONDA_PREFIX}}/bin/time -v bcalm -nb-cores {threads} -kmer-size {wildcards.k} -in '{input.references}' -out '{output.tigs}' -abundance-min {wildcards.min_abundance} 2>&1 | tee -a '{log.log}'
+        mv '{output.tigs}.unitigs.fa' '{output.tigs}'
+        cp {log.log} {output.log}
+        """
+
+
+
+rule bcalm2_build_real:
+    input:  references = REAL_GENOME,
+    output: tigs = BUILD_FA_REAL,
+            log = LOG_UNITIGS_REAL,
+    log:    log = "logs/bcalm2/real_{metagenome}_k{k}ma{min_abundance}t{threads}/log.log",
     params: references = lambda wildcards, input: "'" + "' '".join(input.references) + "'",
     conda:  "config/conda-bcalm2-env.yml",
     threads: MAX_THREADS,
@@ -975,7 +1003,7 @@ rule download_flowtigs_for_real_data:
         rm -rf flowtigs-with-real-data
         git clone https://github.com/elieling/flowtigs-with-real-data
         cd flowtigs-with-real-data
-        git checkout 7766a4ffa50bbbd6265e2ec5010460b602c2b78b  
+        git checkout ad62310a3496552972f929b50aad0d188f5c7d36  
 
         cargo fetch
     """ 
