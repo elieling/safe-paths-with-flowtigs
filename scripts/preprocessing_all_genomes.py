@@ -54,6 +54,7 @@ def preprocess_single_genome(filename):
 
     # Writing our result to the output file
     if filename.endswith(".fna"): name = filename[:-4] + ".fasta"
+    elif filename.endswith(".fq"): name = filename[:-3] + ".fasta"
     else: name = filename
     # Path(os.path.join(snakemake.output.report, name)).touch()
     with open(os.path.join(snakemake.output.report, name), 'w') as outfile:
