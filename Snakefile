@@ -121,6 +121,7 @@ LOG_ALGORITHM = os.path.join(REPORTDIR, "safe_paths_{algorithm}", "{file_name}_k
 ALL_RUNTIMES = os.path.join(REPORTDIR, "runtimes", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.tsv")
 FAST_RUNTIMES = os.path.join(REPORTDIR, "fast_runtimes", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.tsv")
 GRAPH_STATISTICS = os.path.join(REPORTDIR, "graph_statistics", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.tsv")
+GRAPH_STATISTICS_REAL = os.path.join(REPORTDIR, "graph_statistics_real", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.tsv")
 NUMBER_OF_CHARACTERS_IN_CONCATENATED_METAGENOME = os.path.join(REPORTDIR, "number_of_characters", "meta_{metagenome}_characters", "report.txt")
 REAL_NUMBER_OF_CHARACTERS_IN_CONCATENATED_METAGENOME = os.path.join(REPORTDIR, "number_of_characters", "real_{metagenome}_characters", "report.txt")
 REAL_NUMBER_OF_CHARACTERS_IN_CONCATENATED_REFERENCE_METAGENOME = os.path.join(REPORTDIR, "number_of_characters", "real_{metagenome}_reference_characters", "report.txt")
@@ -255,6 +256,8 @@ rule create_single_report_for_fast_algorithms_only:
             combined_eaxmax_plot = REPORT_COMBINED_EAXMAX_PLOT_FAST,
             runtimes = FAST_RUNTIMES,
             script = CONVERT_FAST_VALIDATION_OUTPUTS_TO_LATEX_SCRIPT,
+            graph_statistics = GRAPH_STATISTICS,
+            number_of_characters = NUMBER_OF_CHARACTERS,
     output: report = REPORT_TEX_FAST,
     log:    log = "logs/create_single_report/{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}r{report_name}rf{report_file_name}/log.log",
     params: genome_name = lambda wildcards: ", ".join(wildcards.file_name), 
@@ -270,7 +273,7 @@ rule create_single_report_for_fast_algorithms_only:
     shell: """
         mkdir -p '{params.hashdir}'
         echo '{wildcards.report_name} {params.genome_name} {wildcards.report_file_name}' > '{params.name_file}'
-        python3 '{input.script}' '{params.hashdir}' '{params.name_file}' 'none' 'none' '{input.combined_eaxmax_plot}' '{output}' '{input.runtimes}' {params.script_column_arguments}
+        python3 '{input.script}' '{params.hashdir}' '{params.name_file}' 'none' 'none' '{input.combined_eaxmax_plot}' '{output}' '{input.runtimes}' '{input.graph_statistics}' '{input.number_of_characters}' {params.script_column_arguments}
         """
 
 
@@ -354,6 +357,18 @@ rule gather_graph_statistics:
     script: "scripts/gather_statistics.py"
 
 
+
+rule gather_graph_statistics_fast:
+    input:  log = LOG_TRIVIAL_OMNITIGS,
+            edges_in_cycles = LOG_FLOWTIGS_REAL,
+    output: statistics = GRAPH_STATISTICS_REAL,
+    log:    log = "logs/gathering_graph_statistics_fast/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
+    conda:  "config/conda-seaborn-env.yml"
+    resources:
+            time_min = 60, 
+            mem_mb = 10_000, 
+            queue = "short,medium,bigmem,aurinko",
+    script: "scripts/gather_statistics_fast.py"
 
 
 ###########################
