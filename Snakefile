@@ -125,6 +125,7 @@ GRAPH_STATISTICS_REAL = os.path.join(REPORTDIR, "graph_statistics_real", "{file_
 NUMBER_OF_CHARACTERS_IN_CONCATENATED_METAGENOME = os.path.join(REPORTDIR, "number_of_characters", "meta_{metagenome}_characters", "report.txt")
 REAL_NUMBER_OF_CHARACTERS_IN_CONCATENATED_METAGENOME = os.path.join(REPORTDIR, "number_of_characters", "real_{metagenome}_characters", "report.txt")
 REAL_NUMBER_OF_CHARACTERS_IN_CONCATENATED_REFERENCE_METAGENOME = os.path.join(REPORTDIR, "number_of_characters", "real_{metagenome}_reference_characters", "report.txt")
+REAL_NUMBER_OF_CHARACTERS_REFERENCE = os.path.join(REPORTDIR, "number_of_characters", "{file_name}_reference_characters", "report.txt")
 NUMBER_OF_CHARACTERS = os.path.join(REPORTDIR, "number_of_characters", "{file_name}_characters", "report.txt")
 SAFE_PATHS_WITH_NON_MAXIMAL = os.path.join(REPORTDIR, "safe_paths_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}nm1", "report.fasta") 
 SAFE_PATHS_WITH_NON_MAXIMAL_NOT_UNIQUIFIED = os.path.join(REPORTDIR, "safe_paths_{algorithm}_not_uniquified", "{file_name}_k{k}ma{min_abundance}t{threads}nm1", "report.fasta") 
@@ -257,7 +258,7 @@ rule create_single_report_for_fast_algorithms_only:
             runtimes = FAST_RUNTIMES,
             script = CONVERT_FAST_VALIDATION_OUTPUTS_TO_LATEX_SCRIPT,
             graph_statistics = GRAPH_STATISTICS_REAL,
-            number_of_characters = NUMBER_OF_CHARACTERS,
+            number_of_characters = REAL_NUMBER_OF_CHARACTERS_REFERENCE,
     output: report = REPORT_TEX_FAST,
     log:    log = "logs/create_single_report/{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}r{report_name}rf{report_file_name}/log.log",
     params: genome_name = lambda wildcards: ", ".join(wildcards.file_name), 
@@ -421,19 +422,7 @@ rule metagenome_concatenate:
     script: "scripts/metagenome_concatenate.py"
 
 
-# Rule to concatenate metagenome data without added abundances.
-rule real_metagenome_concatenate:
-    input:  references = METAGENOME_FASTA,
-            abundances = METAGENOME_ABUNDANCES,
-    output: report = REAL_METAGENOME,
-            number_of_characters = REAL_NUMBER_OF_CHARACTERS_IN_CONCATENATED_METAGENOME
-    log:    log = "logs/real_metagenome_concatenate/{metagenome}/log.log",
-    conda:  "config/conda-seaborn-env.yml"
-    resources:
-            time_min = 600, 
-            mem_mb = 10_000,
-            queue = "medium,bigmem,aurinko",
-    script: "scripts/metagenome_concatenate.py"
+
 
 
 # Rule to concatenate metagenome data without added abundances.
@@ -1018,7 +1007,7 @@ rule download_flowtigs_for_real_data:
         rm -rf flowtigs-with-real-data
         git clone https://github.com/elieling/flowtigs-with-real-data
         cd flowtigs-with-real-data
-        git checkout ad62310a3496552972f929b50aad0d188f5c7d36  
+        git checkout 9a1b3558c81f721cd42d3affab16c6b7cc346e93  
 
         cargo fetch
     """ 
