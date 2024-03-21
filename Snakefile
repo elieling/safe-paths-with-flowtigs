@@ -256,7 +256,7 @@ rule create_single_report_for_fast_algorithms_only:
             combined_eaxmax_plot = REPORT_COMBINED_EAXMAX_PLOT_FAST,
             runtimes = FAST_RUNTIMES,
             script = CONVERT_FAST_VALIDATION_OUTPUTS_TO_LATEX_SCRIPT,
-            graph_statistics = GRAPH_STATISTICS,
+            graph_statistics = GRAPH_STATISTICS_REAL,
             number_of_characters = NUMBER_OF_CHARACTERS,
     output: report = REPORT_TEX_FAST,
     log:    log = "logs/create_single_report/{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}r{report_name}rf{report_file_name}/log.log",
