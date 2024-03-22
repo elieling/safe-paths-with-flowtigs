@@ -660,8 +660,8 @@ rule flowtigs_real_data:
     conda:  "config/conda-time-env.yml",
     resources:
             time_min = 1440, 
-            mem_mb = 495_000,
-            stack_mb = 100_000,
+            mem_mb = 995_000,
+            stack_mb = 300_000,
             queue = "medium,bigmem,aurinko",
     shell:  """
         rm -f '{log.log}'
