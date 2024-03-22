@@ -661,8 +661,10 @@ rule flowtigs_real_data:
     resources:
             time_min = 1440, 
             mem_mb = 495_000,
+            stack_mb = 100_000,
             queue = "medium,bigmem,aurinko",
     shell:  """
+        rm -f '{log.log}'
         rm -f '{log.log}'
         ${{CONDA_PREFIX}}/bin/time -v '{input.binary}' -k {wildcards.k} --input '{input.arc_centric_dbg}' --output '{output.safe_paths}' 2>&1 | tee -a '{log.log}'
         cp {log.log} {output.log}
