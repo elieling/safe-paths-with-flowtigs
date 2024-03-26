@@ -13,12 +13,10 @@ with open(snakemake.input.log, 'r') as input_file:
 
 
 
-with open(snakemake.input.edges_in_cycles, 'r') as input_file:
-        for line in input_file:                
-            if re.match(r'.*Cycles contain a total of \d+ edges', line):
-                line = line[line.find("Cycles"):]
-                statistics.append(re.search(r'\d+', line).group(0))
-                break
+
+        
+# No edges in cycles, because there is no cycles
+statistics.append(0)
 
 
 
