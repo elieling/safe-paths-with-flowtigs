@@ -882,6 +882,14 @@ rule run_multiple_pipelines:
     """ # os.path.join(REPORTDIR, "output", "meta_HMP_Modified_k31ma1t28nm{nonmaximal}", "report_{date}", "report.tex"), 
 
 
+rule run_multiple_base7:
+    input: pipeline_outputs = [os.path.join(REPORTDIR, "output", "meta_base7_k31ma5t28nm{nonmaximal}", "report_{date}", "report.tex"), os.path.join(REPORTDIR, "output_fast", "meta_base7_k31ma5t28nm{nonmaximal}", "report_{date}", "report.tex")],
+    output: empty_file = os.path.join(REPORTDIR, "multiple_bcalm_{date}_nm{nonmaximal}")
+    shell:  """
+        cd data/reports
+        touch multiple_bcalm_{wildcards.date}_nm{wildcards.nonmaximal}
+
+
 #######################
 ###### Downloads ######
 #######################
@@ -1008,7 +1016,7 @@ rule download_flowtigs_for_real_data:
         rm -rf flowtigs-with-real-data
         git clone https://github.com/elieling/flowtigs-with-real-data
         cd flowtigs-with-real-data
-        git checkout 555b05f8b94b9aaf33c5ce2527ae88cb8215ff0b
+        git checkout ca558f3fc20c0af900062a8fbe506baff0033b95
 
         cargo fetch
     """ 
