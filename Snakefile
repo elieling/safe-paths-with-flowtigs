@@ -1017,7 +1017,7 @@ rule download_flowtigs_for_real_data:
         rm -rf flowtigs-with-real-data
         git clone https://github.com/elieling/flowtigs-with-real-data
         cd flowtigs-with-real-data
-        git checkout eab26c98cecf69a719ee5df1827400bc6f5aef73
+        git checkout 153225e36106e18a086b3bc8f8e5fe4c2e5fce99
 
         cargo fetch
     """ 
