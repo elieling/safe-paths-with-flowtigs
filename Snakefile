@@ -1009,10 +1009,12 @@ rule download_flowtigs_for_real_data:
         rm -rf flowtigs-with-real-data
         git clone https://github.com/elieling/flowtigs-with-real-data
         cd flowtigs-with-real-data
-        git checkout 2dea1c0a2908f9820c628d6cab91d680f41dd8bd
+        git checkout 555b05f8b94b9aaf33c5ce2527ae88cb8215ff0b
 
         cargo fetch
     """ 
+    
+
     
 
 localrules: install_quast
