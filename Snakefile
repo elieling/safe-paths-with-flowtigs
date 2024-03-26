@@ -888,6 +888,7 @@ rule run_multiple_base7:
     shell:  """
         cd data/reports
         touch multiple_bcalm_{wildcards.date}_nm{wildcards.nonmaximal}
+    """
 
 
 #######################
