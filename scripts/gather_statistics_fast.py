@@ -4,7 +4,7 @@ import re
 statistics = []
 with open(snakemake.input.log, 'r') as input_file:
         for line in input_file:                
-            if re.match(r'.*Graph has \d+ nodes and \d+ edges', line):
+            if re.match(r'.*Graph contains \d+ nodes and \d+ edges', line):
                 line = line[line.find("Graph"):]
                 statistics = re.findall(r'\d+', line)
                 break

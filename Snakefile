@@ -360,8 +360,7 @@ rule gather_graph_statistics:
 
 
 rule gather_graph_statistics_fast:
-    input:  log = LOG_TRIVIAL_OMNITIGS,
-            edges_in_cycles = LOG_FLOWTIGS_REAL,
+    input:  log = LOG_FLOWTIGS_REAL,
     output: statistics = GRAPH_STATISTICS_REAL,
     log:    log = "logs/gathering_graph_statistics_fast/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
     conda:  "config/conda-seaborn-env.yml"
