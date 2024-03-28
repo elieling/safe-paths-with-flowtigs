@@ -57,7 +57,7 @@ REAL_GENOME = os.path.join(DATADIR, "meta", "{metagenome}", "SRR13128014.fq")
 GENOME_CONCAT_REFERENCES = os.path.join(DATADIR, "{file_name}_concat.fasta")
 GENOME_CIRCULAR_REFERENCES = os.path.join(REPORTDIR, "circularization", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
 GENOME_META_CIRCULAR_REFERENCES = os.path.join(REPORTDIR, "circularization", "meta_{metagenome}_k{k}ma{min_abundance}t{threads}", "report.fasta")
-BUILD_FA = os.path.join(REPORTDIR, "safe_paths_unitigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm0", "report.fasta")
+BUILD_FA = os.path.join(REPORTDIR, "safe_paths_unitigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm0th0", "report.fasta")
 BUILD_FA_META = os.path.join(REPORTDIR, "safe_paths_unitigs", "meta_{metagenome}_k{k}ma{min_abundance}t{threads}nm0th{threshold}", "report.fasta")
 BUILD_FA_REAL = os.path.join(REPORTDIR, "safe_paths_unitigs", "real_{metagenome}_k{k}ma{min_abundance}t{threads}nm0th{threshold}", "report.fasta")
 BUILD_LOG = os.path.join("logs", "build_{file_name}_k{k}ma{min_abundance}t{threads}", "log.log")
@@ -71,7 +71,7 @@ QUAST_BINARY = os.path.abspath("external_software/quast/quast.py")
 QUAST_OUTPUT_DIR = os.path.join(REPORTDIR, "quast_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}th{threshold}")
 QUAST_EXTENDED_OUTPUT_DIR = os.path.join(REPORTDIR, "extended_quast_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}th{threshold}")
 PRACTICAL_OMNITIGS_BINARY = os.path.abspath("external_software/practical-omnitigs/implementation/target/release/cli")
-PRACTICAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_multi-safe", "{file_name}_k{k}ma{min_abundance}t{threads}nm0", "report.fasta")
+PRACTICAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_multi-safe", "{file_name}_k{k}ma{min_abundance}t{threads}nm0th{threshold}", "report.fasta")
 ECOLI = os.path.join(DATADIR, "ecoli.fasta")
 ECOLI_CONCAT = os.path.join(DATADIR, "ecoli_concat.fasta")
 HUMAN_GUT_FILE_LIST = os.path.join(DATADIR, "meta", "human_gut_files.tsv")
@@ -87,7 +87,7 @@ REAL_METAGENOME = os.path.join(DATADIR, "real_{metagenome}.fasta")
 REAL_METAGENOME_CONCAT = os.path.join(DATADIR, "real_{metagenome}_concat.fasta")
 METAGENOME_REFERENCE = os.path.join(DATADIR, "preprocessed_metagenome", "{metagenome}_reference")
 METAGENOME_ABUNDANCES_REFERENCE = os.path.join(DATADIR, "meta", "abundances", "{metagenome}_reference", "nanosim.abundances.tsv")
-PRACTICAL_TEST_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm0", "report.fasta")
+PRACTICAL_TEST_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm0th{threshold}", "report.fasta")
 PRACTICAL_TRIVIAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_trivial-omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm0th{threshold}", "report.fasta")
 ALGORITHMS = ["unitigs", "trivial-omnitigs", "multi-safe", "flowtigs"] # values for the wildcard that chooses which contigs to generate
 ALGORITHM_COLUMN_NAMES = ["unitigs", "t. omnitigs", "multi-safe", "flowtigs"] # column names for the different contigs
@@ -819,7 +819,7 @@ rule build_practical_omnitigs:
 rule practical_multisafe:
     input:  practical_omnitigs = BUILD_FA,
             binary = PRACTICAL_OMNITIGS_BINARY,
-    log:    log = "logs/practical_multi-safe/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
+    log:    log = "logs/practical_multi-safe/{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
     output: practical_omnitigs = PRACTICAL_OMNITIGS,  
             log = LOG_MULTI_SAFE,
     conda:  "config/conda-rust-env.yml",
@@ -838,7 +838,7 @@ rule practical_multisafe:
 rule practical_omitigs:
     input:  practical_omnitigs = BUILD_FA,
             binary = PRACTICAL_OMNITIGS_BINARY,
-    log:    log = "logs/practical_omnitigs/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
+    log:    log = "logs/practical_omnitigs/{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
     output: practical_omnitigs = PRACTICAL_TEST_OMNITIGS,  
             log = LOG_OMNITIGS,
     conda:  "config/conda-rust-env.yml",
