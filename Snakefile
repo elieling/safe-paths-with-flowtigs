@@ -665,7 +665,7 @@ rule flowtigs_real_data:
     shell:  """
         rm -f '{log.log}'
         rm -f '{log.log}'
-        ${{CONDA_PREFIX}}/bin/time -v '{input.binary}' -k {wildcards.k} -t {threshold} --input '{input.arc_centric_dbg}' --output '{output.safe_paths}' 2>&1 | tee -a '{log.log}'
+        ${{CONDA_PREFIX}}/bin/time -v '{input.binary}' -k {wildcards.k} -t {wildcards.threshold} --input '{input.arc_centric_dbg}' --output '{output.safe_paths}' 2>&1 | tee -a '{log.log}'
         cp {log.log} {output.log}
     """
 
