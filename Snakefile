@@ -526,49 +526,48 @@ rule bcalm2_build:
 
 
 
-# rule bcalm2_build_real:
-#     input:  references = REAL_GENOME,
-#     output: tigs = BUILD_FA_REAL,
-#             log = LOG_UNITIGS_REAL,
-#     log:    log = "logs/bcalm2/real_{metagenome}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
-#     params: references = lambda wildcards, input: "'" + "' '".join(input.references) + "'",
-#     conda:  "config/conda-bcalm2-env.yml",
-#     threads: MAX_THREADS,
-#     shadow: "minimal"
-#     resources:
-#             mem_mb = 1_000_000, 
-#             time_min = 1440,
-#             cpus = build_cpus,
-#             queue = 'aurinko,bigmem,medium',
-#     shell:  """
-#         rm -f '{log.log}'
-#         ${{CONDA_PREFIX}}/bin/time -v bcalm -nb-cores {threads} -kmer-size {wildcards.k} -in '{input.references}' -out '{output.tigs}' -abundance-min {wildcards.min_abundance} 2>&1 | tee -a '{log.log}'
-#         mv '{output.tigs}.unitigs.fa' '{output.tigs}'
-#         cp {log.log} {output.log}
-#         """
-
-
-rule ggcat_real:
+rule bcalm2_build_real:
     input:  references = REAL_GENOME,
-            binary = GGCAT_BINARY,
     output: tigs = BUILD_FA_REAL,
             log = LOG_UNITIGS_REAL,
-    log:    log = "logs/ggcat/real_{metagenome}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
+    log:    log = "logs/bcalm2/real_{metagenome}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
     params: references = lambda wildcards, input: "'" + "' '".join(input.references) + "'",
     conda:  "config/conda-bcalm2-env.yml",
     threads: MAX_THREADS,
     shadow: "minimal"
     resources:
-            mem_mb = 495_000, 
+            mem_mb = 1_000_000, 
             time_min = 1440,
             cpus = build_cpus,
             queue = 'aurinko,bigmem,medium',
     shell:  """
         rm -f '{log.log}'
-        ${{CONDA_PREFIX}}/bin/time -v ggcat build -k {wildcards.k} -j {wildcards.threads} -e -s {wildcards.min_abundance} '{input.references}' -o '{output.tigs}' 2>&1 | tee -a '{log.log}'
+        ${{CONDA_PREFIX}}/bin/time -v bcalm -nb-cores {threads} -kmer-size {wildcards.k} -in '{input.references}' -out '{output.tigs}' -abundance-min {wildcards.min_abundance} 2>&1 | tee -a '{log.log}'
         mv '{output.tigs}.unitigs.fa' '{output.tigs}'
         cp {log.log} {output.log}
         """
+
+
+# rule ggcat_real:
+#     input:  references = REAL_GENOME,
+#             binary = GGCAT_BINARY,
+#     output: tigs = BUILD_FA_REAL,
+#             log = LOG_UNITIGS_REAL,
+#     log:    log = "logs/ggcat/real_{metagenome}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
+#     params: references = lambda wildcards, input: "'" + "' '".join(input.references) + "'",
+#     conda:  "config/conda-bcalm2-env.yml",
+#     threads: MAX_THREADS,
+#     shadow: "minimal"
+#     resources:
+#             mem_mb = 495_000, 
+#             time_min = 1440,
+#             cpus = build_cpus,
+#             queue = 'aurinko,bigmem,medium',
+#     shell:  """
+#         rm -f '{log.log}'
+#         ${{CONDA_PREFIX}}/bin/time -v {input.binary} build -k {wildcards.k} -j {wildcards.threads} -e -s {wildcards.min_abundance} '{input.references}' -o '{output.tigs}' 2>&1 | tee -a '{log.log}'
+#         cp {log.log} {output.log}
+#         """
 
 
 
@@ -906,13 +905,20 @@ JGI_31 = os.path.join(REPORTDIR, "output_fast", "meta_JGI_Mock_k{k}ma{min_abunda
 MEDIUM_31 = os.path.join(REPORTDIR, "output_fast", "meta_medium20_k{k}ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
 BASE_31 = os.path.join(REPORTDIR, "output_fast", "meta_base7_k{k}ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
 COMPLEX_31 = os.path.join(REPORTDIR, "output_fast", "meta_complex32_k{k}ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
-ZYMO_31 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k{k}ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
+ZYMO = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k{k}ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
+ZYMO_51 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k51ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
+ZYMO_101 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k101ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
+ZYMO_191 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k191ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
+ZYMO_MA10 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k{k}ma10t28nm{nonmaximal}th0", "report_{date}", "report.tex")
+ZYMO_MA10TH15 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k{k}ma10t28nm{nonmaximal}th15", "report_{date}", "report.tex")
+ZYMO_191_MA10 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k191ma10t28nm{nonmaximal}th0", "report_{date}", "report.tex")
+ZYMO_191_MA10TH15 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k191ma10t28nm{nonmaximal}th15", "report_{date}", "report.tex")
 
 
 
 # Rule for running multiple pipelines at the same time. Insert the outputs of the pipelines that you want to run in the input of this rule.
 rule run_multiple_pipelines:
-    input: pipeline_outputs = [HMP_31, JGI_31, BASE_31, MEDIUM_31, COMPLEX_31, ZYMO_31]
+    input: pipeline_outputs = [ZYMO_51, ZYMO_101, ZYMO_191, ZYMO_MA10, ZYMO_MA10TH15, ZYMO_191_MA10, ZYMO_191_MA10TH15]
     output: empty_file = os.path.join(REPORTDIR, "multiple_runs_{date}_k{k}_ma{min_abundance}_nm{nonmaximal}_th{threshold}")
     shell:  """
         cd data/reports
@@ -1078,7 +1084,7 @@ rule download_ggcat:
         git clone https://github.com/algbio/ggcat --recursive
         cd ggcat/
         git checkout a91ecc97f286b737b37195c0a86f0e11ad6bfc3b
-        cargo install --path crates/cmdline/ --locked
+        cargo install --path crates/cmdline/ --locked --features "kmer-counters"
         cargo fetch
     """ 
     
