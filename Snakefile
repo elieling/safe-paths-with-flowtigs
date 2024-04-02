@@ -65,6 +65,7 @@ NODE_TO_ARC_CENTRIC_DBG_BINARY = os.path.abspath("external_software/node-to-arc-
 NODE_TO_ARC_CENTRIC_DBG = os.path.join(REPORTDIR, "node_to_arc", "{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}", "report.edgelist") 
 FLOWTIGS_BINARY = os.path.abspath("external_software/flowtigs/target/release/flowtigs")
 FLOWTIGS_BINARY_REAL = os.path.abspath("external_software/flowtigs-with-real-data/target/release/flowtigs")
+GGCAT_BINARY = os.path.abspath("external_software/ggcat/target/release/ggcat")
 SAFE_PATHS = os.path.join(REPORTDIR, "safe_paths_flowtigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm0th{threshold}", "report.fasta") 
 SAFE_PATHS_REAL = os.path.join(REPORTDIR, "safe_paths_flowtigs_real", "{file_name}_k{k}ma{min_abundance}t{threads}nm0th{threshold}", "report.fasta") 
 QUAST_BINARY = os.path.abspath("external_software/quast/quast.py")
@@ -525,23 +526,46 @@ rule bcalm2_build:
 
 
 
-rule bcalm2_build_real:
+# rule bcalm2_build_real:
+#     input:  references = REAL_GENOME,
+#     output: tigs = BUILD_FA_REAL,
+#             log = LOG_UNITIGS_REAL,
+#     log:    log = "logs/bcalm2/real_{metagenome}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
+#     params: references = lambda wildcards, input: "'" + "' '".join(input.references) + "'",
+#     conda:  "config/conda-bcalm2-env.yml",
+#     threads: MAX_THREADS,
+#     shadow: "minimal"
+#     resources:
+#             mem_mb = 1_000_000, 
+#             time_min = 1440,
+#             cpus = build_cpus,
+#             queue = 'aurinko,bigmem,medium',
+#     shell:  """
+#         rm -f '{log.log}'
+#         ${{CONDA_PREFIX}}/bin/time -v bcalm -nb-cores {threads} -kmer-size {wildcards.k} -in '{input.references}' -out '{output.tigs}' -abundance-min {wildcards.min_abundance} 2>&1 | tee -a '{log.log}'
+#         mv '{output.tigs}.unitigs.fa' '{output.tigs}'
+#         cp {log.log} {output.log}
+#         """
+
+
+rule ggcat_real:
     input:  references = REAL_GENOME,
+            binary = GGCAT_BINARY,
     output: tigs = BUILD_FA_REAL,
             log = LOG_UNITIGS_REAL,
-    log:    log = "logs/bcalm2/real_{metagenome}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
+    log:    log = "logs/ggcat/real_{metagenome}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
     params: references = lambda wildcards, input: "'" + "' '".join(input.references) + "'",
     conda:  "config/conda-bcalm2-env.yml",
     threads: MAX_THREADS,
     shadow: "minimal"
     resources:
-            mem_mb = 1_000_000, 
+            mem_mb = 495_000, 
             time_min = 1440,
             cpus = build_cpus,
             queue = 'aurinko,bigmem,medium',
     shell:  """
         rm -f '{log.log}'
-        ${{CONDA_PREFIX}}/bin/time -v bcalm -nb-cores {threads} -kmer-size {wildcards.k} -in '{input.references}' -out '{output.tigs}' -abundance-min {wildcards.min_abundance} 2>&1 | tee -a '{log.log}'
+        ${{CONDA_PREFIX}}/bin/time -v ggcat build -k {wildcards.k} -j {wildcards.threads} -e -s {wildcards.min_abundance} '{input.references}' -o '{output.tigs}' 2>&1 | tee -a '{log.log}'
         mv '{output.tigs}.unitigs.fa' '{output.tigs}'
         cp {log.log} {output.log}
         """
@@ -1039,6 +1063,25 @@ rule download_flowtigs_for_real_data:
     """ 
     
 
+
+# Rule to download the external software used for computing unitigs with ggcat.
+localrules: download_ggcat
+rule download_ggcat:
+    output: GGCAT_BINARY,
+    conda:  "config/conda-ggcat-env.yml"
+    threads: 1
+    shell:  """
+        mkdir -p external_software
+        cd external_software
+
+        rm -rf ggcat
+        git clone https://github.com/algbio/ggcat --recursive
+        cd ggcat/
+        git checkout a91ecc97f286b737b37195c0a86f0e11ad6bfc3b
+        cargo install --path crates/cmdline/ --locked
+        cargo fetch
+    """ 
+    
     
 
 localrules: install_quast
