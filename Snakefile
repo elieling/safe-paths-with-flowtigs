@@ -53,7 +53,7 @@ ASSEMBLY_SOURCE_READS = os.path.join(DATADIR, "assembly", "s{species}-k{k}", "re
 ASSEMBLY = os.path.join(DATADIR, "assembly", "s{species}-k{k}", "assembly.fa")
 REPORT = os.path.join(REPORTDIR, "s{species}-k{k}", "report.txt")
 GENOME_ALL_REFERENCES = os.path.join(DATADIR, "{file_name}.fasta")
-REAL_GENOME = os.path.join(DATADIR, "meta", "{metagenome}", "SRR13128014.fq")
+REAL_GENOME = os.path.join(DATADIR, "meta", "{metagenome}", "reads.fq")
 GENOME_CONCAT_REFERENCES = os.path.join(DATADIR, "{file_name}_concat.fasta")
 GENOME_CIRCULAR_REFERENCES = os.path.join(REPORTDIR, "circularization", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
 GENOME_META_CIRCULAR_REFERENCES = os.path.join(REPORTDIR, "circularization", "meta_{metagenome}_k{k}ma{min_abundance}t{threads}", "report.fasta")
@@ -66,7 +66,9 @@ NODE_TO_ARC_CENTRIC_DBG = os.path.join(REPORTDIR, "node_to_arc", "{file_name}_k{
 FLOWTIGS_BINARY = os.path.abspath("external_software/flowtigs/target/release/flowtigs")
 FLOWTIGS_BINARY_REAL = os.path.abspath("external_software/flowtigs-with-real-data/target/release/flowtigs")
 GGCAT_BINARY = os.path.abspath("external_software/ggcat/target/release/ggcat")
+HIFIASM_BINARY = os.path.abspath("external_software/hifiasm-meta/hifiasm_meta")
 SAFE_PATHS = os.path.join(REPORTDIR, "safe_paths_flowtigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm0th{threshold}", "report.fasta") 
+HIFIASM = os.path.join(REPORTDIR, "safe_paths_hifiasm", "{file_name}_k{k}ma{min_abundance}t{threads}nm0th{threshold}", "report.fasta") 
 SAFE_PATHS_REAL = os.path.join(REPORTDIR, "safe_paths_flowtigs_real", "{file_name}_k{k}ma{min_abundance}t{threads}nm0th{threshold}", "report.fasta") 
 QUAST_BINARY = os.path.abspath("external_software/quast/quast.py")
 QUAST_OUTPUT_DIR = os.path.join(REPORTDIR, "quast_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}th{threshold}")
@@ -118,6 +120,7 @@ LOG_FLOWTIGS_REAL = os.path.join(REPORTDIR, "safe_paths_flowtigs_real", "{file_n
 LOG_TRIVIAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_trivial-omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}", "log.log") 
 LOG_MULTI_SAFE = os.path.join(REPORTDIR, "safe_paths_multi-safe", "{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}", "log.log") 
 LOG_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}", "log.log") 
+LOG_HIFIASM = os.path.join(REPORTDIR, "safe_paths_hifiasm", "{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}", "log.log") 
 LOG_ALGORITHM = os.path.join(REPORTDIR, "safe_paths_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}", "log.log") 
 ALL_RUNTIMES = os.path.join(REPORTDIR, "runtimes", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.tsv")
 FAST_RUNTIMES = os.path.join(REPORTDIR, "fast_runtimes", "{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}", "report.tsv")
@@ -571,6 +574,31 @@ rule ggcat_real:
 
 
 
+
+rule hifiasm:
+    input:  references = BUILD_FA,
+            binary = HIFIASM_BINARY,
+    output: tigs = HIFIASM,
+            log = LOG_HIFIASM,
+    log:    log = "logs/hifiasm/{file_name}}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
+    params: references = lambda wildcards, input: "'" + "' '".join(input.references) + "'",
+    conda:  "config/conda-cpp-env.yml",
+    threads: MAX_THREADS,
+    shadow: "minimal"
+    resources:
+            mem_mb = 495_000, 
+            time_min = 1440,
+            cpus = build_cpus,
+            queue = 'aurinko,bigmem,medium',
+    shell:  """
+        rm -f '{log.log}'
+        ${{CONDA_PREFIX}}/bin/time -v {input.binary} -t{wildcards.threads} -o {output.tigs} {input.references} 2>{log.log}
+        cp {log.log} {output.log}
+        """
+
+
+
+
 # Rule to set up the external software for the node_to_arc_centric_dbg rule.
 rule build_node_to_arc_centric_dbg:
     input:  "external_software/node-to-arc-centric-dbg/Cargo.toml",
@@ -905,10 +933,27 @@ JGI_31 = os.path.join(REPORTDIR, "output_fast", "meta_JGI_Mock_k{k}ma{min_abunda
 MEDIUM_31 = os.path.join(REPORTDIR, "output_fast", "meta_medium20_k{k}ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
 BASE_31 = os.path.join(REPORTDIR, "output_fast", "meta_base7_k{k}ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
 COMPLEX_31 = os.path.join(REPORTDIR, "output_fast", "meta_complex32_k{k}ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
+
 ZYMO = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k{k}ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
 ZYMO_51 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k51ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
 ZYMO_101 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k101ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
 ZYMO_191 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k191ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
+ZYMO_251 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k251ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
+ZYMO_501 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k501ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
+ZYMO_1001 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k1001ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
+ZYMO_MA10 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k{k}ma10t28nm{nonmaximal}th15", "report_{date}", "report.tex")
+ZYMO_MA10_51 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k51ma10t28nm{nonmaximal}th15", "report_{date}", "report.tex")
+ZYMO_MA10_101 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k101ma10t28nm{nonmaximal}th15", "report_{date}", "report.tex")
+ZYMO_MA10_191 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k191ma10t28nm{nonmaximal}th15", "report_{date}", "report.tex")
+ZYMO_MA10_251 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k251ma10t28nm{nonmaximal}th15", "report_{date}", "report.tex")
+ZYMO_MA10_501 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k501ma10t28nm{nonmaximal}th15", "report_{date}", "report.tex")
+ZYMO_MA10_1001 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k1001ma10t28nm{nonmaximal}th15", "report_{date}", "report.tex")
+
+ATCC = os.path.join(REPORTDIR, "output_fast", "real_ATCC_k{k}ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
+ATCC_1001 = os.path.join(REPORTDIR, "output_fast", "real_ATCC_k1001ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
+ATCC_MA10 = os.path.join(REPORTDIR, "output_fast", "real_ATCC_k{k}ma10t28nm{nonmaximal}th15", "report_{date}", "report.tex")
+ATCC_MA10_1001 = os.path.join(REPORTDIR, "output_fast", "real_ATCC_k1001ma10t28nm{nonmaximal}th15", "report_{date}", "report.tex")
+
 ZYMO_MA10 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k{k}ma10t28nm{nonmaximal}th0", "report_{date}", "report.tex")
 ZYMO_MA10TH15 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k{k}ma10t28nm{nonmaximal}th15", "report_{date}", "report.tex")
 ZYMO_191_MA10 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k191ma10t28nm{nonmaximal}th0", "report_{date}", "report.tex")
@@ -918,7 +963,7 @@ ZYMO_191_MA10TH15 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k191ma10t2
 
 # Rule for running multiple pipelines at the same time. Insert the outputs of the pipelines that you want to run in the input of this rule.
 rule run_multiple_pipelines:
-    input: pipeline_outputs = [ZYMO_51, ZYMO_101, ZYMO_191, ZYMO_MA10, ZYMO_MA10TH15, ZYMO_191_MA10, ZYMO_191_MA10TH15]
+    input: pipeline_outputs = [ZYMO, ZYMO_51, ZYMO_101, ZYMO_251, ZYMO_501, ZYMO_1001, ZYMO_MA10, ZYMO_MA10_51, ZYMO_MA10_101, ZYMO_MA10_251, ZYMO_MA10_501, ZYMO_MA10_1001, ATCC, ATCC_1001, ATCC_MA10, ATCC_MA10_1001]
     output: empty_file = os.path.join(REPORTDIR, "multiple_runs_{date}_k{k}_ma{min_abundance}_nm{nonmaximal}_th{threshold}")
     shell:  """
         cd data/reports
@@ -1063,7 +1108,7 @@ rule download_flowtigs_for_real_data:
         rm -rf flowtigs-with-real-data
         git clone https://github.com/elieling/flowtigs-with-real-data
         cd flowtigs-with-real-data
-        git checkout 0a2043a560fb82263ef40832528596b1cc2ca2b4
+        git checkout d0babc8687847e5b3265c6957b8fad670273e8b3
 
         cargo fetch
     """ 
@@ -1088,6 +1133,19 @@ rule download_ggcat:
         cargo fetch
     """ 
     
+
+localrules: download_hifiasm
+rule download_hifiasm:
+    output: HIFIASM_BINARY,
+    threads: 1
+    shell:  """
+        mkdir -p external_software
+        cd external_software
+
+        rm -rf hifiasm-meta
+        git clone https://github.com/xfengnefx/hifiasm-meta.git
+        cd hifiasm-meta && make
+    """ 
     
 
 localrules: install_quast

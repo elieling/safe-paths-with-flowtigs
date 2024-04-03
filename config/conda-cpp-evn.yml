@@ -1,0 +1,6 @@
+channels:
+  - defaults
+dependencies:
+  - gcc
+  - make
+  - cmake
