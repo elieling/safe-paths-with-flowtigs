@@ -526,48 +526,48 @@ rule bcalm2_build:
 
 
 
-rule bcalm2_build_real:
-    input:  references = REAL_GENOME,
-    output: tigs = BUILD_FA_REAL,
-            log = LOG_UNITIGS_REAL,
-    log:    log = "logs/bcalm2/real_{metagenome}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
-    params: references = lambda wildcards, input: "'" + "' '".join(input.references) + "'",
-    conda:  "config/conda-bcalm2-env.yml",
-    threads: MAX_THREADS,
-    shadow: "minimal"
-    resources:
-            mem_mb = 1_000_000, 
-            time_min = 1440,
-            cpus = build_cpus,
-            queue = 'aurinko,bigmem,medium',
-    shell:  """
-        rm -f '{log.log}'
-        ${{CONDA_PREFIX}}/bin/time -v bcalm -nb-cores {threads} -kmer-size {wildcards.k} -in '{input.references}' -out '{output.tigs}' -abundance-min {wildcards.min_abundance} 2>&1 | tee -a '{log.log}'
-        mv '{output.tigs}.unitigs.fa' '{output.tigs}'
-        cp {log.log} {output.log}
-        """
-
-
-# rule ggcat_real:
+# rule bcalm2_build_real:
 #     input:  references = REAL_GENOME,
-#             binary = GGCAT_BINARY,
 #     output: tigs = BUILD_FA_REAL,
 #             log = LOG_UNITIGS_REAL,
-#     log:    log = "logs/ggcat/real_{metagenome}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
+#     log:    log = "logs/bcalm2/real_{metagenome}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
 #     params: references = lambda wildcards, input: "'" + "' '".join(input.references) + "'",
 #     conda:  "config/conda-bcalm2-env.yml",
 #     threads: MAX_THREADS,
 #     shadow: "minimal"
 #     resources:
-#             mem_mb = 495_000, 
+#             mem_mb = 1_000_000, 
 #             time_min = 1440,
 #             cpus = build_cpus,
 #             queue = 'aurinko,bigmem,medium',
 #     shell:  """
 #         rm -f '{log.log}'
-#         ${{CONDA_PREFIX}}/bin/time -v {input.binary} build -k {wildcards.k} -j {wildcards.threads} -e -s {wildcards.min_abundance} '{input.references}' -o '{output.tigs}' 2>&1 | tee -a '{log.log}'
+#         ${{CONDA_PREFIX}}/bin/time -v bcalm -nb-cores {threads} -kmer-size {wildcards.k} -in '{input.references}' -out '{output.tigs}' -abundance-min {wildcards.min_abundance} 2>&1 | tee -a '{log.log}'
+#         mv '{output.tigs}.unitigs.fa' '{output.tigs}'
 #         cp {log.log} {output.log}
 #         """
+
+
+rule ggcat_real:
+    input:  references = REAL_GENOME,
+            binary = GGCAT_BINARY,
+    output: tigs = BUILD_FA_REAL,
+            log = LOG_UNITIGS_REAL,
+    log:    log = "logs/ggcat/real_{metagenome}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
+    params: references = lambda wildcards, input: "'" + "' '".join(input.references) + "'",
+    conda:  "config/conda-bcalm2-env.yml",
+    threads: MAX_THREADS,
+    shadow: "minimal"
+    resources:
+            mem_mb = 495_000, 
+            time_min = 1440,
+            cpus = build_cpus,
+            queue = 'aurinko,bigmem,medium',
+    shell:  """
+        rm -f '{log.log}'
+        ${{CONDA_PREFIX}}/bin/time -v {input.binary} build -k {wildcards.k} -j {wildcards.threads} -e -s {wildcards.min_abundance} '{input.references}' -o '{output.tigs}' 2>&1 | tee -a '{log.log}'
+        cp {log.log} {output.log}
+        """
 
 
 
