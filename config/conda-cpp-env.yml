@@ -1,6 +1,7 @@
 channels:
-  - defaults
+  - conda-forge
 dependencies:
   - gcc
   - make
   - cmake
+  - time == 1.8
