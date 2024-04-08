@@ -96,7 +96,7 @@ METAGENOME_ABUNDANCES_REFERENCE = os.path.join(DATADIR, "meta", "abundances", "{
 PRACTICAL_TEST_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm0th{threshold}", "report.fasta")
 PRACTICAL_TRIVIAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_trivial-omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm0th{threshold}", "report.fasta")
 ALGORITHMS = ["unitigs", "trivial-omnitigs", "hifiasm", "flowtigs_real"] # values for the wildcard that chooses which contigs to generate
-ALGORITHM_COLUMN_NAMES = ["unitigs", "t. omnitigs", "multi-safe", "flowtigs"] # column names for the different contigs
+ALGORITHM_COLUMN_NAMES = ["unitigs", "t. omnitigs", "hifiasm", "flowtigs"] # column names for the different contigs
 FAST_ALGORITHMS = ["unitigs", "trivial-omnitigs", "flowtigs_real"] # algorithms that have a fast runtime
 FAST_ALGORITHM_COLUMN_NAMES = ["unitigs", "t. omnitigs", "flowtigs"] # column names for algorithms that have a fast runtime
 CONVERT_VALIDATION_OUTPUTS_TO_LATEX_SCRIPT = "scripts/convert_validation_outputs_to_latex.py"
@@ -238,8 +238,8 @@ rule create_single_report_tex:
             combined_eaxmax_plot = REPORT_COMBINED_EAXMAX_PLOT,
             runtimes = ALL_RUNTIMES,
             script = CONVERT_VALIDATION_OUTPUTS_TO_LATEX_SCRIPT,
-            graph_statistics = GRAPH_STATISTICS,
-            number_of_characters = NUMBER_OF_CHARACTERS,
+            graph_statistics = GRAPH_STATISTICS_REAL,
+            number_of_characters = REAL_NUMBER_OF_CHARACTERS_REFERENCE,
     output: report = REPORT_TEX,
     log:    log = "logs/create_single_report/{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}th{threshold}r{report_name}rf{report_file_name}/log.log",
     params: genome_name = lambda wildcards: ", ".join(wildcards.file_name), 
@@ -351,18 +351,17 @@ rule gathering_fast_runtimes:
 
 
 
-# Rule to gather number of nodes and edges of De Bruijn Graph into a tsv file.
-rule gather_graph_statistics:
-    input:  log = LOG_MULTI_SAFE,
-            edges_in_cycles = LOG_FLOWTIGS,
-    output: statistics = GRAPH_STATISTICS,
-    log:    log = "logs/gathering_graph_statistics/{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
-    conda:  "config/conda-seaborn-env.yml"
-    resources:
-            time_min = 60, 
-            mem_mb = 10_000, 
-            queue = "short,medium,bigmem,aurinko",
-    script: "scripts/gather_statistics.py"
+# # Rule to gather number of nodes and edges of De Bruijn Graph into a tsv file.
+# rule gather_graph_statistics:
+#     input:  log = LOG_FLOWTIGS_REAL,
+#     output: statistics = GRAPH_STATISTICS_REAL,
+#     log:    log = "logs/gathering_graph_statistics_fast/{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
+#     conda:  "config/conda-seaborn-env.yml"
+#     resources:
+#             time_min = 60, 
+#             mem_mb = 10_000, 
+#             queue = "short,medium,bigmem,aurinko",
+#     script: "scripts/gather_statistics.py"
 
 
 
@@ -967,17 +966,21 @@ ZYMO_MA10_191 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k191ma10t28nm{
 ZYMO_MA10_251 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k251ma10t28nm{nonmaximal}th15", "report_{date}", "report.tex")
 ZYMO_MA10_501 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k501ma10t28nm{nonmaximal}th15", "report_{date}", "report.tex")
 ZYMO_MA10_1001 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k1001ma10t28nm{nonmaximal}th15", "report_{date}", "report.tex")
+ZYMO_HIFI = os.path.join(REPORTDIR, "output", "real_Zymo_k{k}ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
+ZYMO_TH10 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k{k}ma{min_abundance}t28nm{nonmaximal}th10", "report_{date}", "report.tex")
+ZYMO_1001_TH10 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k1001ma{min_abundance}t28nm{nonmaximal}th10", "report_{date}", "report.tex")
 
 ATCC = os.path.join(REPORTDIR, "output_fast", "real_ATCC_k{k}ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
 ATCC_1001 = os.path.join(REPORTDIR, "output_fast", "real_ATCC_k1001ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
 ATCC_MA10 = os.path.join(REPORTDIR, "output_fast", "real_ATCC_k{k}ma10t28nm{nonmaximal}th15", "report_{date}", "report.tex")
 ATCC_MA10_1001 = os.path.join(REPORTDIR, "output_fast", "real_ATCC_k1001ma10t28nm{nonmaximal}th15", "report_{date}", "report.tex")
+ATCC_HIFI = os.path.join(REPORTDIR, "output", "real_ATCC_k{k}ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
 
 
 
 # Rule for running multiple pipelines at the same time. Insert the outputs of the pipelines that you want to run in the input of this rule.
 rule run_multiple_pipelines:
-    input: pipeline_outputs = [ZYMO, ZYMO_51, ZYMO_101, ZYMO_251, ZYMO_501, ZYMO_1001, ZYMO_MA10, ZYMO_MA10_51, ZYMO_MA10_101, ZYMO_MA10_251, ZYMO_MA10_501, ZYMO_MA10_1001, ATCC, ATCC_1001, ATCC_MA10, ATCC_MA10_1001]
+    input: pipeline_outputs = [ZYMO_HIFI, ATCC_HIFI, ZYMO_TH10, ZYMO_1001_TH10]
     output: empty_file = os.path.join(REPORTDIR, "multiple_runs_{date}_k{k}_ma{min_abundance}_nm{nonmaximal}_th{threshold}")
     shell:  """
         cd data/reports
