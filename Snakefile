@@ -589,10 +589,10 @@ rule real_hifiasm:
     threads: MAX_THREADS,
     shadow: "minimal"
     resources:
-            mem_mb = 495_000, 
-            time_min = 1440,
+            mem_mb = 1_495_000, 
+            time_min = 4320,
             cpus = build_cpus,
-            queue = 'aurinko,bigmem,medium',
+            queue = 'aurinko,bigmem',
     shell:  """
         rm -f '{log.log}'
         ${{CONDA_PREFIX}}/bin/time -v {input.binary} -k {wildcards.k} -t{wildcards.threads} -o {params.no_ending} {input.references} 2>&1 | tee -a '{log.log}'
@@ -980,7 +980,7 @@ ATCC_HIFI = os.path.join(REPORTDIR, "output", "real_ATCC_k{k}ma{min_abundance}t2
 
 # Rule for running multiple pipelines at the same time. Insert the outputs of the pipelines that you want to run in the input of this rule.
 rule run_multiple_pipelines:
-    input: pipeline_outputs = [ZYMO_HIFI, ATCC_HIFI, ZYMO_TH10, ZYMO_1001_TH10]
+    input: pipeline_outputs = [ZYMO_HIFI, ATCC, ZYMO_TH10, ZYMO_1001_TH10]
     output: empty_file = os.path.join(REPORTDIR, "multiple_runs_{date}_k{k}_ma{min_abundance}_nm{nonmaximal}_th{threshold}")
     shell:  """
         cd data/reports
