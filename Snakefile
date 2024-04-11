@@ -65,7 +65,7 @@ NODE_TO_ARC_CENTRIC_DBG_BINARY = os.path.abspath("external_software/node-to-arc-
 NODE_TO_ARC_CENTRIC_DBG = os.path.join(REPORTDIR, "node_to_arc", "{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}", "report.edgelist") 
 FLOWTIGS_BINARY = os.path.abspath("external_software/flowtigs/target/release/flowtigs")
 FLOWTIGS_BINARY_REAL = os.path.abspath("external_software/flowtigs-with-real-data/target/release/flowtigs")
-FLOWTIGS_BINARY_NO_FILTERING = os.path.abspath("external_software/flowtigs-without-filtering/target/release/flowtigs")
+FLOWTIGS_BINARY_NO_FILTERING = os.path.abspath("external_software/no_filtering/flowtigs-with-real-data/target/release/flowtigs")
 GGCAT_BINARY = os.path.abspath("external_software/ggcat/target/release/ggcat")
 HIFIASM_BINARY = os.path.abspath("external_software/hifiasm-meta/hifiasm_meta")
 SAFE_PATHS = os.path.join(REPORTDIR, "safe_paths_flowtigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm0th{threshold}", "report.fasta") 
@@ -796,7 +796,7 @@ rule build_flowtigs_for_real_data:
 
 
 rule build_flowtigs_without_filtering:
-    input:  "external_software/flowtigs-without-filtering/Cargo.toml",
+    input:  "external_software/no_filtering/flowtigs-with-real-data/Cargo.toml",
     output: FLOWTIGS_BINARY_NO_FILTERING,
     conda:  "config/conda-rust-env.yml",
     threads: MAX_THREADS,
@@ -806,7 +806,7 @@ rule build_flowtigs_without_filtering:
             cpus = MAX_THREADS,
             queue = "aurinko,bigmem,short,medium",
     shell:  """
-        cd external_software/flowtigs-without-filtering
+        cd external_software/no_filtering/flowtigs-with-real-data
         cargo build --release -j {threads} 
     """
 
@@ -1279,12 +1279,12 @@ rule download_flowtigs_for_real_data:
 
 localrules: download_flowtigs_without_filtering
 rule download_flowtigs_without_filtering:
-    output: "external_software/flowtigs-without-filtering/Cargo.toml"
+    output: "external_software/no_filtering/flowtigs-with-real-data/Cargo.toml"
     conda:  "config/conda-rust-env.yml"
     threads: 1
     shell:  """
         mkdir -p external_software
-        cd external_software
+        cd external_software/no_filtering
 
         rm -rf flowtigs-with-real-data
         git clone https://github.com/elieling/flowtigs-with-real-data
@@ -1292,8 +1292,6 @@ rule download_flowtigs_without_filtering:
         git checkout c3acce01740f313972c30eae96a5f25eacd545d8
         
         cargo fetch
-        cd ..
-        mv flowtigs-with-real-data flowtigs-without-filtering
     """ 
     
 
