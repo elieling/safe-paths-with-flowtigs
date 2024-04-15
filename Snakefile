@@ -245,6 +245,25 @@ def get_single_report_script_column_arguments_from_wildcards_fast(wildcards):
 
 
 
+def get_single_report_script_column_arguments_from_wildcards_no_filtering(wildcards):
+    try:
+        result = ""
+        once = True
+        for algorithm in NO_FILTERING_ALGORITHMS:
+            if once:
+                once = False
+            else:
+                result += " "
+
+            quast_output_dir = safe_format(QUAST_EXTENDED_OUTPUT_DIR, algorithm = algorithm).format(**wildcards)
+            result += f"'{algorithm}' '' '{quast_output_dir}' '' ''"
+        return result
+    except Exception:
+        traceback.print_exc()
+        sys.exit("Catched exception")
+
+
+
 rule create_single_report_tex:
     input:  quasts = [safe_format(QUAST_EXTENDED_OUTPUT_DIR, algorithm = algorithm) for algorithm in ALGORITHMS],
             combined_eaxmax_plot = REPORT_COMBINED_EAXMAX_PLOT,
@@ -307,7 +326,7 @@ rule create_single_report_no_filtering:
     output: report = REPORT_TEX_NO_FILTERING,
     log:    log = "logs/create_single_report_no_filtering/{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}th{threshold}r{report_name}rf{report_file_name}/log.log",
     params: genome_name = lambda wildcards: ", ".join(wildcards.file_name), 
-            script_column_arguments = get_single_report_script_column_arguments_from_wildcards_fast,
+            script_column_arguments = get_single_report_script_column_arguments_from_wildcards_no_filtering,
             name_file = REPORT_NAME_FILE,
             hashdir = REPORT_HASHDIR,
     wildcard_constraints:
@@ -1105,6 +1124,14 @@ ZYMO_251_NO_FILTERS = os.path.join(REPORTDIR, "output_no_filtering", "real_Zymo_
 ZYMO_501_NO_FILTERS = os.path.join(REPORTDIR, "output_no_filtering", "real_Zymo_k501ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
 ZYMO_1001_NO_FILTERS = os.path.join(REPORTDIR, "output_no_filtering", "real_Zymo_k1001ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
 
+ZYMO_TH0 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k{k}ma{min_abundance}t28nm{nonmaximal}th0", "report_{date}", "report.tex")
+ZYMO_51_TH0 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k51ma{min_abundance}t28nm{nonmaximal}th0", "report_{date}", "report.tex")
+ZYMO_101_TH0 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k101ma{min_abundance}t28nm{nonmaximal}th0", "report_{date}", "report.tex")
+ZYMO_191_TH0 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k191ma{min_abundance}t28nm{nonmaximal}th0", "report_{date}", "report.tex")
+ZYMO_251_TH0 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k251ma{min_abundance}t28nm{nonmaximal}th0", "report_{date}", "report.tex")
+ZYMO_501_TH0 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k501ma{min_abundance}t28nm{nonmaximal}th0", "report_{date}", "report.tex")
+ZYMO_1001_TH0 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k1001ma{min_abundance}t28nm{nonmaximal}th0", "report_{date}", "report.tex")
+
 ZYMO_MA10 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k{k}ma10t28nm{nonmaximal}th15", "report_{date}", "report.tex")
 ZYMO_MA10_51 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k51ma10t28nm{nonmaximal}th15", "report_{date}", "report.tex")
 ZYMO_MA10_101 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k101ma10t28nm{nonmaximal}th15", "report_{date}", "report.tex")
@@ -1126,7 +1153,7 @@ ATCC_HIFI = os.path.join(REPORTDIR, "output", "real_ATCC_k{k}ma{min_abundance}t2
 
 # Rule for running multiple pipelines at the same time. Insert the outputs of the pipelines that you want to run in the input of this rule.
 rule run_multiple_pipelines:
-    input: pipeline_outputs = [ZYMO_NO_FILTERS, ZYMO_51_NO_FILTERS, ZYMO_101_NO_FILTERS, ZYMO_251_NO_FILTERS, ZYMO_501_NO_FILTERS, ZYMO_1001_NO_FILTERS],
+    input: pipeline_outputs = [ZYMO_NO_FILTERS, ZYMO_51_NO_FILTERS, ZYMO_101_NO_FILTERS, ZYMO_251_NO_FILTERS, ZYMO_501_NO_FILTERS, ZYMO_1001_NO_FILTERS, ZYMO_TH0, ZYMO_51_TH0, ZYMO_101_TH0, ZYMO_251_TH0, ZYMO_501_TH0, ZYMO_1001_TH0],
     output: empty_file = os.path.join(REPORTDIR, "multiple_runs_{date}_k{k}_ma{min_abundance}_nm{nonmaximal}_th{threshold}")
     shell:  """
         cd data/reports
@@ -1284,6 +1311,7 @@ rule download_flowtigs_without_filtering:
     threads: 1
     shell:  """
         mkdir -p external_software
+        mkdir -p external_software/no_filtering
         cd external_software/no_filtering
 
         rm -rf flowtigs-with-real-data
