@@ -471,9 +471,9 @@ ea40max = "Improvement in EA40max (\%) & " + str(round(calculate_improvement(int
 integer_ea45max = get_values(ea45max)
 ea45max = "Improvement in EA45max (\%) & " + str(round(calculate_improvement(integer_ea45max[0], integer_ea45max[0]), 1)) + " & " + str(round(calculate_improvement(integer_ea45max[1], integer_ea45max[0]), 1)) + " & " + str(round(calculate_improvement(integer_ea45max[2], integer_ea45max[0]), 1)) + " \\\\"
 integer_ea50max = get_values(ea50max)
-ea50max = "Improvement in EA50max (\%) & " + str(round(calculate_improvement(integer_ea50max[0], integer_ea50max[0]), 3)) + " & " + str(round(calculate_improvement(integer_ea50max[1], integer_ea50max[0]), 3)) + " & " + str(round(calculate_improvement(integer_ea50max[2], integer_ea50max[0]), 3)) + " \\\\"
+ea50max = "Improvement in EA50max (\%) & " + str(round(calculate_improvement(integer_ea50max[0], integer_ea50max[0]), 1)) + " & " + str(round(calculate_improvement(integer_ea50max[1], integer_ea50max[0]), 1)) + " & " + str(round(calculate_improvement(integer_ea50max[2], integer_ea50max[0]), 1)) + " \\\\"
 integer_ea75max = get_values(ea75max)
-ea75max = "Improvement in EA75max (\%) & " + str(round(calculate_improvement(integer_ea75max[0], integer_ea75max[0]), 3)) + " & " + str(round(calculate_improvement(integer_ea75max[1], integer_ea75max[0]), 3)) + " & " + str(round(calculate_improvement(integer_ea75max[2], integer_ea75max[0]), 3)) + " \\\\"
+ea75max = "Improvement in EA75max (\%) & " + str(round(calculate_improvement(integer_ea75max[0], integer_ea75max[0]), 1)) + " & " + str(round(calculate_improvement(integer_ea75max[1], integer_ea75max[0]), 1)) + " & " + str(round(calculate_improvement(integer_ea75max[2], integer_ea75max[0]), 1)) + " \\\\"
 
 write_table(output_file, "QUAST: improvements of flowtigs compared to other algorithms", len(experiments), [quast_table[0]] + [average_length + "\\hline " + ea50max + ea75max + "\\hline " + ea5max + ea10max + ea15max + ea20max + ea25max + ea30max + ea35max + ea40max + ea45max], meta = True)
 

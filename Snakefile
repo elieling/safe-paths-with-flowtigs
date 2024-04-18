@@ -692,7 +692,7 @@ rule real_hifiasm:
             queue = 'aurinko,bigmem',
     shell:  """
         rm -f '{log.log}'
-        ${{CONDA_PREFIX}}/bin/time -v {input.binary} -k {wildcards.k} -t{wildcards.threads} -o {params.no_ending} {input.references} 2>&1 | tee -a '{log.log}'
+        ${{CONDA_PREFIX}}/bin/time -v {input.binary} -k {wildcards.k} -t{wildcards.threads} --force-rs -o {params.no_ending} {input.references} 2>{log.log}
         cp {log.log} {output.log}
         """
 
@@ -1132,6 +1132,22 @@ ZYMO_251_TH0 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k251ma{min_abun
 ZYMO_501_TH0 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k501ma{min_abundance}t28nm{nonmaximal}th0", "report_{date}", "report.tex")
 ZYMO_1001_TH0 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k1001ma{min_abundance}t28nm{nonmaximal}th0", "report_{date}", "report.tex")
 
+ZYMO_TH6 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k{k}ma{min_abundance}t28nm{nonmaximal}th6", "report_{date}", "report.tex")
+ZYMO_51_TH6 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k51ma{min_abundance}t28nm{nonmaximal}th6", "report_{date}", "report.tex")
+ZYMO_101_TH6 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k101ma{min_abundance}t28nm{nonmaximal}th6", "report_{date}", "report.tex")
+ZYMO_191_TH6 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k191ma{min_abundance}t28nm{nonmaximal}th6", "report_{date}", "report.tex")
+ZYMO_251_TH6 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k251ma{min_abundance}t28nm{nonmaximal}th6", "report_{date}", "report.tex")
+ZYMO_501_TH6 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k501ma{min_abundance}t28nm{nonmaximal}th6", "report_{date}", "report.tex")
+ZYMO_1001_TH6 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k1001ma{min_abundance}t28nm{nonmaximal}th6", "report_{date}", "report.tex")
+
+ZYMO_TH5 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k{k}ma{min_abundance}t28nm{nonmaximal}th5", "report_{date}", "report.tex")
+ZYMO_51_TH5 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k51ma{min_abundance}t28nm{nonmaximal}th5", "report_{date}", "report.tex")
+ZYMO_101_TH5 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k101ma{min_abundance}t28nm{nonmaximal}th5", "report_{date}", "report.tex")
+ZYMO_191_TH5 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k191ma{min_abundance}t28nm{nonmaximal}th5", "report_{date}", "report.tex")
+ZYMO_251_TH5 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k251ma{min_abundance}t28nm{nonmaximal}th5", "report_{date}", "report.tex")
+ZYMO_501_TH5 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k501ma{min_abundance}t28nm{nonmaximal}th5", "report_{date}", "report.tex")
+ZYMO_1001_TH5 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k1001ma{min_abundance}t28nm{nonmaximal}th5", "report_{date}", "report.tex")
+
 ZYMO_MA10 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k{k}ma10t28nm{nonmaximal}th15", "report_{date}", "report.tex")
 ZYMO_MA10_51 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k51ma10t28nm{nonmaximal}th15", "report_{date}", "report.tex")
 ZYMO_MA10_101 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k101ma10t28nm{nonmaximal}th15", "report_{date}", "report.tex")
@@ -1149,11 +1165,26 @@ ATCC_MA10 = os.path.join(REPORTDIR, "output_fast", "real_ATCC_k{k}ma10t28nm{nonm
 ATCC_MA10_1001 = os.path.join(REPORTDIR, "output_fast", "real_ATCC_k1001ma10t28nm{nonmaximal}th15", "report_{date}", "report.tex")
 ATCC_HIFI = os.path.join(REPORTDIR, "output", "real_ATCC_k{k}ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
 
+ZYMO_31_MA2_TH4 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k31ma2t28nm0th4", "report_{date}", "report.tex")
+ZYMO_1001_MA2_TH4 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k1001ma2t28nm0th4", "report_{date}", "report.tex")
+ZYMO_31_MA2_TH6 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k31ma2t28nm0th6", "report_{date}", "report.tex")
+ZYMO_1001_MA2_TH6 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k1001ma2t28nm0th6", "report_{date}", "report.tex")
+ZYMO_31_MA2_TH8 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k31ma2t28nm0th8", "report_{date}", "report.tex")
+ZYMO_1001_MA2_TH8 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k1001ma2t28nm0th8", "report_{date}", "report.tex")
+
+ZYMO_31_MA1_TH4 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k31ma1t28nm0th4", "report_{date}", "report.tex")
+ZYMO_1001_MA1_TH4 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k1001ma1t28nm0th4", "report_{date}", "report.tex")
+ZYMO_31_MA1_TH6 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k31ma1t28nm0th6", "report_{date}", "report.tex")
+ZYMO_1001_MA1_TH6 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k1001ma1t28nm0th6", "report_{date}", "report.tex")
+ZYMO_31_MA1_TH8 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k31ma1t28nm0th8", "report_{date}", "report.tex")
+ZYMO_1001_MA1_TH8 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k1001ma1t28nm0th8", "report_{date}", "report.tex")
+ZYMO_31_MA1_TH2 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k31ma1t28nm0th2", "report_{date}", "report.tex")
+ZYMO_1001_MA1_TH2 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k1001ma1t28nm0th2", "report_{date}", "report.tex")
 
 
 # Rule for running multiple pipelines at the same time. Insert the outputs of the pipelines that you want to run in the input of this rule.
 rule run_multiple_pipelines:
-    input: pipeline_outputs = [ZYMO_NO_FILTERS, ZYMO_51_NO_FILTERS, ZYMO_101_NO_FILTERS, ZYMO_251_NO_FILTERS, ZYMO_501_NO_FILTERS, ZYMO_1001_NO_FILTERS, ZYMO_TH0, ZYMO_51_TH0, ZYMO_101_TH0, ZYMO_251_TH0, ZYMO_501_TH0, ZYMO_1001_TH0],
+    input: pipeline_outputs = [ZYMO_31_MA2_TH4, ZYMO_1001_MA2_TH4, ZYMO_31_MA2_TH6, ZYMO_1001_MA2_TH6, ZYMO_31_MA2_TH8, ZYMO_1001_MA2_TH8, ZYMO_31_MA1_TH4, ZYMO_1001_MA1_TH4, ZYMO_31_MA1_TH6, ZYMO_1001_MA1_TH6, ZYMO_31_MA1_TH8, ZYMO_1001_MA1_TH8, ZYMO_31_MA1_TH2, ZYMO_1001_MA1_TH2],
     output: empty_file = os.path.join(REPORTDIR, "multiple_runs_{date}_k{k}_ma{min_abundance}_nm{nonmaximal}_th{threshold}")
     shell:  """
         cd data/reports
