@@ -692,7 +692,7 @@ rule real_hifiasm:
             queue = 'aurinko,bigmem',
     shell:  """
         rm -f '{log.log}'
-        ${{CONDA_PREFIX}}/bin/time -v {input.binary} -k {wildcards.k} -t{wildcards.threads} --force-rs -o {params.no_ending} {input.references} 2>{log.log}
+        ${{CONDA_PREFIX}}/bin/time -v {input.binary} -t{wildcards.threads} --force-rs -o {params.no_ending} {input.references} 2>&1 | tee -a '{log.log}'
         cp {log.log} {output.log}
         """
 
