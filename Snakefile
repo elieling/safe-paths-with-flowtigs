@@ -1156,8 +1156,12 @@ ZYMO_MA10_251 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k251ma10t28nm{
 ZYMO_MA10_501 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k501ma10t28nm{nonmaximal}th15", "report_{date}", "report.tex")
 ZYMO_MA10_1001 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k1001ma10t28nm{nonmaximal}th15", "report_{date}", "report.tex")
 ZYMO_HIFI = os.path.join(REPORTDIR, "output", "real_Zymo_k{k}ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
-ZYMO_TH10 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k{k}ma{min_abundance}t28nm{nonmaximal}th10", "report_{date}", "report.tex")
-ZYMO_1001_TH10 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k1001ma{min_abundance}t28nm{nonmaximal}th10", "report_{date}", "report.tex")
+ZYMO_31_TH10 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k31ma5t28nm0th10", "report_{date}", "report.tex")
+ZYMO_51_TH10 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k51ma5t28nm0th10", "report_{date}", "report.tex")
+ZYMO_101_TH10 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k101ma5t28nm0th10", "report_{date}", "report.tex")
+ZYMO_251_TH10 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k251ma5t28nm0th10", "report_{date}", "report.tex")
+ZYMO_501_TH10 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k501ma5t28nm0th10", "report_{date}", "report.tex")
+ZYMO_1001_TH10 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k1001ma5t28nm0th10", "report_{date}", "report.tex")
 
 ATCC = os.path.join(REPORTDIR, "output_fast", "real_ATCC_k{k}ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
 ATCC_1001 = os.path.join(REPORTDIR, "output_fast", "real_ATCC_k1001ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
@@ -1193,9 +1197,7 @@ rule run_multiple_pipelines:
 # [ZYMO, ZYMO_51, ZYMO_101, ZYMO_251, ZYMO_501, ZYMO_1001]
 
 rule run_multiple_groups_of_pipelines:
-    input: pipeline_outputs = [os.path.join(os.path.join(REPORTDIR, "multiple_runs_{date}_k151_ma20_nm0_th0"), REPORTDIR, "multiple_runs_{date}_k101_ma20_nm0_th0"), os.path.join(REPORTDIR, "multiple_runs_{date}_k51_ma20_nm0_th0"), os.path.join(REPORTDIR, "multiple_runs_{date}_k31_ma20_nm0_th0"), os.path.join(os.path.join(REPORTDIR, "multiple_runs_{date}_k151_ma10_nm0_th0"), REPORTDIR, "multiple_runs_{date}_k101_ma10_nm0_th0"), os.path.join(REPORTDIR, "multiple_runs_{date}_k51_ma10_nm0_th0"), os.path.join(REPORTDIR, "multiple_runs_{date}_k31_ma10_nm0_th0"), os.path.join(os.path.join(REPORTDIR, "multiple_runs_{date}_k151_ma5_nm0_th0"), REPORTDIR, "multiple_runs_{date}_k101_ma5_nm0_th0"), os.path.join(REPORTDIR, "multiple_runs_{date}_k51_ma5_nm0_th0"), os.path.join(REPORTDIR, "multiple_runs_{date}_k31_ma5_nm0_th0")],
-           more_pipeline_outputs = [os.path.join(os.path.join(REPORTDIR, "multiple_runs_{date}_k151_ma20_nm0_th10"), REPORTDIR, "multiple_runs_{date}_k101_ma20_nm0_th10"), os.path.join(REPORTDIR, "multiple_runs_{date}_k51_ma20_nm0_th10"), os.path.join(REPORTDIR, "multiple_runs_{date}_k31_ma20_nm0_th10"), os.path.join(os.path.join(REPORTDIR, "multiple_runs_{date}_k151_ma10_nm0_th10"), REPORTDIR, "multiple_runs_{date}_k101_ma10_nm0_th10"), os.path.join(REPORTDIR, "multiple_runs_{date}_k51_ma10_nm0_th10"), os.path.join(REPORTDIR, "multiple_runs_{date}_k31_ma10_nm0_th10"), os.path.join(os.path.join(REPORTDIR, "multiple_runs_{date}_k151_ma5_nm0_th10"), REPORTDIR, "multiple_runs_{date}_k101_ma5_nm0_th10"), os.path.join(REPORTDIR, "multiple_runs_{date}_k51_ma5_nm0_th10"), os.path.join(REPORTDIR, "multiple_runs_{date}_k31_ma5_nm0_th10")],
-           even_more_pipeline_outputs = [os.path.join(os.path.join(REPORTDIR, "multiple_runs_{date}_k151_ma20_nm0_th8"), REPORTDIR, "multiple_runs_{date}_k101_ma20_nm0_th8"), os.path.join(REPORTDIR, "multiple_runs_{date}_k51_ma20_nm0_th8"), os.path.join(REPORTDIR, "multiple_runs_{date}_k31_ma20_nm0_th8"), os.path.join(os.path.join(REPORTDIR, "multiple_runs_{date}_k151_ma10_nm0_th8"), REPORTDIR, "multiple_runs_{date}_k101_ma10_nm0_th8"), os.path.join(REPORTDIR, "multiple_runs_{date}_k51_ma10_nm0_th8"), os.path.join(REPORTDIR, "multiple_runs_{date}_k31_ma10_nm0_th8"), os.path.join(os.path.join(REPORTDIR, "multiple_runs_{date}_k151_ma5_nm0_th8"), REPORTDIR, "multiple_runs_{date}_k101_ma5_nm0_th8"), os.path.join(REPORTDIR, "multiple_runs_{date}_k51_ma5_nm0_th8"), os.path.join(REPORTDIR, "multiple_runs_{date}_k31_ma5_nm0_th8")],
+    input: pipeline_outputs = [ZYMO_31_TH10, ZYMO_51_TH10, ZYMO_101_TH10, ZYMO_251_TH10, ZYMO_501_TH10, ZYMO_1001_TH10],
     output: empty_file = os.path.join(REPORTDIR, "multiple_groups_of_pipelines_{date}")
     shell:  """
         cd data/reports
