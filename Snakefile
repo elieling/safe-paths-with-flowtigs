@@ -1300,8 +1300,8 @@ rule download_node_to_arc_centric_dbg:
 
 
 # Rule to download the external software used for calculatings safe paths from an arc-centric De Bruijn graph.
-localrules: download_flowtigs-with-simulated-data
-rule download_flowtigs-with-simulated-data:
+localrules: download_flowtigs_with_simulated_data
+rule download_flowtigs_with_simulated_data:
     output: "external_software/flowtigs-with-simulated-data/Cargo.toml"
     conda:  "config/conda-rust-env.yml"
     threads: 1
