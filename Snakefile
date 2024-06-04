@@ -63,8 +63,8 @@ BUILD_FA_REAL = os.path.join(REPORTDIR, "safe_paths_unitigs", "real_{metagenome}
 BUILD_LOG = os.path.join("logs", "build_{file_name}_k{k}ma{min_abundance}t{threads}", "log.log")
 NODE_TO_ARC_CENTRIC_DBG_BINARY = os.path.abspath("external_software/node-to-arc-centric-dbg/target/release/node-to-arc-centric-dbg")
 NODE_TO_ARC_CENTRIC_DBG = os.path.join(REPORTDIR, "node_to_arc", "{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}", "report.edgelist") 
-FLOWTIGS_BINARY = os.path.abspath("external_software/flowtigs/target/release/flowtigs")
-FLOWTIGS_BINARY_REAL = os.path.abspath("external_software/flowtigs-with-real-data/target/release/flowtigs")
+FLOWTIGS_BINARY = os.path.abspath("external_software/flowtigs/target/release/flowtigs-with-simulated-data")
+FLOWTIGS_BINARY_REAL = os.path.abspath("external_software/flowtigs/target/release/flowtigs")
 FLOWTIGS_BINARY_NO_FILTERING = os.path.abspath("external_software/no_filtering/flowtigs-with-real-data/target/release/flowtigs")
 GGCAT_BINARY = os.path.abspath("external_software/ggcat/target/release/ggcat")
 HIFIASM_BINARY = os.path.abspath("external_software/hifiasm-meta/hifiasm_meta")
@@ -783,7 +783,7 @@ rule node_to_arc_centric_dbg:
 
 # Rule to set up the external software for the safe-paths rule.
 rule build_safe_paths:
-    input:  "external_software/flowtigs/Cargo.toml",
+    input:  "external_software/flowtigs-with-simulated-data/Cargo.toml",
     output: FLOWTIGS_BINARY,
     conda:  "config/conda-rust-env.yml",
     threads: MAX_THREADS,
@@ -793,13 +793,13 @@ rule build_safe_paths:
             cpus = MAX_THREADS,
             queue = "aurinko,bigmem,short,medium",
     shell:  """
-        cd external_software/flowtigs
+        cd external_software/flowtigs-with-simulated-data
         cargo build --release -j {threads} 
     """
 
 
 rule build_flowtigs_for_real_data:
-    input:  "external_software/flowtigs-with-real-data/Cargo.toml",
+    input:  "external_software/flowtigs/Cargo.toml",
     output: FLOWTIGS_BINARY_REAL,
     conda:  "config/conda-rust-env.yml",
     threads: MAX_THREADS,
@@ -809,7 +809,7 @@ rule build_flowtigs_for_real_data:
             cpus = MAX_THREADS,
             queue = "aurinko,bigmem,short,medium",
     shell:  """
-        cd external_software/flowtigs-with-real-data
+        cd external_software/flowtigs
         cargo build --release -j {threads} 
     """
 
@@ -1300,18 +1300,18 @@ rule download_node_to_arc_centric_dbg:
 
 
 # Rule to download the external software used for calculatings safe paths from an arc-centric De Bruijn graph.
-localrules: download_flowtigs
-rule download_flowtigs:
-    output: "external_software/flowtigs/Cargo.toml"
+localrules: download_flowtigs-with-simulated-data
+rule download_flowtigs-with-simulated-data:
+    output: "external_software/flowtigs-with-simulated-data/Cargo.toml"
     conda:  "config/conda-rust-env.yml"
     threads: 1
     shell:  """
         mkdir -p external_software
         cd external_software
 
-        rm -rf flowtigs
-        git clone https://github.com/elieling/flowtigs.git
-        cd flowtigs
+        rm -rf flowtigs-with-simulated-data
+        git clone https://github.com/elieling/flowtigs-with-simulated-data.git
+        cd flowtigs-with-simulated-data
         git checkout cdf3b7947050c972212a64e84de9ab88b47a348e  
 
         cargo fetch
@@ -1321,17 +1321,17 @@ rule download_flowtigs:
 # Rule to download the external software used for calculatings safe paths from an arc-centric De Bruijn graph, that works both with simulated and real data.
 localrules: download_flowtigs_for_real_data
 rule download_flowtigs_for_real_data:
-    output: "external_software/flowtigs-with-real-data/Cargo.toml"
+    output: "external_software/flowtigs/Cargo.toml"
     conda:  "config/conda-rust-env.yml"
     threads: 1
     shell:  """
         mkdir -p external_software
         cd external_software
 
-        rm -rf flowtigs-with-real-data
-        git clone https://github.com/elieling/flowtigs-with-real-data
-        cd flowtigs-with-real-data
-        git checkout 0a2043a560fb82263ef40832528596b1cc2ca2b4
+        rm -rf flowtigs
+        git clone https://github.com/elieling/flowtigs
+        cd flowtigs
+        git checkout 4bf88017049a22ce1688dfbe33b63c61d1555073
 
         cargo fetch
     """ 
@@ -1339,7 +1339,7 @@ rule download_flowtigs_for_real_data:
 
 localrules: download_flowtigs_without_filtering
 rule download_flowtigs_without_filtering:
-    output: "external_software/no_filtering/flowtigs-with-real-data/Cargo.toml"
+    output: "external_software/no_filtering/flowtigs/Cargo.toml"
     conda:  "config/conda-rust-env.yml"
     threads: 1
     shell:  """
@@ -1347,9 +1347,9 @@ rule download_flowtigs_without_filtering:
         mkdir -p external_software/no_filtering
         cd external_software/no_filtering
 
-        rm -rf flowtigs-with-real-data
-        git clone https://github.com/elieling/flowtigs-with-real-data
-        cd flowtigs-with-real-data
+        rm -rf flowtigs
+        git clone https://github.com/elieling/flowtigs
+        cd flowtigs
         git checkout c3acce01740f313972c30eae96a5f25eacd545d8
         
         cargo fetch
