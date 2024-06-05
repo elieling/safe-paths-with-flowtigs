@@ -899,7 +899,7 @@ rule flowtigs_no_filtering:
 rule add_non_maximal_paths:
     input:  safe_paths = SAFE_PATHS_WITH_ONLY_MAXIMAL,
             unitigs = BUILD_FA,
-    log:    log = "logs/add_non_maximal_paths_{algorithm}/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
+    log:    log = "logs/add_non_maximal_paths_{algorithm}/{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
     output: all_safe_paths = SAFE_PATHS_WITH_NON_MAXIMAL_NOT_UNIQUIFIED,
     conda:  "config/conda-seaborn-env.yml",
     resources:
