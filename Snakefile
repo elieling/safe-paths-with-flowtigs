@@ -146,9 +146,9 @@ REAL_NUMBER_OF_CHARACTERS_IN_CONCATENATED_METAGENOME = os.path.join(REPORTDIR, "
 REAL_NUMBER_OF_CHARACTERS_IN_CONCATENATED_REFERENCE_METAGENOME = os.path.join(REPORTDIR, "number_of_characters", "real_{metagenome}_reference_characters", "report.txt")
 REAL_NUMBER_OF_CHARACTERS_REFERENCE = os.path.join(REPORTDIR, "number_of_characters", "{file_name}_reference_characters", "report.txt")
 NUMBER_OF_CHARACTERS = os.path.join(REPORTDIR, "number_of_characters", "{file_name}_characters", "report.txt")
-SAFE_PATHS_WITH_NON_MAXIMAL = os.path.join(REPORTDIR, "safe_paths_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}nm1", "report.fasta") 
-SAFE_PATHS_WITH_NON_MAXIMAL_NOT_UNIQUIFIED = os.path.join(REPORTDIR, "safe_paths_{algorithm}_not_uniquified", "{file_name}_k{k}ma{min_abundance}t{threads}nm1", "report.fasta") 
-SAFE_PATHS_WITH_ONLY_MAXIMAL = os.path.join(REPORTDIR, "safe_paths_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}nm0", "report.fasta") 
+SAFE_PATHS_WITH_NON_MAXIMAL = os.path.join(REPORTDIR, "safe_paths_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}nm1th{threshold}", "report.fasta") 
+SAFE_PATHS_WITH_NON_MAXIMAL_NOT_UNIQUIFIED = os.path.join(REPORTDIR, "safe_paths_{algorithm}_not_uniquified", "{file_name}_k{k}ma{min_abundance}t{threads}nm1th{threshold}", "report.fasta") 
+SAFE_PATHS_WITH_ONLY_MAXIMAL = os.path.join(REPORTDIR, "safe_paths_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}nm0th{threshold}", "report.fasta") 
 
 
 
