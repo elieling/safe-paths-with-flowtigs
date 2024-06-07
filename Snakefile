@@ -414,7 +414,7 @@ rule gathering_runtimes:
 
 # Rule to gather rutimes and memory usage of only fast algorithms into a tsv file.
 rule gathering_fast_runtimes:
-    input:  log_files = [os.path.join(safe_format(LOG_ALGORITHM, algorithm = algorithm)) for algorithm in FAST_ALGORITHMS] + [LOG_NODE_TO_ARC], 
+    input:  log_files = [os.path.join(safe_format(LOG_ALGORITHM, algorithm = algorithm)) for algorithm in FAST_ALGORITHMS] + [LOG_FLOWTIGS_ENTIRE], 
     output: report = FAST_RUNTIMES,
     log:    log = "logs/gathering_fast_runtimes/{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
     conda:  "config/conda-seaborn-env.yml"
@@ -845,7 +845,7 @@ rule build_flowtigs_for_flowtigs_and_node_to_edge:
     shell:  """
         cd external_software/entire/flowtigs
         cargo build --release -j {threads} 
-    """ # TODO !!!!!
+    """
 
 
 # Rule to get the safe paths from the edge-centric weighted De Bruijn graph given by
@@ -1400,15 +1400,15 @@ rule download_flowtigs_and_node_to_arc_together:
     threads: 1
     shell:  """
         mkdir -p external_software/entire
-        cd external_software   /entire           
+        cd external_software/entire           
 
         rm -rf flowtigs
         git clone https://github.com/elieling/flowtigs
         cd flowtigs
-        git checkout cf2a9ba1b28f5c0021500dce770c753f90a93880
+        git checkout 368225a2f6c5fd7ecb1c16aae4df613e3a0a1e80
         cargo fetch
     """ 
-           # TODO !!!!!!!!!!!!!!!!!!!!
+         
 
 
 # Rule to download the external software used for computing unitigs with ggcat.
