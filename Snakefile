@@ -66,6 +66,7 @@ NODE_TO_ARC_CENTRIC_DBG = os.path.join(REPORTDIR, "node_to_arc", "{file_name}_k{
 FLOWTIGS_BINARY = os.path.abspath("external_software/flowtigs-with-simulated-data/target/release/flowtigs-with-simulated-data")
 FLOWTIGS_BINARY_REAL = os.path.abspath("external_software/flowtigs/target/release/flowtigs")
 FLOWTIGS_BINARY_NO_FILTERING = os.path.abspath("external_software/no_filtering/flowtigs/target/release/flowtigs")
+FLOWTIGS_BINARY_ENTIRE = os.path.abspath("external_software/entire/flowtigs/target/release/flowtigs")
 GGCAT_BINARY = os.path.abspath("external_software/ggcat/target/release/ggcat")
 HIFIASM_BINARY = os.path.abspath("external_software/hifiasm-meta/hifiasm_meta")
 SAFE_PATHS = os.path.join(REPORTDIR, "safe_paths_flowtigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm0th{threshold}", "report.fasta") 
@@ -76,6 +77,7 @@ HIFIASM_GFA_SIMU = os.path.join(REPORTDIR, "safe_paths_hifiasm", "meta_{metageno
 HIFIASM_GFA = os.path.join(REPORTDIR, "safe_paths_hifiasm", "{file_name}_k{k}ma{min_abundance}t{threads}nm0th{threshold}", "report.gfa") 
 HIFIASM = os.path.join(REPORTDIR, "safe_paths_hifiasm", "{file_name}_k{k}ma{min_abundance}t{threads}nm0th{threshold}", "report.fasta") 
 SAFE_PATHS_REAL = os.path.join(REPORTDIR, "safe_paths_flowtigs_real", "{file_name}_k{k}ma{min_abundance}t{threads}nm0th{threshold}", "report.fasta") 
+SAFE_PATHS_ENTIRE = os.path.join(REPORTDIR, "safe_paths_flowtigs_entire", "{file_name}_k{k}ma{min_abundance}t{threads}nm0th{threshold}", "report.fasta") 
 SAFE_PATHS_NO_FILETRING = os.path.join(REPORTDIR, "safe_paths_flowtigs_without_filtering", "{file_name}_k{k}ma{min_abundance}t{threads}nm0th{threshold}", "report.fasta") 
 QUAST_BINARY = os.path.abspath("external_software/quast/quast.py")
 QUAST_OUTPUT_DIR = os.path.join(REPORTDIR, "quast_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}th{threshold}")
@@ -101,7 +103,7 @@ PRACTICAL_TEST_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_omnitigs", "{file_
 PRACTICAL_TRIVIAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_trivial-omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm0th{threshold}", "report.fasta")
 ALGORITHMS = ["unitigs", "trivial-omnitigs", "hifiasm", "flowtigs_real"] # values for the wildcard that chooses which contigs to generate
 ALGORITHM_COLUMN_NAMES = ["unitigs", "t. omnitigs", "hifiasm", "flowtigs"] # column names for the different contigs
-FAST_ALGORITHMS = ["unitigs", "trivial-omnitigs", "flowtigs_real"] # algorithms that have a fast runtime
+FAST_ALGORITHMS = ["unitigs", "trivial-omnitigs", "flowtigs_entire"] # algorithms that have a fast runtime
 NO_FILTERING_ALGORITHMS = ["unitigs", "trivial-omnitigs", "flowtigs_without_filtering"] # algorithms that have a fast runtime
 FAST_ALGORITHM_COLUMN_NAMES = ["unitigs", "t. omnitigs", "flowtigs"] # column names for algorithms that have a fast runtime
 NO_FILTERING_ALGORITHM_COLUMN_NAMES = ["unitigs", "t. omnitigs", "flowtigs"] # column names for algorithms that have a fast runtime
@@ -128,6 +130,7 @@ LOG_UNITIGS_REAL = os.path.join(REPORTDIR, "safe_paths_unitigs", "real_{metageno
 LOG_NODE_TO_ARC = os.path.join(REPORTDIR, "node_to_arc", "{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}", "log.log") 
 LOG_FLOWTIGS = os.path.join(REPORTDIR, "safe_paths_flowtigs", "{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}", "log.log") 
 LOG_FLOWTIGS_REAL = os.path.join(REPORTDIR, "safe_paths_flowtigs_real", "{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}", "log.log") 
+LOG_FLOWTIGS_ENTIRE = os.path.join(REPORTDIR, "safe_paths_flowtigs_entire", "{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}", "log.log") 
 LOG_FLOWTIGS_NO_FILTERING = os.path.join(REPORTDIR, "safe_paths_flowtigs_without_filtering", "{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}", "log.log") 
 LOG_TRIVIAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_trivial-omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}", "log.log") 
 LOG_MULTI_SAFE = os.path.join(REPORTDIR, "safe_paths_multi-safe", "{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}", "log.log") 
@@ -452,7 +455,7 @@ rule gathering_no_filtering_runtimes:
 
 
 rule gather_graph_statistics_fast:
-    input:  log = LOG_FLOWTIGS_REAL,
+    input:  log = LOG_FLOWTIGS_ENTIRE,
     output: statistics = GRAPH_STATISTICS_REAL,
     log:    log = "logs/gathering_graph_statistics_fast/{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
     conda:  "config/conda-seaborn-env.yml"
@@ -829,6 +832,21 @@ rule build_flowtigs_without_filtering:
         cargo build --release -j {threads} 
     """
 
+rule build_flowtigs_for_flowtigs_and_node_to_edge:
+    input:  "external_software/entire/flowtigs/Cargo.toml",
+    output: FLOWTIGS_BINARY_ENTIRE,
+    conda:  "config/conda-rust-env.yml",
+    threads: MAX_THREADS,
+    resources:
+            mem_mb = 10000,
+            time_min = 60,
+            cpus = MAX_THREADS,
+            queue = "aurinko,bigmem,short,medium",
+    shell:  """
+        cd external_software/entire/flowtigs
+        cargo build --release -j {threads} 
+    """ # TODO !!!!!
+
 
 # Rule to get the safe paths from the edge-centric weighted De Bruijn graph given by
 #   the node_to_arc_centric_dbg rule.
@@ -891,6 +909,26 @@ rule flowtigs_no_filtering:
         rm -f '{log.log}'
         rm -f '{log.log}'
         ${{CONDA_PREFIX}}/bin/time -v '{input.binary}' -k {wildcards.k} -t {wildcards.threshold} --input '{input.arc_centric_dbg}' --output '{output.safe_paths}' 2>&1 | tee -a '{log.log}'
+        cp {log.log} {output.log}
+    """
+
+
+rule flowtigs_and_node_to_arc:
+    input:  node_centric_dbg = BUILD_FA,
+            binary = FLOWTIGS_BINARY_ENTIRE,
+    log:    log = "logs/flowtigs_entire/{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
+    output: safe_paths = SAFE_PATHS_ENTIRE,
+            log = LOG_FLOWTIGS_ENTIRE,
+    conda:  "config/conda-time-env.yml",
+    resources:
+            time_min = 1440, 
+            mem_mb = 995_000,
+            stack_mb = 300_000,
+            queue = "medium,bigmem,aurinko",
+    shell:  """
+        rm -f '{log.log}'
+        rm -f '{log.log}'
+        ${{CONDA_PREFIX}}/bin/time -v '{input.binary}' -k {wildcards.k} -t {wildcards.threshold} --input '{input.node_centric_dbg}' --output '{output.safe_paths}' 2>&1 | tee -a '{log.log}'
         cp {log.log} {output.log}
     """
 
@@ -1354,6 +1392,23 @@ rule download_flowtigs_without_filtering:
         cargo fetch
     """ 
     
+
+localrules: download_flowtigs_and_node_to_arc_together
+rule download_flowtigs_and_node_to_arc_together:
+    output: "external_software/entire/flowtigs/Cargo.toml"
+    conda:  "config/conda-rust-env.yml"
+    threads: 1
+    shell:  """
+        mkdir -p external_software/entire
+        cd external_software   /entire           
+
+        rm -rf flowtigs
+        git clone https://github.com/elieling/flowtigs
+        cd flowtigs
+        git checkout cf2a9ba1b28f5c0021500dce770c753f90a93880
+        cargo fetch
+    """ 
+           # TODO !!!!!!!!!!!!!!!!!!!!
 
 
 # Rule to download the external software used for computing unitigs with ggcat.
