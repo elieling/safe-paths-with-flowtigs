@@ -1405,10 +1405,10 @@ rule download_flowtigs_and_node_to_arc_together:
         rm -rf flowtigs
         git clone https://github.com/elieling/flowtigs
         cd flowtigs
-        git checkout 368225a2f6c5fd7ecb1c16aae4df613e3a0a1e80
+        git checkout fed5bb0a22103086a6a04b9901dd0fb654479302
+         
         cargo fetch
     """ 
-         
 
 
 # Rule to download the external software used for computing unitigs with ggcat.

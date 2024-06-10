@@ -488,8 +488,8 @@ write_table(output_file, "QUAST: misassembly statistics", len(experiments), quas
 # Calculating resources
 import pandas as pd
 resource_df = pd.read_csv(runtimes_file, sep='\t', index_col=0)
-time_usage = "Runtime (s) & " + str(resource_df["time"]["unitigs"]) + " & " + str(resource_df["time"]["t. omnitigs"]) + " & " + str(resource_df["time"]["flowtigs"] + resource_df["time"]["node_to_arc"]) + " & " + str(resource_df["time"]["flowtigs"]) + "&" + str(resource_df["time"]["node_to_arc"]) + " \\\\"
-memory_usage = "Memory (mb) & " + str(round(resource_df["mem"]["unitigs"]/1000, 1)) + " & " + str(round(resource_df["mem"]["t. omnitigs"]/1000, 1)) + " & " + str(round((resource_df["mem"]["flowtigs"] + resource_df["mem"]["node_to_arc"])/1000, 1)) + " & " + str(round(resource_df["mem"]["flowtigs"]/1000, 1)) + "&" + str(round(resource_df["mem"]["node_to_arc"]/1000, 1)) + " \\\\"
+time_usage = "Runtime (s) & " + str(resource_df["time"]["unitigs"]) + " & " + str(resource_df["time"]["t. omnitigs"]) + " & " + str(resource_df["time"]["flowtigs"]) + " & - & - \\\\"
+memory_usage = "Memory (mb) & " + str(round(resource_df["mem"]["unitigs"]/1024, 1)) + " & " + str(round(resource_df["mem"]["t. omnitigs"]/1024, 1)) + " & " + str(round((resource_df["mem"]["flowtigs"])/1024, 1)) + " & - & - \\\\"
 first_line = "Parameter & unitigs & trivial-omnitigs & flowtigs (total) & only flowtigs & only node-to-arc\\\\ \\hline\\\\"
 resources_table = [first_line, time_usage, memory_usage]
 
