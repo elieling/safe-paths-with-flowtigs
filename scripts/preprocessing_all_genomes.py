@@ -6,17 +6,12 @@ import os
 from pathlib import Path
 import logging
 from joblib import Parallel, delayed
-import random
 
 
 def preprocess_single_genome(filename):
     file = os.path.join(snakemake.input.assembly, filename)
     record_list = []
     if os.path.isdir(file): return
-    counter = 0
-    successive = 0
-    max_successive = 0
-    random.seed(0)
     with open(file, 'r') as infile:
 
         # Going through all the sequences from the input file
@@ -31,22 +26,6 @@ def preprocess_single_genome(filename):
             for c in s_data:
                 if c in {'A', 'C', 'G', 'T'}:
                     s_result = s_result + c
-                elif c == 'a': s_results = s_result + 'A'
-                elif c == 'c': s_results = s_result + 'C'
-                elif c == 'g': s_results = s_result + 'G'
-                elif c == 't': s_results = s_result + 'T'
-                elif c == 'U': s_results = s_result + 'T'
-                elif c == 'N': s_results = s_result + random.choice(list({'A', 'C', 'G', 'T'}))
-                elif c == 'M': s_results = s_result + random.choice(list({'A', 'C'}))
-                elif c == 'R': s_results = s_result + random.choice(list({'A', 'G'}))
-                elif c == 'W': s_results = s_result + random.choice(list({'A', 'T'}))
-                elif c == 'S': s_results = s_result + random.choice(list({'C', 'G'}))
-                elif c == 'Y': s_results = s_result + random.choice(list({'C', 'T'}))
-                elif c == 'K': s_results = s_result + random.choice(list({'G', 'T'}))
-                elif c == 'V': s_results = s_result + random.choice(list({'A', 'C', 'G'}))
-                elif c == 'H': s_results = s_result + random.choice(list({'A', 'C', 'T'}))
-                elif c == 'D': s_results = s_result + random.choice(list({'A', 'G', 'T'}))
-                elif c == 'B': s_results = s_result + random.choice(list({'C', 'G', 'T'}))
             
             
             record_list.append(Seq(s_result))
@@ -54,7 +33,6 @@ def preprocess_single_genome(filename):
 
     # Writing our result to the output file
     if filename.endswith(".fna"): name = filename[:-4] + ".fasta"
-    elif filename.endswith(".fq"): name = filename[:-3] + ".fasta"
     else: name = filename
     # Path(os.path.join(snakemake.output.report, name)).touch()
     with open(os.path.join(snakemake.output.report, name), 'w') as outfile:

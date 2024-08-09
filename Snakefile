@@ -7,7 +7,7 @@ import itertools, sys, traceback, pathlib, os, time, datetime
 print("Preprocessing config", flush = True)
 
 # Some standard directories
-DATADIR = "data"
+DATADIR = "data/"
 if "datadir" in config:
     DATADIR = config["datadir"]
 DATADIR = os.path.abspath(DATADIR)
@@ -54,37 +54,19 @@ ASSEMBLY_SOURCE_READS = os.path.join(DATADIR, "assembly", "s{species}-k{k}", "re
 ASSEMBLY = os.path.join(DATADIR, "assembly", "s{species}-k{k}", "assembly.fa")
 REPORT = os.path.join(REPORTDIR, "s{species}-k{k}", "report.txt")
 GENOME_ALL_REFERENCES = os.path.join(DATADIR, "{file_name}.fasta")
-REAL_GENOME = os.path.join(DATADIR, "meta", "{metagenome}", "reads.fq")
 GENOME_CONCAT_REFERENCES = os.path.join(DATADIR, "{file_name}_concat.fasta")
 GENOME_CIRCULAR_REFERENCES = os.path.join(REPORTDIR, "circularization", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.fasta")
-GENOME_META_CIRCULAR_REFERENCES = os.path.join(REPORTDIR, "circularization", "meta_{metagenome}_k{k}ma{min_abundance}t{threads}", "report.fasta")
-BUILD_FA = os.path.join(REPORTDIR, "safe_paths_unitigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm0th0", "report.fasta")
-BUILD_FA_META = os.path.join(REPORTDIR, "safe_paths_unitigs", "meta_{metagenome}_k{k}ma{min_abundance}t{threads}nm0th{threshold}", "report.fasta")
-BUILD_FA_REAL = os.path.join(REPORTDIR, "safe_paths_unitigs", "real_{metagenome}_k{k}ma{min_abundance}t{threads}nm0th{threshold}", "report.fasta")
+BUILD_FA = os.path.join(REPORTDIR, "safe_paths_unitigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm0", "report.fasta")
 BUILD_LOG = os.path.join("logs", "build_{file_name}_k{k}ma{min_abundance}t{threads}", "log.log")
 NODE_TO_ARC_CENTRIC_DBG_BINARY = os.path.abspath("external_software/node-to-arc-centric-dbg/target/release/node-to-arc-centric-dbg")
-NODE_TO_ARC_CENTRIC_DBG = os.path.join(REPORTDIR, "node_to_arc", "{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}", "report.edgelist") 
-FLOWTIGS_BINARY = os.path.abspath("external_software/flowtigs-with-simulated-data/target/release/flowtigs-with-simulated-data")
-FLOWTIGS_BINARY_REAL = os.path.abspath("external_software/flowtigs/target/release/flowtigs")
-FLOWTIGS_BINARY_NO_FILTERING = os.path.abspath("external_software/no_filtering/flowtigs/target/release/flowtigs")
-FLOWTIGS_BINARY_ENTIRE = os.path.abspath("external_software/entire/flowtigs/target/release/flowtigs")
-GGCAT_BINARY = os.path.abspath("external_software/ggcat/target/release/ggcat")
-HIFIASM_BINARY = os.path.abspath("external_software/hifiasm-meta/hifiasm_meta")
-SAFE_PATHS = os.path.join(REPORTDIR, "safe_paths_flowtigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm0th{threshold}", "report.fasta") 
-HIFIASM_REAL_GFA_WITHOUT_ENDING = os.path.join(REPORTDIR, "safe_paths_hifiasm", "real_{metagenome}_k{k}ma{min_abundance}t{threads}nm0th{threshold}", "report") 
-HIFIASM_REAL_GFA = os.path.join(REPORTDIR, "safe_paths_hifiasm", "real_{metagenome}_k{k}ma{min_abundance}t{threads}nm0th{threshold}", "report.gfa") 
-HIFIASM_GFA_WITHOUT_ENDING = os.path.join(REPORTDIR, "safe_paths_hifiasm", "meta_{metagenome}_k{k}ma{min_abundance}t{threads}nm0th{threshold}", "report") 
-HIFIASM_GFA_SIMU = os.path.join(REPORTDIR, "safe_paths_hifiasm", "meta_{metagenome}_k{k}ma{min_abundance}t{threads}nm0th{threshold}", "report.gfa") 
-HIFIASM_GFA = os.path.join(REPORTDIR, "safe_paths_hifiasm", "{file_name}_k{k}ma{min_abundance}t{threads}nm0th{threshold}", "report.gfa") 
-HIFIASM = os.path.join(REPORTDIR, "safe_paths_hifiasm", "{file_name}_k{k}ma{min_abundance}t{threads}nm0th{threshold}", "report.fasta") 
-SAFE_PATHS_REAL = os.path.join(REPORTDIR, "safe_paths_flowtigs_real", "{file_name}_k{k}ma{min_abundance}t{threads}nm0th{threshold}", "report.fasta") 
-SAFE_PATHS_ENTIRE = os.path.join(REPORTDIR, "safe_paths_flowtigs_entire", "{file_name}_k{k}ma{min_abundance}t{threads}nm0th{threshold}", "report.fasta") 
-SAFE_PATHS_NO_FILETRING = os.path.join(REPORTDIR, "safe_paths_flowtigs_without_filtering", "{file_name}_k{k}ma{min_abundance}t{threads}nm0th{threshold}", "report.fasta") 
+NODE_TO_ARC_CENTRIC_DBG = os.path.join(REPORTDIR, "node_to_arc", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.edgelist") 
+FLOWTIGS_BINARY = os.path.abspath("external_software/flowtigs/target/release/flowtigs")
+SAFE_PATHS = os.path.join(REPORTDIR, "safe_paths_flowtigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm0", "report.fasta") 
 QUAST_BINARY = os.path.abspath("external_software/quast/quast.py")
-QUAST_OUTPUT_DIR = os.path.join(REPORTDIR, "quast_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}th{threshold}")
-QUAST_EXTENDED_OUTPUT_DIR = os.path.join(REPORTDIR, "extended_quast_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}th{threshold}")
+QUAST_OUTPUT_DIR = os.path.join(REPORTDIR, "quast_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}")
+QUAST_EXTENDED_OUTPUT_DIR = os.path.join(REPORTDIR, "extended_quast_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}")
 PRACTICAL_OMNITIGS_BINARY = os.path.abspath("external_software/practical-omnitigs/implementation/target/release/cli")
-PRACTICAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_multi-safe", "{file_name}_k{k}ma{min_abundance}t{threads}nm0th{threshold}", "report.fasta")
+PRACTICAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_multi-safe", "{file_name}_k{k}ma{min_abundance}t{threads}nm0", "report.fasta")
 ECOLI = os.path.join(DATADIR, "ecoli.fasta")
 ECOLI_CONCAT = os.path.join(DATADIR, "ecoli_concat.fasta")
 HUMAN_GUT_FILE_LIST = os.path.join(DATADIR, "meta", "human_gut_files.tsv")
@@ -96,63 +78,42 @@ SINGLE_CONCAT = os.path.join(DATADIR, "bac_{file_name}_concat.fasta")
 METADIR = os.path.join(DATADIR, "meta")
 METAGENOME = os.path.join(DATADIR, "meta_{metagenome}.fasta")
 METAGENOME_CONCAT = os.path.join(DATADIR, "meta_{metagenome}_concat.fasta")
-REAL_METAGENOME = os.path.join(DATADIR, "real_{metagenome}.fasta")
-REAL_METAGENOME_CONCAT = os.path.join(DATADIR, "real_{metagenome}_concat.fasta")
-METAGENOME_REFERENCE = os.path.join(DATADIR, "preprocessed_metagenome", "{metagenome}_reference")
-METAGENOME_ABUNDANCES_REFERENCE = os.path.join(DATADIR, "meta", "abundances", "{metagenome}_reference", "nanosim.abundances.tsv")
-PRACTICAL_TEST_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm0th{threshold}", "report.fasta")
-PRACTICAL_TRIVIAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_trivial-omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm0th{threshold}", "report.fasta")
-ALGORITHMS = ["unitigs", "trivial-omnitigs", "hifiasm", "flowtigs_real"] # values for the wildcard that chooses which contigs to generate
-ALGORITHM_COLUMN_NAMES = ["unitigs", "t. omnitigs", "hifiasm", "flowtigs"] # column names for the different contigs
-FAST_ALGORITHMS = ["unitigs", "trivial-omnitigs", "flowtigs_entire"] # algorithms that have a fast runtime
-NO_FILTERING_ALGORITHMS = ["unitigs", "trivial-omnitigs", "flowtigs_without_filtering"] # algorithms that have a fast runtime
+PRACTICAL_TEST_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm0", "report.fasta")
+PRACTICAL_TRIVIAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_trivial-omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm0", "report.fasta")
+ALGORITHMS = ["unitigs", "trivial-omnitigs", "multi-safe", "flowtigs"] # values for the wildcard that chooses which contigs to generate
+ALGORITHM_COLUMN_NAMES = ["unitigs", "t. omnitigs", "multi-safe", "flowtigs"] # column names for the different contigs
+FAST_ALGORITHMS = ["unitigs", "trivial-omnitigs", "flowtigs"] # algorithms that have a fast runtime
 FAST_ALGORITHM_COLUMN_NAMES = ["unitigs", "t. omnitigs", "flowtigs"] # column names for algorithms that have a fast runtime
-NO_FILTERING_ALGORITHM_COLUMN_NAMES = ["unitigs", "t. omnitigs", "flowtigs"] # column names for algorithms that have a fast runtime
 CONVERT_VALIDATION_OUTPUTS_TO_LATEX_SCRIPT = "scripts/convert_validation_outputs_to_latex.py"
 CONVERT_FAST_VALIDATION_OUTPUTS_TO_LATEX_SCRIPT = "scripts/convert_fast_validation_outputs_to_latex.py"
 CREATE_COMBINED_EAXMAX_PLOT_SCRIPT = "scripts/create_combined_eaxmax_plot.py"
 REPORT_SUBDIR = os.path.join(REPORTDIR, "final_reports", "final_reports_{file_name}k{k}ma{min_abundance}t{threads}")
-REPORT_COMBINED_EAXMAX_PLOT = os.path.join(REPORT_SUBDIR, "combined_eaxmax_plot_nm{non_maximal}th{threshold}.pdf")
-REPORT_COMBINED_EAXMAX_PLOT_FAST = os.path.join(REPORT_SUBDIR, "combined_eaxmax_plot_fast_nm{non_maximal}th{threshold}.pdf")
-REPORT_COMBINED_EAXMAX_PLOT_NO_FILTERING = os.path.join(REPORT_SUBDIR, "combined_eaxmax_plot_no_filtering_nm{non_maximal}th{threshold}.pdf")
+REPORT_COMBINED_EAXMAX_PLOT = os.path.join(REPORT_SUBDIR, "combined_eaxmax_plot_nm{non_maximal}.pdf")
+REPORT_COMBINED_EAXMAX_PLOT_FAST = os.path.join(REPORT_SUBDIR, "combined_eaxmax_plot_fast_nm{non_maximal}.pdf")
 REPORT_NAME_FILE = os.path.join(REPORT_SUBDIR, "name.txt")
 REPORT_HASHDIR = os.path.join(REPORTDIR, "hashdir")
 META_BASE7_DIR = os.path.join(DATADIR, "meta", "base7")
 UNPREPROCESSED_METAGENOME = os.path.join(DATADIR, "meta", "{metagenome}", "{genome}.fasta")
 METAGENOME_ABUNDANCES = os.path.join(DATADIR, "meta", "abundances", "{metagenome}", "nanosim.abundances.tsv")
 METAGENOME_DIR = os.path.join(DATADIR, "meta", "{metagenome}")
-METAGENOME_FASTA_NOT_CONCAT = os.path.join(DATADIR, "preprocessed_metagenome_not_concat", "{metagenome}")
 METAGENOME_FASTA = os.path.join(DATADIR, "preprocessed_metagenome", "{metagenome}")
-REPORT_TEX = os.path.join(REPORTDIR, "output", "{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}th{threshold}", "{report_name}", "{report_file_name}.tex")
-REPORT_TEX_FAST = os.path.join(REPORTDIR, "output_fast", "{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}th{threshold}", "{report_name}", "{report_file_name}.tex")
-REPORT_TEX_NO_FILTERING = os.path.join(REPORTDIR, "output_no_filtering", "{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}th{threshold}", "{report_name}", "{report_file_name}.tex")
-LOG_UNITIGS = os.path.join(REPORTDIR, "safe_paths_unitigs", "meta_{metagenome}_k{k}ma{min_abundance}t{threads}th{threshold}", "log.log") 
-LOG_UNITIGS_REAL = os.path.join(REPORTDIR, "safe_paths_unitigs", "real_{metagenome}_k{k}ma{min_abundance}t{threads}th{threshold}", "log.log") 
-LOG_NODE_TO_ARC = os.path.join(REPORTDIR, "node_to_arc", "{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}", "log.log") 
-LOG_FLOWTIGS = os.path.join(REPORTDIR, "safe_paths_flowtigs", "{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}", "log.log") 
-LOG_FLOWTIGS_REAL = os.path.join(REPORTDIR, "safe_paths_flowtigs_real", "{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}", "log.log") 
-LOG_FLOWTIGS_ENTIRE = os.path.join(REPORTDIR, "safe_paths_flowtigs_entire", "{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}", "log.log") 
-LOG_FLOWTIGS_NO_FILTERING = os.path.join(REPORTDIR, "safe_paths_flowtigs_without_filtering", "{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}", "log.log") 
-LOG_TRIVIAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_trivial-omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}", "log.log") 
-LOG_MULTI_SAFE = os.path.join(REPORTDIR, "safe_paths_multi-safe", "{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}", "log.log") 
-LOG_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}", "log.log") 
-LOG_HIFIASM_REAL = os.path.join(REPORTDIR, "safe_paths_hifiasm", "real_{metagenome}_k{k}ma{min_abundance}t{threads}th{threshold}", "log.log") 
-LOG_HIFIASM = os.path.join(REPORTDIR, "safe_paths_hifiasm", "meta_{metagenome}_k{k}ma{min_abundance}t{threads}th{threshold}", "log.log") 
-LOG_ALGORITHM = os.path.join(REPORTDIR, "safe_paths_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}", "log.log") 
-ALL_RUNTIMES = os.path.join(REPORTDIR, "runtimes", "{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}", "report.tsv")
-FAST_RUNTIMES = os.path.join(REPORTDIR, "fast_runtimes", "{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}", "report.tsv")
-NO_FILTERING_RUNTIMES = os.path.join(REPORTDIR, "no_filtering_runtimes", "{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}", "report.tsv")
-GRAPH_STATISTICS = os.path.join(REPORTDIR, "graph_statistics", "{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}", "report.tsv")
-GRAPH_STATISTICS_REAL = os.path.join(REPORTDIR, "graph_statistics_real", "{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}", "report.tsv")
-GRAPH_STATISTICS_NO_FILTERING = os.path.join(REPORTDIR, "graph_statistics_no_filtering", "{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}", "report.tsv")
+REPORT_TEX = os.path.join(REPORTDIR, "output", "{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}", "{report_name}", "{report_file_name}.tex")
+REPORT_TEX_FAST = os.path.join(REPORTDIR, "output_fast", "{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}", "{report_name}", "{report_file_name}.tex")
+LOG_UNITIGS = os.path.join(REPORTDIR, "safe_paths_unitigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "log.log") 
+LOG_NODE_TO_ARC = os.path.join(REPORTDIR, "node_to_arc", "{file_name}_k{k}ma{min_abundance}t{threads}", "log.log") 
+LOG_FLOWTIGS = os.path.join(REPORTDIR, "safe_paths_flowtigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "log.log") 
+LOG_TRIVIAL_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_trivial-omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "log.log") 
+LOG_MULTI_SAFE = os.path.join(REPORTDIR, "safe_paths_multi-safe", "{file_name}_k{k}ma{min_abundance}t{threads}", "log.log") 
+LOG_OMNITIGS = os.path.join(REPORTDIR, "safe_paths_omnitigs", "{file_name}_k{k}ma{min_abundance}t{threads}", "log.log") 
+LOG_ALGORITHM = os.path.join(REPORTDIR, "safe_paths_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}", "log.log") 
+ALL_RUNTIMES = os.path.join(REPORTDIR, "runtimes", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.tsv")
+FAST_RUNTIMES = os.path.join(REPORTDIR, "fast_runtimes", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.tsv")
+GRAPH_STATISTICS = os.path.join(REPORTDIR, "graph_statistics", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.tsv")
 NUMBER_OF_CHARACTERS_IN_CONCATENATED_METAGENOME = os.path.join(REPORTDIR, "number_of_characters", "meta_{metagenome}_characters", "report.txt")
-REAL_NUMBER_OF_CHARACTERS_IN_CONCATENATED_METAGENOME = os.path.join(REPORTDIR, "number_of_characters", "real_{metagenome}_characters", "report.txt")
-REAL_NUMBER_OF_CHARACTERS_IN_CONCATENATED_REFERENCE_METAGENOME = os.path.join(REPORTDIR, "number_of_characters", "real_{metagenome}_reference_characters", "report.txt")
-REAL_NUMBER_OF_CHARACTERS_REFERENCE = os.path.join(REPORTDIR, "number_of_characters", "{file_name}_reference_characters", "report.txt")
 NUMBER_OF_CHARACTERS = os.path.join(REPORTDIR, "number_of_characters", "{file_name}_characters", "report.txt")
-SAFE_PATHS_WITH_NON_MAXIMAL = os.path.join(REPORTDIR, "safe_paths_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}nm1th{threshold}", "report.fasta") 
-SAFE_PATHS_WITH_NON_MAXIMAL_NOT_UNIQUIFIED = os.path.join(REPORTDIR, "safe_paths_{algorithm}_not_uniquified", "{file_name}_k{k}ma{min_abundance}t{threads}nm1th{threshold}", "report.fasta") 
-SAFE_PATHS_WITH_ONLY_MAXIMAL = os.path.join(REPORTDIR, "safe_paths_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}nm0th{threshold}", "report.fasta") 
+SAFE_PATHS_WITH_NON_MAXIMAL = os.path.join(REPORTDIR, "safe_paths_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}nm1", "report.fasta") 
+SAFE_PATHS_WITH_NON_MAXIMAL_NOT_UNIQUIFIED = os.path.join(REPORTDIR, "safe_paths_{algorithm}_not_uniquified", "{file_name}_k{k}ma{min_abundance}t{threads}nm1", "report.fasta") 
+SAFE_PATHS_WITH_ONLY_MAXIMAL = os.path.join(REPORTDIR, "safe_paths_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}nm0", "report.fasta") 
 
 
 
@@ -249,34 +210,15 @@ def get_single_report_script_column_arguments_from_wildcards_fast(wildcards):
 
 
 
-def get_single_report_script_column_arguments_from_wildcards_no_filtering(wildcards):
-    try:
-        result = ""
-        once = True
-        for algorithm in NO_FILTERING_ALGORITHMS:
-            if once:
-                once = False
-            else:
-                result += " "
-
-            quast_output_dir = safe_format(QUAST_EXTENDED_OUTPUT_DIR, algorithm = algorithm).format(**wildcards)
-            result += f"'{algorithm}' '' '{quast_output_dir}' '' ''"
-        return result
-    except Exception:
-        traceback.print_exc()
-        sys.exit("Catched exception")
-
-
-
 rule create_single_report_tex:
     input:  quasts = [safe_format(QUAST_EXTENDED_OUTPUT_DIR, algorithm = algorithm) for algorithm in ALGORITHMS],
             combined_eaxmax_plot = REPORT_COMBINED_EAXMAX_PLOT,
             runtimes = ALL_RUNTIMES,
             script = CONVERT_VALIDATION_OUTPUTS_TO_LATEX_SCRIPT,
-            graph_statistics = GRAPH_STATISTICS_REAL,
-            number_of_characters = REAL_NUMBER_OF_CHARACTERS_REFERENCE,
+            graph_statistics = GRAPH_STATISTICS,
+            number_of_characters = NUMBER_OF_CHARACTERS,
     output: report = REPORT_TEX,
-    log:    log = "logs/create_single_report/{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}th{threshold}r{report_name}rf{report_file_name}/log.log",
+    log:    log = "logs/create_single_report/{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}r{report_name}rf{report_file_name}/log.log",
     params: genome_name = lambda wildcards: ", ".join(wildcards.file_name), 
             script_column_arguments = get_single_report_script_column_arguments_from_wildcards,
             name_file = REPORT_NAME_FILE,
@@ -299,10 +241,8 @@ rule create_single_report_for_fast_algorithms_only:
             combined_eaxmax_plot = REPORT_COMBINED_EAXMAX_PLOT_FAST,
             runtimes = FAST_RUNTIMES,
             script = CONVERT_FAST_VALIDATION_OUTPUTS_TO_LATEX_SCRIPT,
-            graph_statistics = GRAPH_STATISTICS_REAL,
-            number_of_characters = REAL_NUMBER_OF_CHARACTERS_REFERENCE,
     output: report = REPORT_TEX_FAST,
-    log:    log = "logs/create_single_report/{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}th{threshold}r{report_name}rf{report_file_name}/log.log",
+    log:    log = "logs/create_single_report/{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}r{report_name}rf{report_file_name}/log.log",
     params: genome_name = lambda wildcards: ", ".join(wildcards.file_name), 
             script_column_arguments = get_single_report_script_column_arguments_from_wildcards_fast,
             name_file = REPORT_NAME_FILE,
@@ -316,33 +256,7 @@ rule create_single_report_for_fast_algorithms_only:
     shell: """
         mkdir -p '{params.hashdir}'
         echo '{wildcards.report_name} {params.genome_name} {wildcards.report_file_name}' > '{params.name_file}'
-        python3 '{input.script}' '{params.hashdir}' '{params.name_file}' 'none' 'none' '{input.combined_eaxmax_plot}' '{output}' '{input.runtimes}' '{input.graph_statistics}' '{input.number_of_characters}' {params.script_column_arguments}
-        """
-
-
-rule create_single_report_no_filtering:
-    input:  quasts = [safe_format(QUAST_EXTENDED_OUTPUT_DIR, algorithm = algorithm) for algorithm in NO_FILTERING_ALGORITHMS],
-            combined_eaxmax_plot = REPORT_COMBINED_EAXMAX_PLOT_NO_FILTERING,
-            runtimes = NO_FILTERING_RUNTIMES,
-            script = CONVERT_FAST_VALIDATION_OUTPUTS_TO_LATEX_SCRIPT,
-            graph_statistics = GRAPH_STATISTICS_NO_FILTERING,
-            number_of_characters = REAL_NUMBER_OF_CHARACTERS_REFERENCE,
-    output: report = REPORT_TEX_NO_FILTERING,
-    log:    log = "logs/create_single_report_no_filtering/{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}th{threshold}r{report_name}rf{report_file_name}/log.log",
-    params: genome_name = lambda wildcards: ", ".join(wildcards.file_name), 
-            script_column_arguments = get_single_report_script_column_arguments_from_wildcards_no_filtering,
-            name_file = REPORT_NAME_FILE,
-            hashdir = REPORT_HASHDIR,
-    wildcard_constraints:
-            report_name = "[^/]+",
-    conda: "config/conda-latex-gen-env.yml" 
-    threads: 1
-    resources:
-            queue = "short,medium,bigmem,aurinko",
-    shell: """
-        mkdir -p '{params.hashdir}'
-        echo '{wildcards.report_name} {params.genome_name} {wildcards.report_file_name}' > '{params.name_file}'
-        python3 '{input.script}' '{params.hashdir}' '{params.name_file}' 'none' 'none' '{input.combined_eaxmax_plot}' '{output}' '{input.runtimes}' '{input.graph_statistics}' '{input.number_of_characters}' {params.script_column_arguments}
+        python3 '{input.script}' '{params.hashdir}' '{params.name_file}' 'none' 'none' '{input.combined_eaxmax_plot}' '{output}' '{input.runtimes}' {params.script_column_arguments}
         """
 
 
@@ -375,22 +289,6 @@ rule create_combined_eaxmax_graph_for_fast_algorithms_only:
         """
 
 
-rule create_combined_eaxmax_graph_no_filtering:
-    input:  quast_csvs = [os.path.join(safe_format(QUAST_OUTPUT_DIR, algorithm = algorithm), "aligned_stats", "EAxmax_plot.csv") for algorithm in NO_FILTERING_ALGORITHMS],
-            script = CREATE_COMBINED_EAXMAX_PLOT_SCRIPT,
-    output: REPORT_COMBINED_EAXMAX_PLOT_NO_FILTERING,
-    params: input_quast_csvs = lambda wildcards, input: "' '".join([shortname + "' '" + quast for shortname, quast in zip(NO_FILTERING_ALGORITHM_COLUMN_NAMES, input.quast_csvs)])
-    conda:  "config/conda-seaborn-env.yml"
-    threads: 1
-    resources:
-            queue = "short,medium,bigmem,aurinko",
-    shell: """
-        mkdir -p "$(dirname '{output}')"
-        python3 '{input.script}' '{params.input_quast_csvs}' '{output}'
-        """
-
-
-
 
 
 
@@ -404,7 +302,7 @@ rule create_combined_eaxmax_graph_no_filtering:
 rule gathering_runtimes:
     input:  log_files = [os.path.join(safe_format(LOG_ALGORITHM, algorithm = algorithm)) for algorithm in ALGORITHMS] + [LOG_NODE_TO_ARC], 
     output: report = ALL_RUNTIMES,
-    log:    log = "logs/gathering_runtimes/{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
+    log:    log = "logs/gathering_runtimes/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
     conda:  "config/conda-seaborn-env.yml"
     params: row_names = ALGORITHM_COLUMN_NAMES + ["node_to_arc"]
     resources:
@@ -415,9 +313,9 @@ rule gathering_runtimes:
 
 # Rule to gather rutimes and memory usage of only fast algorithms into a tsv file.
 rule gathering_fast_runtimes:
-    input:  log_files = [os.path.join(safe_format(LOG_ALGORITHM, algorithm = algorithm)) for algorithm in FAST_ALGORITHMS] + [LOG_FLOWTIGS_ENTIRE], 
+    input:  log_files = [os.path.join(safe_format(LOG_ALGORITHM, algorithm = algorithm)) for algorithm in FAST_ALGORITHMS] + [LOG_NODE_TO_ARC], 
     output: report = FAST_RUNTIMES,
-    log:    log = "logs/gathering_fast_runtimes/{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
+    log:    log = "logs/gathering_fast_runtimes/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
     conda:  "config/conda-seaborn-env.yml"
     params: row_names = FAST_ALGORITHM_COLUMN_NAMES + ["node_to_arc"]
     resources:
@@ -427,55 +325,21 @@ rule gathering_fast_runtimes:
     script: "scripts/gather_runtimes.py"
 
 
-rule gathering_no_filtering_runtimes:
-    input:  log_files = [os.path.join(safe_format(LOG_ALGORITHM, algorithm = algorithm)) for algorithm in NO_FILTERING_ALGORITHMS] + [LOG_NODE_TO_ARC], 
-    output: report = NO_FILTERING_RUNTIMES,
-    log:    log = "logs/gathering_fast_runtimes/{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
-    conda:  "config/conda-seaborn-env.yml"
-    params: row_names = NO_FILTERING_ALGORITHM_COLUMN_NAMES + ["node_to_arc"]
-    resources:
-            time_min = 60, 
-            mem_mb = 10_000, 
-            queue = "short,medium,bigmem,aurinko",
-    script: "scripts/gather_runtimes.py"
 
-
-
-# # Rule to gather number of nodes and edges of De Bruijn Graph into a tsv file.
-# rule gather_graph_statistics:
-#     input:  log = LOG_FLOWTIGS_REAL,
-#     output: statistics = GRAPH_STATISTICS_REAL,
-#     log:    log = "logs/gathering_graph_statistics_fast/{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
-#     conda:  "config/conda-seaborn-env.yml"
-#     resources:
-#             time_min = 60, 
-#             mem_mb = 10_000, 
-#             queue = "short,medium,bigmem,aurinko",
-#     script: "scripts/gather_statistics.py"
-
-
-
-rule gather_graph_statistics_fast:
-    input:  log = LOG_FLOWTIGS_ENTIRE,
-    output: statistics = GRAPH_STATISTICS_REAL,
-    log:    log = "logs/gathering_graph_statistics_fast/{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
+# Rule to gather number of nodes and edges of De Bruijn Graph into a tsv file.
+rule gather_graph_statistics:
+    input:  log = LOG_MULTI_SAFE,
+            edges_in_cycles = LOG_FLOWTIGS,
+    output: statistics = GRAPH_STATISTICS,
+    log:    log = "logs/gathering_graph_statistics/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
     conda:  "config/conda-seaborn-env.yml"
     resources:
             time_min = 60, 
             mem_mb = 10_000, 
             queue = "short,medium,bigmem,aurinko",
-    script: "scripts/gather_statistics_fast.py"
+    script: "scripts/gather_statistics.py"
 
-rule gather_graph_statistics_no_filtering:
-    input:  log = LOG_FLOWTIGS_NO_FILTERING,
-    output: statistics = GRAPH_STATISTICS_NO_FILTERING,
-    log:    log = "logs/gathering_graph_statistics_no_filtering/{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
-    conda:  "config/conda-seaborn-env.yml"
-    resources:
-            time_min = 60, 
-            mem_mb = 10_000, 
-            queue = "short,medium,bigmem,aurinko",
-    script: "scripts/gather_statistics_fast.py"
+
 
 
 ###########################
@@ -483,19 +347,6 @@ rule gather_graph_statistics_no_filtering:
 ###########################
 
 # Rules to gather the data from metagenomes to a single file
-
-
-# Rule to concatenate the chromosomes of a bacteria into one file.
-rule concatenating_chromosomes:
-    input:  assembly = METAGENOME_FASTA_NOT_CONCAT,
-    output: report = directory(METAGENOME_FASTA),
-    log:    log = "logs/concatenating_chromosomes/{metagenome}/log.log",
-    conda:  "config/conda-biopython-env.yml"
-    resources:
-            mem_mb = 495_000, 
-            time_min = 1440,
-            queue = 'aurinko,bigmem,medium',
-    script: "scripts/concatenate_chromosomes.py"
 
 
 # Rule to get sequences for metagenome data.
@@ -529,23 +380,6 @@ rule metagenome_concatenate:
 
 
 
-
-
-# Rule to concatenate metagenome data without added abundances.
-rule real_metagenome_reference_concatenate:
-    input:  references = METAGENOME_REFERENCE,
-            abundances = METAGENOME_ABUNDANCES_REFERENCE,
-    output: report = REAL_METAGENOME_CONCAT,
-            number_of_characters = REAL_NUMBER_OF_CHARACTERS_IN_CONCATENATED_REFERENCE_METAGENOME
-    log:    log = "logs/real_metagenome_reference_concatenate/{metagenome}/log.log",
-    conda:  "config/conda-seaborn-env.yml"
-    resources:
-            time_min = 600, 
-            mem_mb = 10_000,
-            queue = "medium,bigmem,aurinko",
-    script: "scripts/metagenome_concatenate.py"
-
-
 ########################
 ###### Assembly ########
 ########################
@@ -567,7 +401,7 @@ rule generate_abundances:
 # Rule to remove all the non-[A, C, G, T] characters from a fasta file. Should be ran first.
 rule preprocessing_all_genomes:
     input:  assembly = METAGENOME_DIR,
-    output: report = directory(METAGENOME_FASTA_NOT_CONCAT),
+    output: report = directory(METAGENOME_FASTA),
     log:    log = "logs/preprocessing_single_genome/{metagenome}/log.log",
     conda:  "config/conda-joblib-env.yml"
     resources:
@@ -610,134 +444,25 @@ rule circularization:
 #   min_abundance=minimum abundance, threds=number of cpu cores used.
 # output: Node-centric weighted De Bruijn graph with k-mers of size k in fasta format.
 rule bcalm2_build:
-    input:  references = GENOME_META_CIRCULAR_REFERENCES,
-    output: tigs = BUILD_FA_META,
+    input:  references = GENOME_CIRCULAR_REFERENCES,
+    output: tigs = BUILD_FA,
             log = LOG_UNITIGS,
-    log:    log = "logs/bcalm2/meta_{metagenome}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
+    log:    log = "logs/bcalm2/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
     params: references = lambda wildcards, input: "'" + "' '".join(input.references) + "'",
     conda:  "config/conda-bcalm2-env.yml",
     threads: MAX_THREADS,
     shadow: "minimal"
     resources:
-            mem_mb = 1_000_000, 
-            time_min = 1440,
+            mem_mb = 2_000_000, 
+            time_min = 4320,
             cpus = build_cpus,
-            queue = 'aurinko,bigmem,medium',
+            queue = 'aurinko,bigmem',
     shell:  """
         rm -f '{log.log}'
         ${{CONDA_PREFIX}}/bin/time -v bcalm -nb-cores {threads} -kmer-size {wildcards.k} -in '{input.references}' -out '{output.tigs}' -abundance-min {wildcards.min_abundance} 2>&1 | tee -a '{log.log}'
         mv '{output.tigs}.unitigs.fa' '{output.tigs}'
         cp {log.log} {output.log}
         """
-
-
-
-# rule bcalm2_build_real:
-#     input:  references = REAL_GENOME,
-#     output: tigs = BUILD_FA_REAL,
-#             log = LOG_UNITIGS_REAL,
-#     log:    log = "logs/bcalm2/real_{metagenome}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
-#     params: references = lambda wildcards, input: "'" + "' '".join(input.references) + "'",
-#     conda:  "config/conda-bcalm2-env.yml",
-#     threads: MAX_THREADS,
-#     shadow: "minimal"
-#     resources:
-#             mem_mb = 1_000_000, 
-#             time_min = 1440,
-#             cpus = build_cpus,
-#             queue = 'aurinko,bigmem,medium',
-#     shell:  """
-#         rm -f '{log.log}'
-#         ${{CONDA_PREFIX}}/bin/time -v bcalm -nb-cores {threads} -kmer-size {wildcards.k} -in '{input.references}' -out '{output.tigs}' -abundance-min {wildcards.min_abundance} 2>&1 | tee -a '{log.log}'
-#         mv '{output.tigs}.unitigs.fa' '{output.tigs}'
-#         cp {log.log} {output.log}
-#         """
-
-
-rule ggcat_real:
-    input:  references = REAL_GENOME,
-            binary = GGCAT_BINARY,
-    output: tigs = BUILD_FA_REAL,
-            log = LOG_UNITIGS_REAL,
-    log:    log = "logs/ggcat/real_{metagenome}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
-    params: references = lambda wildcards, input: "'" + "' '".join(input.references) + "'",
-    conda:  "config/conda-bcalm2-env.yml",
-    threads: MAX_THREADS,
-    shadow: "minimal"
-    resources:
-            mem_mb = 495_000, 
-            time_min = 1440,
-            cpus = build_cpus,
-            queue = 'aurinko,bigmem,medium',
-    shell:  """
-        rm -f '{log.log}'
-        ${{CONDA_PREFIX}}/bin/time -v {input.binary} build -k {wildcards.k} -j {wildcards.threads} -e -s {wildcards.min_abundance} '{input.references}' -o '{output.tigs}' 2>&1 | tee -a '{log.log}'
-        cp {log.log} {output.log}
-        """
-
-
-
-
-rule real_hifiasm:
-    input:  references = REAL_GENOME,
-            binary = HIFIASM_BINARY,
-    output: tigs = HIFIASM_REAL_GFA,
-            log = LOG_HIFIASM_REAL,
-    log:    log = "logs/hifiasm/real_{metagenome}}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
-    params: references = lambda wildcards, input: "'" + "' '".join(input.references) + "'",
-            no_ending = HIFIASM_REAL_GFA_WITHOUT_ENDING,
-    conda:  "config/conda-cpp-env.yml",
-    threads: MAX_THREADS,
-    shadow: "minimal"
-    resources:
-            mem_mb = 1_495_000, 
-            time_min = 4320,
-            cpus = build_cpus,
-            queue = 'aurinko,bigmem',
-    shell:  """
-        rm -f '{log.log}'
-        ${{CONDA_PREFIX}}/bin/time -v {input.binary} -t{wildcards.threads} --force-rs -o {params.no_ending} {input.references} 2>&1 | tee -a '{log.log}'
-        cp {log.log} {output.log}
-        """
-
-
-rule simulated_hifiasm:
-    input:  references = GENOME_META_CIRCULAR_REFERENCES,
-            binary = HIFIASM_BINARY,
-    output: tigs = HIFIASM_GFA_SIMU,
-            log = LOG_HIFIASM,
-    log:    log = "logs/hifiasm/meta_{metagenome}}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
-    params: references = lambda wildcards, input: "'" + "' '".join(input.references) + "'",
-            no_ending = HIFIASM_GFA_WITHOUT_ENDING,
-    conda:  "config/conda-cpp-env.yml",
-    threads: MAX_THREADS,
-    shadow: "minimal"
-    resources:
-            mem_mb = 1_495_000, 
-            time_min = 4320,
-            cpus = build_cpus,
-            queue = 'aurinko,bigmem',
-    shell:  """
-        rm -f '{log.log}'
-        ${{CONDA_PREFIX}}/bin/time -v {input.binary} -k {wildcards.k} -t{wildcards.threads} -o {params.no_ending} {input.references} 2>&1 | tee -a '{log.log}'
-        cp {log.log} {output.log}
-        """
-
-
-
-# Rule to convert gfa to fasta
-rule convert_hifiasm:
-    input:  references = HIFIASM_GFA,
-    output: tigs = HIFIASM,
-    log:    log = "logs/hifiasm/{file_name}}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
-    conda:  "config/conda-seaborn-env.yml"
-    resources:
-            time_min = 600, 
-            mem_mb = 10_000,
-            queue = "medium,bigmem,aurinko",
-    script: "scripts/gfa_to_fasta.py"
-
-
 
 
 
@@ -768,7 +493,7 @@ rule build_node_to_arc_centric_dbg:
 rule node_to_arc_centric_dbg:
     input:  node_centric_dbg = BUILD_FA,
             binary = NODE_TO_ARC_CENTRIC_DBG_BINARY,
-    log:    log = "logs/node_to_arc/{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
+    log:    log = "logs/node_to_arc/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
     output: arc_centric_dbg = NODE_TO_ARC_CENTRIC_DBG,  
             log = LOG_NODE_TO_ARC,
     conda:  "config/conda-time-env.yml",
@@ -787,7 +512,7 @@ rule node_to_arc_centric_dbg:
 
 # Rule to set up the external software for the safe-paths rule.
 rule build_safe_paths:
-    input:  "external_software/flowtigs-with-simulated-data/Cargo.toml",
+    input:  "external_software/flowtigs/Cargo.toml",
     output: FLOWTIGS_BINARY,
     conda:  "config/conda-rust-env.yml",
     threads: MAX_THREADS,
@@ -797,54 +522,7 @@ rule build_safe_paths:
             cpus = MAX_THREADS,
             queue = "aurinko,bigmem,short,medium",
     shell:  """
-        cd external_software/flowtigs-with-simulated-data
-        cargo build --release -j {threads} 
-    """
-
-
-rule build_flowtigs_for_real_data:
-    input:  "external_software/flowtigs/Cargo.toml",
-    output: FLOWTIGS_BINARY_REAL,
-    conda:  "config/conda-rust-env.yml",
-    threads: MAX_THREADS,
-    resources:
-            mem_mb = 10000,
-            time_min = 60,
-            cpus = MAX_THREADS,
-            queue = "aurinko,bigmem,short,medium",
-    shell:  """
         cd external_software/flowtigs
-        cargo build --release -j {threads} 
-    """
-
-
-rule build_flowtigs_without_filtering:
-    input:  "external_software/no_filtering/flowtigs-with-real-data/Cargo.toml",
-    output: FLOWTIGS_BINARY_NO_FILTERING,
-    conda:  "config/conda-rust-env.yml",
-    threads: MAX_THREADS,
-    resources:
-            mem_mb = 10000,
-            time_min = 60,
-            cpus = MAX_THREADS,
-            queue = "aurinko,bigmem,short,medium",
-    shell:  """
-        cd external_software/no_filtering/flowtigs-with-real-data
-        cargo build --release -j {threads} 
-    """
-
-rule build_flowtigs_for_flowtigs_and_node_to_edge:
-    input:  "external_software/entire/flowtigs/Cargo.toml",
-    output: FLOWTIGS_BINARY_ENTIRE,
-    conda:  "config/conda-rust-env.yml",
-    threads: MAX_THREADS,
-    resources:
-            mem_mb = 10000,
-            time_min = 60,
-            cpus = MAX_THREADS,
-            queue = "aurinko,bigmem,short,medium",
-    shell:  """
-        cd external_software/entire/flowtigs
         cargo build --release -j {threads} 
     """
 
@@ -859,13 +537,13 @@ rule build_flowtigs_for_flowtigs_and_node_to_edge:
 rule flowtigs:
     input:  arc_centric_dbg = NODE_TO_ARC_CENTRIC_DBG,
             binary = FLOWTIGS_BINARY,
-    log:    log = "logs/flowtigs/{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
+    log:    log = "logs/flowtigs/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
     output: safe_paths = SAFE_PATHS,
             log = LOG_FLOWTIGS,
     conda:  "config/conda-time-env.yml",
     resources:
-            time_min = 1440, 
-            mem_mb = 495_000,
+            time_min = 4320, 
+            mem_mb = 3_000_000,
             queue = "medium,bigmem,aurinko",
     shell:  """
         rm -f '{log.log}'
@@ -874,71 +552,11 @@ rule flowtigs:
     """
 
 
-rule flowtigs_real_data:
-    input:  arc_centric_dbg = NODE_TO_ARC_CENTRIC_DBG,
-            binary = FLOWTIGS_BINARY_REAL,
-    log:    log = "logs/flowtigs_real_data/{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
-    output: safe_paths = SAFE_PATHS_REAL,
-            log = LOG_FLOWTIGS_REAL,
-    conda:  "config/conda-time-env.yml",
-    resources:
-            time_min = 1440, 
-            mem_mb = 995_000,
-            stack_mb = 300_000,
-            queue = "medium,bigmem,aurinko",
-    shell:  """
-        rm -f '{log.log}'
-        rm -f '{log.log}'
-        ${{CONDA_PREFIX}}/bin/time -v '{input.binary}' -k {wildcards.k} -t {wildcards.threshold} --input '{input.arc_centric_dbg}' --output '{output.safe_paths}' 2>&1 | tee -a '{log.log}'
-        cp {log.log} {output.log}
-    """
-
-
-rule flowtigs_no_filtering:
-    input:  arc_centric_dbg = NODE_TO_ARC_CENTRIC_DBG,
-            binary = FLOWTIGS_BINARY_NO_FILTERING,
-    log:    log = "logs/flowtigs_no_filtering/{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
-    output: safe_paths = SAFE_PATHS_NO_FILETRING,
-            log = LOG_FLOWTIGS_NO_FILTERING,
-    conda:  "config/conda-time-env.yml",
-    resources:
-            time_min = 1440, 
-            mem_mb = 995_000,
-            stack_mb = 300_000,
-            queue = "medium,bigmem,aurinko",
-    shell:  """
-        rm -f '{log.log}'
-        rm -f '{log.log}'
-        ${{CONDA_PREFIX}}/bin/time -v '{input.binary}' -k {wildcards.k} -t {wildcards.threshold} --input '{input.arc_centric_dbg}' --output '{output.safe_paths}' 2>&1 | tee -a '{log.log}'
-        cp {log.log} {output.log}
-    """
-
-
-rule flowtigs_and_node_to_arc:
-    input:  node_centric_dbg = BUILD_FA,
-            binary = FLOWTIGS_BINARY_ENTIRE,
-    log:    log = "logs/flowtigs_entire/{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
-    output: safe_paths = SAFE_PATHS_ENTIRE,
-            log = LOG_FLOWTIGS_ENTIRE,
-    conda:  "config/conda-time-env.yml",
-    resources:
-            time_min = 1440, 
-            mem_mb = 995_000,
-            stack_mb = 300_000,
-            queue = "medium,bigmem,aurinko",
-    shell:  """
-        rm -f '{log.log}'
-        rm -f '{log.log}'
-        ${{CONDA_PREFIX}}/bin/time -v '{input.binary}' -k {wildcards.k} -t {wildcards.threshold} --input '{input.node_centric_dbg}' --output '{output.safe_paths}' 2>&1 | tee -a '{log.log}'
-        cp {log.log} {output.log}
-    """
-
-
 # Rule to add unitigs to output file
 rule add_non_maximal_paths:
     input:  safe_paths = SAFE_PATHS_WITH_ONLY_MAXIMAL,
             unitigs = BUILD_FA,
-    log:    log = "logs/add_non_maximal_paths_{algorithm}/{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
+    log:    log = "logs/add_non_maximal_paths_{algorithm}/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
     output: all_safe_paths = SAFE_PATHS_WITH_NON_MAXIMAL_NOT_UNIQUIFIED,
     conda:  "config/conda-seaborn-env.yml",
     resources:
@@ -972,7 +590,7 @@ rule uniquify_fasta_ids:
 #   threads: number of cpu cores used.
 # output: report in .tex, .tsv, .txt, and .pdf formats
 rule run_quast:
-    input:  contigs = os.path.join(REPORTDIR, "safe_paths_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}th{threshold}", "report.fasta"),
+    input:  contigs = os.path.join(REPORTDIR, "safe_paths_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}", "report.fasta"),
             references = [GENOME_CONCAT_REFERENCES], # list of references
             script = QUAST_BINARY,
             error_report = "config/quast_error_report.tex",
@@ -983,7 +601,7 @@ rule run_quast:
     params: references = lambda wildcards, input: "-r '" + "' -r '".join(input.references) + "'",
     conda: "config/conda-quast-env.yml"
     threads: 14,
-    resources: mem_mb = 1_495_000, 
+    resources: mem_mb = 1_000_000, 
                cpus = 14,
                time_min = 1440,
                queue = "bigmem,aurinko", 
@@ -1022,9 +640,9 @@ rule add_longest_unaligned_contig_length_to_report:
     input: directory = QUAST_OUTPUT_DIR,
            script = "scripts/longest_unaligned_contig.py",
     output: directory(QUAST_EXTENDED_OUTPUT_DIR)
-    log:    log = "logs/the_longest_unaligned_{algorithm}/{file_name}_k{k}ma{min_abundance}th{threshold}t{threads}nm{non_maximal}th{threshold}/log.log",
+    log:    log = "logs/the_longest_unaligned_{algorithm}/{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}/log.log",
     conda:  "config/conda-seaborn-env.yml"
-    resources: mem_mb = 995_000, 
+    resources: mem_mb = 495_000, 
                time_min = 120,
                queue = "medium,bigmem,aurinko",
     shell:"""
@@ -1083,7 +701,7 @@ rule build_practical_omnitigs:
 rule practical_multisafe:
     input:  practical_omnitigs = BUILD_FA,
             binary = PRACTICAL_OMNITIGS_BINARY,
-    log:    log = "logs/practical_multi-safe/{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
+    log:    log = "logs/practical_multi-safe/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
     output: practical_omnitigs = PRACTICAL_OMNITIGS,  
             log = LOG_MULTI_SAFE,
     conda:  "config/conda-rust-env.yml",
@@ -1102,7 +720,7 @@ rule practical_multisafe:
 rule practical_omitigs:
     input:  practical_omnitigs = BUILD_FA,
             binary = PRACTICAL_OMNITIGS_BINARY,
-    log:    log = "logs/practical_omnitigs/{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
+    log:    log = "logs/practical_omnitigs/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
     output: practical_omnitigs = PRACTICAL_TEST_OMNITIGS,  
             log = LOG_OMNITIGS,
     conda:  "config/conda-rust-env.yml",
@@ -1121,7 +739,7 @@ rule practical_omitigs:
 rule practical_trivial_omitigs:
     input:  practical_omnitigs = BUILD_FA,
             binary = PRACTICAL_OMNITIGS_BINARY,
-    log:    log = "logs/practical_trivial_omnitigs/{file_name}_k{k}ma{min_abundance}t{threads}th{threshold}/log.log",
+    log:    log = "logs/practical_trivial_omnitigs/{file_name}_k{k}ma{min_abundance}t{threads}/log.log",
     output: practical_omnitigs = PRACTICAL_TRIVIAL_OMNITIGS,  
             log = LOG_TRIVIAL_OMNITIGS,
     conda:  "config/conda-rust-env.yml",
@@ -1136,111 +754,13 @@ rule practical_trivial_omitigs:
     """
 
 
-
-########################################
-######## Run multiple pipelines ########
-########################################
-
-HMP_31 = os.path.join(REPORTDIR, "output_fast", "meta_HMP_Mock_k{k}ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
-JGI_31 = os.path.join(REPORTDIR, "output_fast", "meta_JGI_Mock_k{k}ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
-MEDIUM_31 = os.path.join(REPORTDIR, "output_fast", "meta_medium20_k{k}ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
-BASE_31 = os.path.join(REPORTDIR, "output_fast", "meta_base7_k{k}ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
-COMPLEX_31 = os.path.join(REPORTDIR, "output_fast", "meta_complex32_k{k}ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
-
-ZYMO = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k{k}ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
-ZYMO_51 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k51ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
-ZYMO_101 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k101ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
-ZYMO_191 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k191ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
-ZYMO_251 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k251ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
-ZYMO_501 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k501ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
-ZYMO_1001 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k1001ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
-
-ZYMO_NO_FILTERS = os.path.join(REPORTDIR, "output_no_filtering", "real_Zymo_k{k}ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
-ZYMO_51_NO_FILTERS = os.path.join(REPORTDIR, "output_no_filtering", "real_Zymo_k51ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
-ZYMO_101_NO_FILTERS = os.path.join(REPORTDIR, "output_no_filtering", "real_Zymo_k101ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
-ZYMO_191_NO_FILTERS = os.path.join(REPORTDIR, "output_no_filtering", "real_Zymo_k191ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
-ZYMO_251_NO_FILTERS = os.path.join(REPORTDIR, "output_no_filtering", "real_Zymo_k251ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
-ZYMO_501_NO_FILTERS = os.path.join(REPORTDIR, "output_no_filtering", "real_Zymo_k501ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
-ZYMO_1001_NO_FILTERS = os.path.join(REPORTDIR, "output_no_filtering", "real_Zymo_k1001ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
-
-ZYMO_TH0 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k{k}ma{min_abundance}t28nm{nonmaximal}th0", "report_{date}", "report.tex")
-ZYMO_51_TH0 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k51ma{min_abundance}t28nm{nonmaximal}th0", "report_{date}", "report.tex")
-ZYMO_101_TH0 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k101ma{min_abundance}t28nm{nonmaximal}th0", "report_{date}", "report.tex")
-ZYMO_191_TH0 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k191ma{min_abundance}t28nm{nonmaximal}th0", "report_{date}", "report.tex")
-ZYMO_251_TH0 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k251ma{min_abundance}t28nm{nonmaximal}th0", "report_{date}", "report.tex")
-ZYMO_501_TH0 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k501ma{min_abundance}t28nm{nonmaximal}th0", "report_{date}", "report.tex")
-ZYMO_1001_TH0 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k1001ma{min_abundance}t28nm{nonmaximal}th0", "report_{date}", "report.tex")
-
-ZYMO_TH6 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k{k}ma{min_abundance}t28nm{nonmaximal}th6", "report_{date}", "report.tex")
-ZYMO_51_TH6 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k51ma{min_abundance}t28nm{nonmaximal}th6", "report_{date}", "report.tex")
-ZYMO_101_TH6 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k101ma{min_abundance}t28nm{nonmaximal}th6", "report_{date}", "report.tex")
-ZYMO_191_TH6 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k191ma{min_abundance}t28nm{nonmaximal}th6", "report_{date}", "report.tex")
-ZYMO_251_TH6 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k251ma{min_abundance}t28nm{nonmaximal}th6", "report_{date}", "report.tex")
-ZYMO_501_TH6 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k501ma{min_abundance}t28nm{nonmaximal}th6", "report_{date}", "report.tex")
-ZYMO_1001_TH6 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k1001ma{min_abundance}t28nm{nonmaximal}th6", "report_{date}", "report.tex")
-
-ZYMO_TH5 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k{k}ma{min_abundance}t28nm{nonmaximal}th5", "report_{date}", "report.tex")
-ZYMO_51_TH5 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k51ma{min_abundance}t28nm{nonmaximal}th5", "report_{date}", "report.tex")
-ZYMO_101_TH5 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k101ma{min_abundance}t28nm{nonmaximal}th5", "report_{date}", "report.tex")
-ZYMO_191_TH5 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k191ma{min_abundance}t28nm{nonmaximal}th5", "report_{date}", "report.tex")
-ZYMO_251_TH5 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k251ma{min_abundance}t28nm{nonmaximal}th5", "report_{date}", "report.tex")
-ZYMO_501_TH5 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k501ma{min_abundance}t28nm{nonmaximal}th5", "report_{date}", "report.tex")
-ZYMO_1001_TH5 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k1001ma{min_abundance}t28nm{nonmaximal}th5", "report_{date}", "report.tex")
-
-ZYMO_MA10 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k{k}ma10t28nm{nonmaximal}th15", "report_{date}", "report.tex")
-ZYMO_MA10_51 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k51ma10t28nm{nonmaximal}th15", "report_{date}", "report.tex")
-ZYMO_MA10_101 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k101ma10t28nm{nonmaximal}th15", "report_{date}", "report.tex")
-ZYMO_MA10_191 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k191ma10t28nm{nonmaximal}th15", "report_{date}", "report.tex")
-ZYMO_MA10_251 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k251ma10t28nm{nonmaximal}th15", "report_{date}", "report.tex")
-ZYMO_MA10_501 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k501ma10t28nm{nonmaximal}th15", "report_{date}", "report.tex")
-ZYMO_MA10_1001 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k1001ma10t28nm{nonmaximal}th15", "report_{date}", "report.tex")
-ZYMO_HIFI = os.path.join(REPORTDIR, "output", "real_Zymo_k{k}ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
-ZYMO_31_TH10 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k31ma5t28nm0th10", "report_{date}", "report.tex")
-ZYMO_51_TH10 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k51ma5t28nm0th10", "report_{date}", "report.tex")
-ZYMO_101_TH10 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k101ma5t28nm0th10", "report_{date}", "report.tex")
-ZYMO_251_TH10 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k251ma5t28nm0th10", "report_{date}", "report.tex")
-ZYMO_501_TH10 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k501ma5t28nm0th10", "report_{date}", "report.tex")
-ZYMO_1001_TH10 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k1001ma5t28nm0th10", "report_{date}", "report.tex")
-
-ATCC = os.path.join(REPORTDIR, "output_fast", "real_ATCC_k{k}ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
-ATCC_1001 = os.path.join(REPORTDIR, "output_fast", "real_ATCC_k1001ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
-ATCC_MA10 = os.path.join(REPORTDIR, "output_fast", "real_ATCC_k{k}ma10t28nm{nonmaximal}th15", "report_{date}", "report.tex")
-ATCC_MA10_1001 = os.path.join(REPORTDIR, "output_fast", "real_ATCC_k1001ma10t28nm{nonmaximal}th15", "report_{date}", "report.tex")
-ATCC_HIFI = os.path.join(REPORTDIR, "output", "real_ATCC_k{k}ma{min_abundance}t28nm{nonmaximal}th{threshold}", "report_{date}", "report.tex")
-
-ZYMO_31_MA2_TH4 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k31ma2t28nm0th4", "report_{date}", "report.tex")
-ZYMO_1001_MA2_TH4 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k1001ma2t28nm0th4", "report_{date}", "report.tex")
-ZYMO_31_MA2_TH6 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k31ma2t28nm0th6", "report_{date}", "report.tex")
-ZYMO_1001_MA2_TH6 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k1001ma2t28nm0th6", "report_{date}", "report.tex")
-ZYMO_31_MA2_TH8 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k31ma2t28nm0th8", "report_{date}", "report.tex")
-ZYMO_1001_MA2_TH8 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k1001ma2t28nm0th8", "report_{date}", "report.tex")
-
-ZYMO_31_MA1_TH4 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k31ma1t28nm0th4", "report_{date}", "report.tex")
-ZYMO_1001_MA1_TH4 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k1001ma1t28nm0th4", "report_{date}", "report.tex")
-ZYMO_31_MA1_TH6 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k31ma1t28nm0th6", "report_{date}", "report.tex")
-ZYMO_1001_MA1_TH6 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k1001ma1t28nm0th6", "report_{date}", "report.tex")
-ZYMO_31_MA1_TH8 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k31ma1t28nm0th8", "report_{date}", "report.tex")
-ZYMO_1001_MA1_TH8 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k1001ma1t28nm0th8", "report_{date}", "report.tex")
-ZYMO_31_MA1_TH2 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k31ma1t28nm0th2", "report_{date}", "report.tex")
-ZYMO_1001_MA1_TH2 = os.path.join(REPORTDIR, "output_fast", "real_Zymo_k1001ma1t28nm0th2", "report_{date}", "report.tex")
-
-
 # Rule for running multiple pipelines at the same time. Insert the outputs of the pipelines that you want to run in the input of this rule.
 rule run_multiple_pipelines:
-    input: pipeline_outputs = [ZYMO_31_MA2_TH4, ZYMO_1001_MA2_TH4, ZYMO_31_MA2_TH6, ZYMO_1001_MA2_TH6, ZYMO_31_MA2_TH8, ZYMO_1001_MA2_TH8, ZYMO_31_MA1_TH4, ZYMO_1001_MA1_TH4, ZYMO_31_MA1_TH6, ZYMO_1001_MA1_TH6, ZYMO_31_MA1_TH8, ZYMO_1001_MA1_TH8, ZYMO_31_MA1_TH2, ZYMO_1001_MA1_TH2],
-    output: empty_file = os.path.join(REPORTDIR, "multiple_runs_{date}_k{k}_ma{min_abundance}_nm{nonmaximal}_th{threshold}")
+    input: pipeline_outputs = [os.path.join(REPORTDIR, "output", "meta_HMP_Mock_k31ma1t28nm{nonmaximal}", "report_{date}", "report.tex"), os.path.join(REPORTDIR, "output", "meta_JGI_Mock_k31ma1t28nm{nonmaximal}", "report_{date}", "report.tex"), os.path.join(REPORTDIR, "output", "meta_medium20_k31ma1t28nm{nonmaximal}", "report_{date}", "report.tex"), os.path.join(REPORTDIR, "output", "meta_base7_k31ma1t28nm{nonmaximal}", "report_{date}", "report.tex"), os.path.join(REPORTDIR, "output", "meta_complex32_k31ma1t28nm{nonmaximal}", "report_{date}", "report.tex")]
+    output: empty_file = os.path.join(REPORTDIR, "multiple_runs_{date}_nm{nonmaximal}")
     shell:  """
         cd data/reports
-        touch multiple_runs_{wildcards.date}__k{wildcards.k}_ma{wildcards.min_abundance}_nm{wildcards.nonmaximal}_th{threshold}
-    """
-# [ZYMO, ZYMO_51, ZYMO_101, ZYMO_251, ZYMO_501, ZYMO_1001]
-
-rule run_multiple_groups_of_pipelines:
-    input: pipeline_outputs = [ZYMO_31_TH10, ZYMO_51_TH10, ZYMO_101_TH10, ZYMO_251_TH10, ZYMO_501_TH10, ZYMO_1001_TH10],
-    output: empty_file = os.path.join(REPORTDIR, "multiple_groups_of_pipelines_{date}")
-    shell:  """
-        cd data/reports
-        touch multiple_groups_of_pipelines_{wildcards.date}
+        touch multiple_runs_{wildcards.date}_nm{wildcards.nonmaximal}
     """
 
 
@@ -1339,27 +859,8 @@ rule download_node_to_arc_centric_dbg:
 
 
 # Rule to download the external software used for calculatings safe paths from an arc-centric De Bruijn graph.
-localrules: download_flowtigs_with_simulated_data
-rule download_flowtigs_with_simulated_data:
-    output: "external_software/flowtigs-with-simulated-data/Cargo.toml"
-    conda:  "config/conda-rust-env.yml"
-    threads: 1
-    shell:  """
-        mkdir -p external_software
-        cd external_software
-
-        rm -rf flowtigs-with-simulated-data
-        git clone https://github.com/elieling/flowtigs-with-simulated-data.git
-        cd flowtigs-with-simulated-data
-        git checkout cdf3b7947050c972212a64e84de9ab88b47a348e  
-
-        cargo fetch
-    """ 
-
-
-# Rule to download the external software used for calculatings safe paths from an arc-centric De Bruijn graph, that works both with simulated and real data.
-localrules: download_flowtigs_for_real_data
-rule download_flowtigs_for_real_data:
+localrules: download_flowtigs
+rule download_flowtigs:
     output: "external_software/flowtigs/Cargo.toml"
     conda:  "config/conda-rust-env.yml"
     threads: 1
@@ -1368,80 +869,11 @@ rule download_flowtigs_for_real_data:
         cd external_software
 
         rm -rf flowtigs
-        git clone https://github.com/elieling/flowtigs
+        git clone https://github.com/elieling/flowtigs.git
         cd flowtigs
-        git checkout 6d70e8d5d2e6dbf33a4d6e5786f54bda51749cb2
+        git checkout 2685085eab02c124b8a62787bf75e4922b252882
+
         cargo fetch
-    """ 
-
-
-localrules: download_flowtigs_without_filtering
-rule download_flowtigs_without_filtering:
-    output: "external_software/no_filtering/flowtigs/Cargo.toml"
-    conda:  "config/conda-rust-env.yml"
-    threads: 1
-    shell:  """
-        mkdir -p external_software
-        mkdir -p external_software/no_filtering
-        cd external_software/no_filtering
-
-        rm -rf flowtigs
-        git clone https://github.com/elieling/flowtigs
-        cd flowtigs
-        git checkout c3acce01740f313972c30eae96a5f25eacd545d8
-        
-        cargo fetch
-    """ 
-    
-
-localrules: download_flowtigs_and_node_to_arc_together
-rule download_flowtigs_and_node_to_arc_together:
-    output: "external_software/entire/flowtigs/Cargo.toml"
-    conda:  "config/conda-rust-env.yml"
-    threads: 1
-    shell:  """
-        mkdir -p external_software/entire
-        cd external_software/entire           
-
-        rm -rf flowtigs
-        git clone https://github.com/elieling/flowtigs
-        cd flowtigs
-        git checkout fed5bb0a22103086a6a04b9901dd0fb654479302
-         
-        cargo fetch
-    """ 
-
-
-# Rule to download the external software used for computing unitigs with ggcat.
-localrules: download_ggcat
-rule download_ggcat:
-    output: GGCAT_BINARY,
-    conda:  "config/conda-ggcat-env.yml"
-    threads: 1
-    shell:  """
-        mkdir -p external_software
-        cd external_software
-
-        rm -rf ggcat
-        git clone https://github.com/algbio/ggcat --recursive
-        cd ggcat/
-        git checkout a91ecc97f286b737b37195c0a86f0e11ad6bfc3b
-        cargo install --path crates/cmdline/ --locked --features "kmer-counters"
-        cargo fetch
-    """ 
-    
-
-localrules: download_hifiasm
-rule download_hifiasm:
-    output: HIFIASM_BINARY,
-    threads: 1
-    shell:  """
-        mkdir -p external_software
-        cd external_software
-
-        rm -rf hifiasm-meta
-        git clone https://github.com/xfengnefx/hifiasm-meta.git
-        cd hifiasm-meta && make
     """ 
 
 

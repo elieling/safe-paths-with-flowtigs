@@ -13,7 +13,7 @@ if os.path.exists(abundance_file):
     print("Abundance file found, so abundances are not simulated.")
 else:
     for file in os.listdir(folder):
-        if file.endswith(".fna") or file.endswith(".fasta") or file.endswith(".fq"):
+        if file.endswith(".fna") or file.endswith(".fasta"):
             genomes.append(file)
 
     np.random.seed(0)
