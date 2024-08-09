@@ -7,6 +7,7 @@ import itertools, sys, traceback, pathlib, os, time, datetime
 print("Preprocessing config", flush = True)
 
 # Some standard directories
+DATADIR = "data"
 if "datadir" in config:
     DATADIR = config["datadir"]
 DATADIR = os.path.abspath(DATADIR)
