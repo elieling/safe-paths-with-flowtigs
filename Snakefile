@@ -60,7 +60,7 @@ BUILD_FA = os.path.join(REPORTDIR, "safe_paths_unitigs", "{file_name}_k{k}ma{min
 BUILD_LOG = os.path.join("logs", "build_{file_name}_k{k}ma{min_abundance}t{threads}", "log.log")
 NODE_TO_ARC_CENTRIC_DBG_BINARY = os.path.abspath("external_software/node-to-arc-centric-dbg/target/release/node-to-arc-centric-dbg")
 NODE_TO_ARC_CENTRIC_DBG = os.path.join(REPORTDIR, "node_to_arc", "{file_name}_k{k}ma{min_abundance}t{threads}", "report.edgelist") 
-FLOWTIGS_BINARY = os.path.abspath("external_software/flowtigs/target/release/flowtigs")
+FLOWTIGS_BINARY = os.path.abspath("external_software/flowtigs-with-simulated-data/target/release/flowtigs")
 SAFE_PATHS = os.path.join(REPORTDIR, "safe_paths_flowtigs", "{file_name}_k{k}ma{min_abundance}t{threads}nm0", "report.fasta") 
 QUAST_BINARY = os.path.abspath("external_software/quast/quast.py")
 QUAST_OUTPUT_DIR = os.path.join(REPORTDIR, "quast_{algorithm}", "{file_name}_k{k}ma{min_abundance}t{threads}nm{non_maximal}")
@@ -512,7 +512,7 @@ rule node_to_arc_centric_dbg:
 
 # Rule to set up the external software for the safe-paths rule.
 rule build_safe_paths:
-    input:  "external_software/flowtigs/Cargo.toml",
+    input:  "external_software/flowtigs-with-simulated-data/Cargo.toml",
     output: FLOWTIGS_BINARY,
     conda:  "config/conda-rust-env.yml",
     threads: MAX_THREADS,
@@ -522,7 +522,7 @@ rule build_safe_paths:
             cpus = MAX_THREADS,
             queue = "aurinko,bigmem,short,medium",
     shell:  """
-        cd external_software/flowtigs
+        cd external_software/flowtigs-with-simulated-data
         cargo build --release -j {threads} 
     """
 
@@ -861,17 +861,17 @@ rule download_node_to_arc_centric_dbg:
 # Rule to download the external software used for calculatings safe paths from an arc-centric De Bruijn graph.
 localrules: download_flowtigs
 rule download_flowtigs:
-    output: "external_software/flowtigs/Cargo.toml"
+    output: "external_software/flowtigs-with-simulated-data/Cargo.toml"
     conda:  "config/conda-rust-env.yml"
     threads: 1
     shell:  """
         mkdir -p external_software
         cd external_software
 
-        rm -rf flowtigs
-        git clone https://github.com/elieling/flowtigs.git
-        cd flowtigs
-        git checkout 2685085eab02c124b8a62787bf75e4922b252882
+        rm -rf flowtigs-with-simulated-data
+        git clone https://github.com/elieling/flowtigs-with-simulated-data.git
+        cd flowtigs-with-simulated-data
+        git checkout aad3c847e3b14d96bd42a2b6dd7e6475208c0a82
 
         cargo fetch
     """ 
