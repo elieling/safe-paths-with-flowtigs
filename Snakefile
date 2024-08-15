@@ -1388,7 +1388,7 @@ rule download_flowtigs_without_filtering:
         rm -rf flowtigs
         git clone https://github.com/elieling/flowtigs
         cd flowtigs
-        git checkout b8feaf79df211834858049231d8984579074e5b7
+        git checkout 1b6c3ff9b482b242d350962625dbb0d2fa0e1917
         
         cargo fetch
     """ 
