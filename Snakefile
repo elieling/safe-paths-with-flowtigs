@@ -1406,7 +1406,7 @@ rule download_flowtigs_and_node_to_arc_together:
         rm -rf flowtigs
         git clone https://github.com/elieling/flowtigs
         cd flowtigs
-        git checkout fed5bb0a22103086a6a04b9901dd0fb654479302
+        git checkout 8f98ca942d75e650487ec4e1ef77f4f4319415bc
          
         cargo fetch
     """ 
