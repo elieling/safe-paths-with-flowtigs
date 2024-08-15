@@ -819,7 +819,7 @@ rule build_flowtigs_for_real_data:
 
 
 rule build_flowtigs_without_filtering:
-    input:  "external_software/no_filtering/flowtigs-with-real-data/Cargo.toml",
+    input:  "external_software/no_filtering/flowtigs/Cargo.toml",
     output: FLOWTIGS_BINARY_NO_FILTERING,
     conda:  "config/conda-rust-env.yml",
     threads: MAX_THREADS,
@@ -829,7 +829,7 @@ rule build_flowtigs_without_filtering:
             cpus = MAX_THREADS,
             queue = "aurinko,bigmem,short,medium",
     shell:  """
-        cd external_software/no_filtering/flowtigs-with-real-data
+        cd external_software/no_filtering/flowtigs
         cargo build --release -j {threads} 
     """
 
