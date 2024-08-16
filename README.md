@@ -1,33 +1,79 @@
-# Snakemake Flowtigs
+# Experiment pipeline
 
-A snakmake pipeline for comparing various safe paths with flowtigs in a De Bruijn graph of DNA reads in metagenomes. The pipeline also does all the pre-processing and the post-processing, and compares the results with structural contigs, extended contigs and unitigs.
+This is an experiment pipeline to compare the performance of [flowtigs](https://www.biorxiv.org/content/10.1101/2023.11.17.567499v1) with other safety algorithms.
 
-## Input
+## Setting up the environment
 
-The input dataset should be a folder located in the folder `data/meta/` from the root of this project. The input folder should contain all the genome reads as fasta files with the ending ".fasta" or ".fna". The folder can contain other files as long as they don't have these endings. The five input datasets used in the experiments can be found [here](https://zenodo.org/record/8434267).
+To set up the environment, download [conda](https://www.anaconda.com/), then in the project directory, create the environment with
+```
+    conda env create environment.yml,
+```
+then activate the environment with
+```
+    conda activate snakemake-flowtigs.
+```
 
-## Output
+## Reproducing experiments with simulated data
 
-The output of this pipeline is the LaTeX file `data/reports/output/meta_<name-of-the-input-folder>_k31ma1t28nm1/<report-name>/report.tex`. The figures of the latex file can be found in the folder `data/reports/hashdir`.
+First, ensure you are using the correct version by running in the project directory
+```
+git checkout a2698923762b58129fd027602f242209cecdd2d7
+```
+Then, include the reference of the desired metagenome in the folder
+```
+safe-paths-with-flowtigs/data/meta/<name_of_the_dataset>
+```
+The folder should contain a file ending in `.fna` or `.fasta` for each genome in the reference metagenome, as well as a file named `nanosim.abundances.tsv` containing the abundance information in tsv format, so that the first column contains the name of the genome and the second column contains its abundance in percentage. If the abundance file is missing, abundances will be simulated. The datasets used for the experiments can be found [here](https://zenodo.org/records/8434267). Then, the file 
+```
+```safe-paths-with-flowtigs/data/meta/<name_of_the_dataset>``` 
+```
+should be copied in 
+```
+```safe-paths-with-flowtigs/data/meta/<name_of_the_dataset>_reference```
+```
+because we also simulate the reads when working with simulated data. Then, the pipeline is run with the command
 
-## Setup
+```
+snakemake --use-conda -j 1 "<path>/safe-paths-with-flowtigs/data/reports/output/meta_<metagenome>_k<k>ma1t<threads>nm1/<name_of_the_report>/report.tex"
+```
 
-The following has to be done once before running the pipeline.
+The output report will be located in the file 
+```
+data/reports/output/meta_<metagenome>\_k<k>ma1t<threads>nm1/<name_of_the_report>/report.tex
+```
 
-- Install conda.
-- Create the conda environment with the command `conda env create -f environment.yml` in the root of this project.
+## Reproducing experiments with real data
 
-## Running Instructions
+To ensure you are using the correct version, run in the project directory
+```
+git checkout bd04d0789f313415293ac3bdace399c6b0c035e5
+```
+Then, include the desired reads in the file
+```
+safe-paths-with-flowtigs/data/meta/<name_of_the_dataset>/reads.fq
+```
+ and the reference of the desired metagenome in the folder
+ ```
+safe-paths-with-flowtigs/data/meta/<name_of_the_dataset>_reference
+```
+The reference metagenome should be in the same format as with simulated data, but does not need an abundance file. In our experiments, we use the Zymo reads with accession SRR13128014 and we use a minimum abundance threshold of 5, i.e., we exclude all edges that have a multiplicity lower than 5. Then, the pipeline is run with the command
 
-To run the pipeline:
+```
+snakemake --use-conda -j 1 "<path>/safe-paths-with-flowtigs/data/reports/output/real_<metagenome>_k<k>ma<minimum_abundance>t<threads>nm0th<threshold>/<name_of_the_report>/report.tex" 
+```
 
-- Activate the environment with the command `conda activate snakemake-flowtigs`.
-- Execute the pipeline with the command `snakemake -j 1 "<path-to-this-project>/data/reports/output/meta_<name-of-the-input-folder>_k31ma1t28nm1/<report-name>/report.tex"`.
+The output report will be located in the file 
+```
+data/reports/output/meta_<metagenome>_k<k>ma<minimum_abundance>t<threads>nm0th<threshold>/<name_of_the_report>/report.tex
+```
 
-## Changing Parameters
+To run the pipeline without using the additionnal filtering, instead run
 
-The pipeline parameters can be changed by modifying the `k31ma1t28nm1` part of the running command. This will also change the name of the output file accordingly. The four parameters are represented by characters, followed by an integer indicating their value:
-- k: size of the k-mers used in the De Bruijn graph.
-- ma: minimum adundance.
-- t: number of threads used.
-- nm: binary value representing whether or not to append the unitigs to the results of the other safe-walk-algorithms. Use 1 to append unitigs, and 0 to not append them.
+```
+snakemake --use-conda -j 1 "<path>/safe-paths-with-flowtigs/data/reports/output\_no_filtering/real_<metagenome>_k<k>ma<minimum_abundance>t<threads>nm0th<threshold>/<name_of_the_report>/report.tex" 
+```
+
+The output report will then be located in the file 
+```
+data/reports/output\_no\_filtering/meta_<metagenome>_k<k>ma<minimum_abundance>t<threads>nm0th<threshold>/<name_of_the_report>/report.tex
+```
