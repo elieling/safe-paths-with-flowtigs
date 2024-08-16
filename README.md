@@ -6,11 +6,11 @@ This is an experiment pipeline to compare the performance of [flowtigs](https://
 
 To set up the environment, download [conda](https://www.anaconda.com/), then in the project directory, create the environment with
 ```
-    conda env create environment.yml
+conda env create environment.yml
 ```
 then activate the environment with
 ```
-    conda activate snakemake-flowtigs
+conda activate snakemake-flowtigs
 ```
 
 ## Reproducing experiments with simulated data
